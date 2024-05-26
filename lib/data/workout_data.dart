@@ -42,9 +42,9 @@ class WorkoutData extends ChangeNotifier{
   }
 
   // User can add workout
-  void addWorkout() {
+  void addWorkout(String name) {
     // Adds new workout with blank list of exercises
-    workoutList.add(Workout(name: 'Name', exercises: []));
+    workoutList.add(Workout(name: name, exercises: []));
 
     notifyListeners();
   }
