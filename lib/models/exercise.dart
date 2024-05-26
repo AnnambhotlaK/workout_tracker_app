@@ -13,5 +13,4 @@ class Exercise {
     required this.sets,
     this.isCompleted = false,
   });
-
 }

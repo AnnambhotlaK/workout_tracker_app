@@ -1,6 +1,5 @@
 // Represents complete workout sessions made up of exercises
 
-
 import 'package:main/models/exercise.dart';
 
 class Workout {
