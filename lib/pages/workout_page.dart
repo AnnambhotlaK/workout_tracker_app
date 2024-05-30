@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/data/workout_data.dart';
 import 'package:provider/provider.dart';
@@ -30,31 +29,31 @@ class _WorkoutPageState extends State<WorkoutPage> {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: Text('Add a New Exercise'),
+              title: const Text('Add a New Exercise'),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Exercise Name
                   TextField(
-                    decoration: InputDecoration(label: Text('Name: ')),
+                    decoration: const InputDecoration(label: Text('Name: ')),
                     controller: exerciseNameController,
                   ),
 
                   // Weight
                   TextField(
-                    decoration: InputDecoration(label: Text('Weight: ')),
+                    decoration: const InputDecoration(label: Text('Weight: ')),
                     controller: weightController,
                   ),
 
                   // Reps
                   TextField(
-                    decoration: InputDecoration(label: Text('Reps: ')),
+                    decoration: const InputDecoration(label: Text('Reps: ')),
                     controller: repsController,
                   ),
 
                   // Sets
                   TextField(
-                    decoration: InputDecoration(label: Text('Sets: ')),
+                    decoration: const InputDecoration(label: Text('Sets: ')),
                     controller: setsController,
                   ),
                 ],
@@ -113,7 +112,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             appBar: AppBar(title: Text(widget.workoutName)),
             floatingActionButton: FloatingActionButton(
               onPressed: createNewExercise,
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
             ),
             body: ListView.builder(
                 itemCount: value.numberOfExercisesInWorkout(widget.workoutName),

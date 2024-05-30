@@ -11,10 +11,12 @@ class HiveDatabase {
   // If not, record start date
   bool previousDataExists() {
     if (_myBox.isEmpty) {
+      // ignore: avoid_print
       print('Previous data does NOT exist');
       _myBox.put("START_DATE", todaysDateYYYYMMDD());
       return false;
     } else {
+      // ignore: avoid_print
       print('Previous data DOES exist');
       return true;
     }
@@ -61,16 +63,18 @@ class HiveDatabase {
 
       for (int j = 0; j < exerciseDetails[i].length; j++) {
         exercisesInEachWorkout.add(
-          Exercise(name: exerciseDetails[i][j][0], 
-          weight: exerciseDetails[i][j][1], 
-          reps: exerciseDetails[i][j][2], 
-          sets: exerciseDetails[i][j][3],
-          isCompleted: exerciseDetails[i][j][4] == 'true' ? true : false),
+          Exercise(
+              name: exerciseDetails[i][j][0],
+              weight: exerciseDetails[i][j][1],
+              reps: exerciseDetails[i][j][2],
+              sets: exerciseDetails[i][j][3],
+              isCompleted: exerciseDetails[i][j][4] == 'true' ? true : false),
         );
       }
 
       // Create individual workout
-      Workout workout = Workout(name: workoutNames[i], exercises: exercisesInEachWorkout);
+      Workout workout =
+          Workout(name: workoutNames[i], exercises: exercisesInEachWorkout);
 
       // Add workout to overall list
       mySavedWorkouts.add(workout);

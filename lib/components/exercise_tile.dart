@@ -31,9 +31,9 @@ class ExerciseTile extends StatelessWidget {
                 // Weight
                 Chip(label: Text("${weight}kg")),
                 // Reps
-                Chip(label: Text("${reps} reps")),
+                Chip(label: Text("$reps reps")),
                 // Sets
-                Chip(label: Text("${sets} sets")),
+                Chip(label: Text("$sets sets")),
               ],
             ),
             trailing: Checkbox(
