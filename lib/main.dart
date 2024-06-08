@@ -22,9 +22,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => WorkoutData(),
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: HomePage(),
+      child: MaterialApp(
+        theme: ThemeData(
+          brightness: Brightness.light,
+        ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        /* dark theme settings */
+      ),
+      themeMode: ThemeMode.light, 
+      /* ThemeMode.system to follow system theme, 
+         ThemeMode.light for light theme, 
+         ThemeMode.dark for dark theme
+      */
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
       ),
     );
   }
