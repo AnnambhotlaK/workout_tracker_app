@@ -16,17 +16,18 @@ class MyHeatMap extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(25),
-      child: HeatMap(
-        startDate: createDateTimeObject(startDateYYYYMMDD),
-        endDate: DateTime.now().add(const Duration(days: 0)),
+      child: HeatMapCalendar(
+        initDate: createDateTimeObject(startDateYYYYMMDD),
         datasets: datasets,
         colorMode: ColorMode.color,
         defaultColor: Colors.grey,
         textColor: Colors.black,
+        weekTextColor: Colors.black,
         showColorTip: false,
-        showText: true,
-        scrollable: true,
+        flexible: true,
         size: 30,
+        monthFontSize: 20,
+        weekFontSize: 15,
         colorsets: const {1: Colors.green},
       ),
     );
