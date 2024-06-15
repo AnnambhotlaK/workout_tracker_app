@@ -47,6 +47,21 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Show error message for not filling out workout name
+  void invalidWorkoutNamePopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Workout'),
+        content: Text('Please enter a valid workout name.'),
+        actions: [
+          // OK Button
+          MaterialButton(onPressed: ok, child: const Text('OK')),
+        ],
+      ),
+    );
+  }
+
   // Go to the workout page after clicking on it
 
   void goToWorkoutPage(String workoutName) {
@@ -61,12 +76,18 @@ class _HomePageState extends State<HomePage> {
   void save() {
     // Get workout name from text controller
     String newWorkoutName = newWorkoutNameController.text;
-    // Add workout to workoutdata list
-    Provider.of<WorkoutData>(context, listen: false).addWorkout(newWorkoutName);
+    // If text box is blank, send notification and make user try again
+    if (newWorkoutName.length == 0 || newWorkoutName.trim().isEmpty) {
+      invalidWorkoutNamePopup();
+    } else {
+      // Add workout to workoutdata list
+      Provider.of<WorkoutData>(context, listen: false)
+          .addWorkout(newWorkoutName);
 
-    // Pop dialog box
-    Navigator.pop(context);
-    clear();
+      // Pop dialog box
+      Navigator.pop(context);
+      clear();
+    }
   }
 
   // Cancel Workout
@@ -81,15 +102,25 @@ class _HomePageState extends State<HomePage> {
     newWorkoutNameController.clear();
   }
 
+  // Close invalidWorkoutPopup dialog
+  void ok() {
+    Navigator.pop(context);
+    clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
         builder: (context, value, child) => Scaffold(
               appBar: AppBar(
-                title: const Text('Workout Tracker'),
+                title: const Text('My Workout Journal'),
+                backgroundColor: Colors.blueAccent,
+                foregroundColor: Colors.white,
               ),
               floatingActionButton: FloatingActionButton(
                 onPressed: createNewWorkout,
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
                 child: const Icon(Icons.add),
               ),
               body: ListView(
@@ -98,21 +129,22 @@ class _HomePageState extends State<HomePage> {
                   MyHeatMap(
                       datasets: value.heatMapDataset,
                       startDateYYYYMMDD: value.getStartDate()),
-
                   // Workout List
-                  ListView.builder(
+                  Material(type: MaterialType.transparency,
+                  child: ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: value.getWorkoutList().length,
                     itemBuilder: (context, index) => ListTile(
+                      //textColor: Colors.white,
+                      //tileColor: Colors.green,
                       title: Text(value.getWorkoutList()[index].name),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.arrow_forward_ios),
-                        onPressed: () =>
-                            goToWorkoutPage(value.getWorkoutList()[index].name),
-                      ),
+                      onTap: () => goToWorkoutPage(value.getWorkoutList()[index].name),
+                      trailing: Icon(Icons.arrow_forward_ios),
                     ),
+                  ),
                   )
+                  
                 ],
               ),
             ));

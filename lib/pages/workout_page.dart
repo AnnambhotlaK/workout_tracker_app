@@ -41,7 +41,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
                   // Weight
                   TextField(
-                    decoration: const InputDecoration(label: Text('Weight: ')),
+                    decoration:
+                        const InputDecoration(label: Text('Weight (kg): ')),
                     controller: weightController,
                   ),
 
@@ -74,6 +75,27 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ));
   }
 
+  // Create error popup for exercises
+  void invalidExercisePopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Exercise'),
+        content: Text('Carefully review the exercise details you entered.'),
+        actions: [
+          // OK Button
+          MaterialButton(onPressed: ok, child: const Text('OK')),
+        ],
+      ),
+    );
+  }
+
+  // Allows user to close invalid exercise pop up
+  void ok() {
+    Navigator.pop(context);
+    clear();
+  }
+
   // Save Workout
   void save() {
     // Get exercise information from controllers
@@ -81,13 +103,21 @@ class _WorkoutPageState extends State<WorkoutPage> {
     String weight = weightController.text;
     String reps = repsController.text;
     String sets = setsController.text;
-    // Add workout to workoutdata list
-    Provider.of<WorkoutData>(context, listen: false)
-        .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
+    // If any are incorrect, create error message
+    if ((newExerciseName.isEmpty || newExerciseName.trim().isEmpty) ||
+        (weight.isEmpty || weight.trim().isEmpty) ||
+        (reps.isEmpty || reps.trim().isEmpty) ||
+        (sets.isEmpty || sets.trim().isEmpty)) {
+      invalidExercisePopup();
+    } else {
+      // Add workout to workoutdata list
+      Provider.of<WorkoutData>(context, listen: false)
+          .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
 
-    // Pop dialog box
-    Navigator.pop(context);
-    clear();
+      // Pop dialog box
+      Navigator.pop(context);
+      clear();
+    }
   }
 
   // Cancel Workout
@@ -109,8 +139,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
         builder: (context, value, child) => Scaffold(
-            appBar: AppBar(title: Text(widget.workoutName)),
+            appBar: AppBar(
+              backgroundColor: Colors.blueAccent,
+              foregroundColor: Colors.white,
+              title: Text(widget.workoutName),
+            ),
             floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
               onPressed: createNewExercise,
               child: const Icon(Icons.add),
             ),

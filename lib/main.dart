@@ -8,7 +8,7 @@ import 'pages/home_page.dart';
 void main() async {
   // Initialize hive
   await Hive.initFlutter();
-  
+
   // Open a hive box
   await Hive.openBox('workout_database');
 
@@ -26,17 +26,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           brightness: Brightness.light,
         ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        /* dark theme settings */
-      ),
-      themeMode: ThemeMode.light, 
-      /* ThemeMode.system to follow system theme, 
-         ThemeMode.light for light theme, 
-         ThemeMode.dark for dark theme
-      */
-      debugShowCheckedModeBanner: false,
-      home: HomePage(),
+        darkTheme: ThemeData(
+          brightness: Brightness.light,
+        ),
+        themeMode: ThemeMode.light,
+        debugShowCheckedModeBanner: false,
+        home: HomePage(),
       ),
     );
   }

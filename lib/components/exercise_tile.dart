@@ -23,7 +23,7 @@ class ExerciseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         // Color changes upon checking off exercise
-        color: isCompleted ? Colors.lightGreen : Colors.grey,
+        color: isCompleted ? Colors.green : Colors.grey,
         child: ListTile(
             title: Text(exerciseName),
             subtitle: Row(
