@@ -63,6 +63,18 @@ class WorkoutData extends ChangeNotifier {
     db.saveToDatabase(workoutList);
   }
 
+  // Users deleting workout
+  void deleteWorkout(String workoutName) {
+    // Deletes a workout from the list of available workouts
+    workoutList.remove(Workout(
+        name: workoutName,
+        exercises: getRelevantWorkout(workoutName).exercises));
+
+    // Update backend
+    notifyListeners();
+    db.saveToDatabase(workoutList);
+  }
+
   // User can add exercises
   void addExercise(String workoutName, String exerciseName, String weight,
       String reps, String sets) {
@@ -71,6 +83,22 @@ class WorkoutData extends ChangeNotifier {
         workoutList.firstWhere((workout) => workout.name == workoutName);
 
     relevantWorkout.exercises.add(Exercise(
+      name: exerciseName,
+      weight: weight,
+      reps: reps,
+      sets: sets,
+    ));
+
+    notifyListeners();
+    db.saveToDatabase(workoutList);
+  }
+
+  void deleteExercise(String workoutName, String exerciseName, String weight,
+      String reps, String sets) {
+    // Find the relevant exercise
+    Workout relevantWorkout = getRelevantWorkout(workoutName);
+
+    relevantWorkout.exercises.remove(Exercise(
       name: exerciseName,
       weight: weight,
       reps: reps,

@@ -47,6 +47,16 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Deleting an existing workout
+  void deleteExistingWorkout(String workoutName) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Deleting'),
+              actions: [],
+            ));
+  }
+
   // Show error message for not filling out workout name
   void invalidWorkoutNamePopup() {
     showDialog(
@@ -77,7 +87,7 @@ class _HomePageState extends State<HomePage> {
     // Get workout name from text controller
     String newWorkoutName = newWorkoutNameController.text;
     // If text box is blank, send notification and make user try again
-    if (newWorkoutName.length == 0 || newWorkoutName.trim().isEmpty) {
+    if (newWorkoutName.isEmpty || newWorkoutName.trim().isEmpty) {
       invalidWorkoutNamePopup();
     } else {
       // Add workout to workoutdata list
@@ -130,21 +140,38 @@ class _HomePageState extends State<HomePage> {
                       datasets: value.heatMapDataset,
                       startDateYYYYMMDD: value.getStartDate()),
                   // Workout List
-                  Material(type: MaterialType.transparency,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: value.getWorkoutList().length,
-                    itemBuilder: (context, index) => ListTile(
-                      //textColor: Colors.white,
-                      //tileColor: Colors.green,
-                      title: Text(value.getWorkoutList()[index].name),
-                      onTap: () => goToWorkoutPage(value.getWorkoutList()[index].name),
-                      trailing: Icon(Icons.arrow_forward_ios),
+                  Material(
+                    type: MaterialType.transparency,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: value.getWorkoutList().length,
+                      itemBuilder: (context, index) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            //deleteExistingWorkout(value.getWorkoutList()[index].name);
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    '${value.getWorkoutList()[index].name} deleted')));
+                            setState(() {
+                              value.getWorkoutList().removeAt(index);
+                            });
+                          },
+                          // Show indicator of deleting a workout
+                          background: Container(
+                            color: Colors.red,
+                          ),
+                          child: ListTile(
+                            title: Text(value.getWorkoutList()[index].name),
+                            onTap: () => goToWorkoutPage(
+                                value.getWorkoutList()[index].name),
+                            trailing: const Icon(Icons.arrow_forward_ios),
+                          ),
+                        );
+                      },
                     ),
-                  ),
                   )
-                  
                 ],
               ),
             ));
