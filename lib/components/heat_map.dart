@@ -20,7 +20,6 @@ class MyHeatMap extends StatelessWidget {
         initDate: createDateTimeObject(startDateYYYYMMDD),
         datasets: datasets,
         colorMode: ColorMode.color,
-        //defaultColor: Colors.grey,
         textColor: Colors.black,
         showColorTip: false,
         flexible: true,

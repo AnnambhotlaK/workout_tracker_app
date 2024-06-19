@@ -20,11 +20,32 @@ class WorkoutData extends ChangeNotifier {
   */
 
   List<Workout> workoutList = [
-    // default workout
+    // Default workouts (Push, Pull, Legs)
     Workout(
-      name: 'Upper Body',
+      name: 'Push',
       exercises: [
-        Exercise(name: 'Bicep Curls', weight: '15', reps: '10', sets: '3')
+        Exercise(name: 'Bench Press', weight: '60', reps: '5', sets: '5'),
+        Exercise(name: 'Dumbbell Shoulder Press', weight: '12', reps: '8', sets: '3'),
+        Exercise(name: 'Lateral Raise', weight: '5', reps: '10', sets: '3'),
+        Exercise(name: 'Triceps Extension', weight: '15', reps: '10', sets: '3'),
+      ],
+    ),
+    Workout(
+      name: 'Pull',
+      exercises: [
+        Exercise(name: 'Pull Ups', weight: '0', reps: '6', sets: '4'),
+        Exercise(name: 'Dumbbell Row', weight: '15', reps: '8', sets: '4'),
+        Exercise(name: 'Lat Pulldown', weight: '60', reps: '8', sets: '3'),
+        Exercise(name: 'Dumbbell Curl', weight: '10', reps: '10', sets: '3'),
+      ],
+    ),
+    Workout(
+      name: 'Legs',
+      exercises: [
+        Exercise(name: 'Barbell Squats', weight: '80', reps: '8', sets: '5'),
+        Exercise(name: 'Leg Extensions', weight: '30', reps: '10', sets: '3'),
+        Exercise(name: 'Leg Curl', weight: '20', reps: '10', sets: '3'),
+        Exercise(name: 'Calf Raises', weight: '10', reps: '12', sets: '3'),
       ],
     ),
     // Followed by more workouts...

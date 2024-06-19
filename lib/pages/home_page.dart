@@ -47,23 +47,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Deleting an existing workout
-  void deleteExistingWorkout(String workoutName) {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Deleting'),
-              actions: [],
-            ));
-  }
-
   // Show error message for not filling out workout name
   void invalidWorkoutNamePopup() {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Invalid Workout'),
-        content: Text('Please enter a valid workout name.'),
+        content: const Text('Please enter a valid workout name.'),
         actions: [
           // OK Button
           MaterialButton(onPressed: ok, child: const Text('OK')),
@@ -150,7 +140,6 @@ class _HomePageState extends State<HomePage> {
                         return Dismissible(
                           key: UniqueKey(),
                           onDismissed: (direction) {
-                            //deleteExistingWorkout(value.getWorkoutList()[index].name);
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(
                                     '${value.getWorkoutList()[index].name} deleted')));

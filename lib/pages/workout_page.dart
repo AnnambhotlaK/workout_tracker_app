@@ -81,7 +81,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Invalid Exercise'),
-        content: Text('Carefully review the exercise details you entered.'),
+        content: const Text('Carefully review the exercise details you entered.'),
         actions: [
           // OK Button
           MaterialButton(onPressed: ok, child: const Text('OK')),
