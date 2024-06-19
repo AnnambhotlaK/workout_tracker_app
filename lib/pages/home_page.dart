@@ -150,6 +150,12 @@ class _HomePageState extends State<HomePage> {
                           // Show indicator of deleting a workout
                           background: Container(
                             color: Colors.red,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 36,
+                            ),
                           ),
                           child: ListTile(
                             title: Text(value.getWorkoutList()[index].name),

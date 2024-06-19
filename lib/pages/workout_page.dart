@@ -12,6 +12,7 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
+  
   // Checkbox was ticked
   void onCheckboxChanged(String workoutName, String exerciseName) {
     Provider.of<WorkoutData>(context, listen: false)
