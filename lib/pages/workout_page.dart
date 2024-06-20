@@ -12,7 +12,6 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
-  
   // Checkbox was ticked
   void onCheckboxChanged(String workoutName, String exerciseName) {
     Provider.of<WorkoutData>(context, listen: false)
@@ -82,7 +81,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Invalid Exercise'),
-        content: const Text('Carefully review the exercise details you entered.'),
+        content:
+            const Text('Carefully review the exercise details you entered.'),
         actions: [
           // OK Button
           MaterialButton(onPressed: ok, child: const Text('OK')),
@@ -139,47 +139,81 @@ class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutData>(
-        builder: (context, value, child) => Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.blueAccent,
-              foregroundColor: Colors.white,
-              title: Text(widget.workoutName),
-            ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-              onPressed: createNewExercise,
-              child: const Icon(Icons.add),
-            ),
-            body: ListView.builder(
-                itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-                itemBuilder: (context, index) => ExerciseTile(
-                      exerciseName: value
+      builder: (context, value, child) => Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          foregroundColor: Colors.white,
+          title: Text(widget.workoutName),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.red,
+          foregroundColor: Colors.white,
+          onPressed: createNewExercise,
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+            itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
+            itemBuilder: (context, index) {
+              return Dismissible(
+                key: UniqueKey(),
+                onDismissed: (direction) {
+                  // Sends dismissed notification
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          '${value.getRelevantWorkout(widget.workoutName).exercises[index].name} deleted')));
+                  // Uncheck completed checkbox
+                  if (value.getRelevantWorkout(widget.workoutName).exercises[index].isCompleted) {
+                    !value.getRelevantWorkout(widget.workoutName).exercises[index].isCompleted;
+                  }
+                  setState(() {
+                    // Removes exercise at correct index at the relevant workout
+                    value
+                        .getRelevantWorkout(widget.workoutName)
+                        .exercises
+                        .removeAt(index);
+                  });
+                },
+                // Show indicator of deleting workout
+                background: Container(
+                  color: Colors.red,
+                  padding: const EdgeInsets.only(right: 20),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+                child: ExerciseTile(
+                  exerciseName: value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .name,
+                  weight: value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .weight,
+                  reps: value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .reps,
+                  sets: value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .sets,
+                  isCompleted: value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .isCompleted,
+                  onCheckboxChanged: (val) => onCheckboxChanged(
+                      widget.workoutName,
+                      value
                           .getRelevantWorkout(widget.workoutName)
                           .exercises[index]
-                          .name,
-                      weight: value
-                          .getRelevantWorkout(widget.workoutName)
-                          .exercises[index]
-                          .weight,
-                      reps: value
-                          .getRelevantWorkout(widget.workoutName)
-                          .exercises[index]
-                          .reps,
-                      sets: value
-                          .getRelevantWorkout(widget.workoutName)
-                          .exercises[index]
-                          .sets,
-                      isCompleted: value
-                          .getRelevantWorkout(widget.workoutName)
-                          .exercises[index]
-                          .isCompleted,
-                      onCheckboxChanged: (val) => onCheckboxChanged(
-                          widget.workoutName,
-                          value
-                              .getRelevantWorkout(widget.workoutName)
-                              .exercises[index]
-                              .name),
-                    ))));
+                          .name),
+                ),
+              );
+            }),
+      ),
+    );
   }
 }
