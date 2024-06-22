@@ -33,26 +33,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Exercise Name
                   TextField(
                     decoration: const InputDecoration(label: Text('Name: ')),
                     controller: exerciseNameController,
                   ),
-
-                  // Weight
                   TextField(
                     decoration:
                         const InputDecoration(label: Text('Weight (kg): ')),
                     controller: weightController,
                   ),
-
-                  // Reps
                   TextField(
                     decoration: const InputDecoration(label: Text('Reps: ')),
                     controller: repsController,
                   ),
-
-                  // Sets
                   TextField(
                     decoration: const InputDecoration(label: Text('Sets: ')),
                     controller: setsController,
@@ -75,31 +68,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ));
   }
 
-  // Create error popup for exercises
-  void invalidExercisePopup() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invalid Exercise'),
-        content:
-            const Text('Carefully review the exercise details you entered.'),
-        actions: [
-          // OK Button
-          MaterialButton(onPressed: ok, child: const Text('OK')),
-        ],
-      ),
-    );
-  }
-
-  // Allows user to close invalid exercise pop up
-  void ok() {
-    Navigator.pop(context);
-    clear();
-  }
-
-  // Save Workout
+  // Save exercise
   void save() {
-    // Get exercise information from controllers
     String newExerciseName = exerciseNameController.text;
     String weight = weightController.text;
     String reps = repsController.text;
@@ -115,7 +85,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
       Provider.of<WorkoutData>(context, listen: false)
           .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
 
-      // Pop dialog box
       Navigator.pop(context);
       clear();
     }
@@ -134,6 +103,28 @@ class _WorkoutPageState extends State<WorkoutPage> {
     weightController.clear();
     repsController.clear();
     setsController.clear();
+  }
+
+  // Create error popup for exercises
+  void invalidExercisePopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Exercise'),
+        content:
+            const Text('Carefully review the exercise details you entered.'),
+        actions: [
+          // OK Button
+          MaterialButton(onPressed: ok, child: const Text('OK')),
+        ],
+      ),
+    );
+  }
+
+  // Close invalid exercise alert dialog
+  void ok() {
+    Navigator.pop(context);
+    clear();
   }
 
   @override
@@ -157,16 +148,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
               return Dismissible(
                 key: UniqueKey(),
                 onDismissed: (direction) {
-                  // Sends dismissed notification
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
                           '${value.getRelevantWorkout(widget.workoutName).exercises[index].name} deleted')));
-                  // Uncheck completed checkbox
-                  if (value.getRelevantWorkout(widget.workoutName).exercises[index].isCompleted) {
-                    !value.getRelevantWorkout(widget.workoutName).exercises[index].isCompleted;
+                  if (value
+                      .getRelevantWorkout(widget.workoutName)
+                      .exercises[index]
+                      .isCompleted) {
+                    !value
+                        .getRelevantWorkout(widget.workoutName)
+                        .exercises[index]
+                        .isCompleted;
                   }
                   setState(() {
-                    // Removes exercise at correct index at the relevant workout
                     value
                         .getRelevantWorkout(widget.workoutName)
                         .exercises

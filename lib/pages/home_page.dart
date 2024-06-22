@@ -47,23 +47,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Show error message for not filling out workout name
-  void invalidWorkoutNamePopup() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invalid Workout'),
-        content: const Text('Please enter a valid workout name.'),
-        actions: [
-          // OK Button
-          MaterialButton(onPressed: ok, child: const Text('OK')),
-        ],
-      ),
-    );
-  }
-
   // Go to the workout page after clicking on it
-
   void goToWorkoutPage(String workoutName) {
     Navigator.push(
         context,
@@ -90,19 +74,33 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Cancel Workout
+  // Cancel adding a workout
   void cancel() {
-    // Pop dialog box
     Navigator.pop(context);
     clear();
   }
 
-  // Clear controller
+  // Clear workout name controller
   void clear() {
     newWorkoutNameController.clear();
   }
 
-  // Close invalidWorkoutPopup dialog
+  // Show error message for not filling out workout name
+  void invalidWorkoutNamePopup() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Invalid Workout'),
+        content: const Text('Please enter a valid workout name.'),
+        actions: [
+          // OK Button
+          MaterialButton(onPressed: ok, child: const Text('OK')),
+        ],
+      ),
+    );
+  }
+
+  // Closes invalid workout alert dialog
   void ok() {
     Navigator.pop(context);
     clear();
@@ -125,11 +123,11 @@ class _HomePageState extends State<HomePage> {
               ),
               body: ListView(
                 children: [
-                  // Heat Map
+                  // Activity heat map
                   MyHeatMap(
                       datasets: value.heatMapDataset,
                       startDateYYYYMMDD: value.getStartDate()),
-                  // Workout List
+                  // List of workouts
                   Material(
                     type: MaterialType.transparency,
                     child: ListView.builder(
@@ -147,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                               value.getWorkoutList().removeAt(index);
                             });
                           },
-                          // Show indicator of deleting a workout
+                          // Red "delete" background with trash symbol
                           background: Container(
                             color: Colors.red,
                             padding: const EdgeInsets.only(right: 20),

@@ -28,11 +28,8 @@ class ExerciseTile extends StatelessWidget {
             title: Text(exerciseName),
             subtitle: Row(
               children: [
-                // Weight
                 Chip(label: Text("${weight}kg")),
-                // Reps
                 Chip(label: Text("$reps reps")),
-                // Sets
                 Chip(label: Text("$sets sets")),
               ],
             ),

@@ -1,4 +1,3 @@
-// Represents individual exercises for body parts
 class Exercise {
   final String name;
   final String weight;
