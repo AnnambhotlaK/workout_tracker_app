@@ -1,7 +1,5 @@
 # Workout Tracker App
 
-This is a simple Flutter app that allows a user to track their activities and progress in the gym.
-
 ## Description
 
 Users may add or delete workouts and exercises and can visualize their general activity level on a calendar-style heat map. The app relies on a simple and minimalistic design, featuring few elements and a handful of colors in order to prioritize ease-of-use. Adding workouts or exercises is made easy with a single button, and the app uses Dismissible widgets to create a swipe-to-dismiss system. Workout and exercise data is stored locally in a secure and fast Hive database, so the app can remember your workouts after restarting.
