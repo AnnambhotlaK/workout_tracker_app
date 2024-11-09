@@ -1,4 +1,5 @@
 class Exercise {
+  final String key;
   final String name;
   final String weight;
   final String reps;
@@ -6,6 +7,7 @@ class Exercise {
   bool isCompleted;
 
   Exercise({
+    required this.key,
     required this.name,
     required this.weight,
     required this.reps,

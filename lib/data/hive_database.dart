@@ -53,28 +53,32 @@ class HiveDatabase {
   List<Workout> readFromDatabase() {
     List<Workout> mySavedWorkouts = [];
 
-    List<String> workoutNames = _myBox.get("WORKOUTS");
+    List<List<String>> workouts =
+        List<List<String>>.from(_myBox.get("WORKOUTS"));
     final exerciseDetails = _myBox.get("EXERCISES");
 
     // Create workout objects
-    for (int i = 0; i < workoutNames.length; i++) {
+    for (int i = 0; i < workouts.length; i++) {
       // Each workout can have multiple exercises
       List<Exercise> exercisesInEachWorkout = [];
 
       for (int j = 0; j < exerciseDetails[i].length; j++) {
         exercisesInEachWorkout.add(
           Exercise(
-              name: exerciseDetails[i][j][0],
-              weight: exerciseDetails[i][j][1],
-              reps: exerciseDetails[i][j][2],
-              sets: exerciseDetails[i][j][3],
-              isCompleted: exerciseDetails[i][j][4] == 'true' ? true : false),
+              key: exerciseDetails[i][j][0],
+              name: exerciseDetails[i][j][1],
+              weight: exerciseDetails[i][j][2],
+              reps: exerciseDetails[i][j][3],
+              sets: exerciseDetails[i][j][4],
+              isCompleted: exerciseDetails[i][j][5] == 'true' ? true : false),
         );
       }
 
       // Create individual workout
-      Workout workout =
-          Workout(name: workoutNames[i], exercises: exercisesInEachWorkout);
+      Workout workout = Workout(
+          key: workouts[i][0],
+          name: workouts[i][1],
+          exercises: exercisesInEachWorkout);
 
       // Add workout to overall list
       mySavedWorkouts.add(workout);
@@ -107,15 +111,13 @@ class HiveDatabase {
 
 // Convert workout objects into lists of Strings -> [ upperBody, lowerBody ]
 // (Hive is best with primitive data types)
-List<String> convertObjectToWorkoutList(List<Workout> workouts) {
-  List<String> workoutList = [
+List<List<String>> convertObjectToWorkoutList(List<Workout> workouts) {
+  List<List<String>> workoutList = [
     // [upperbody, lowerbody]
   ];
 
   for (int i = 0; i < workouts.length; i++) {
-    workoutList.add(
-      workouts[i].name,
-    );
+    workoutList.add([workouts[i].key, workouts[i].name]);
   }
 
   return workoutList;
@@ -148,6 +150,7 @@ List<List<List<String>>> convertObjectToExerciseList(List<Workout> workouts) {
       ];
       individualExercise.addAll(
         [
+          exercisesInWorkout[j].key,
           exercisesInWorkout[j].name,
           exercisesInWorkout[j].weight,
           exercisesInWorkout[j].reps,

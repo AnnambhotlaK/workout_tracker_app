@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                                 content: Text(
                                     '${value.getWorkoutList()[index].name} deleted')));
                             setState(() {
-                              value.getWorkoutList().removeAt(index);
+                              value.deleteWorkout(value.getWorkoutList()[index].key);
                             });
                           },
                           // Red "delete" background with trash symbol

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:main/data/hive_database.dart';
 import 'package:main/datetime/date_time.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/workout.dart';
 import 'package:main/models/exercise.dart';
+
+var uuid = const Uuid();
 
 class WorkoutData extends ChangeNotifier {
   final db = HiveDatabase();
@@ -13,42 +16,100 @@ class WorkoutData extends ChangeNotifier {
     WORKOUT DATA STRUCTURE
 
     - List contains different workouts.
-    - Each workout has a String name and List<Exercise> of exercises.
+    - Each workout has a String key, String name and List<Exercise> of exercises.
     
   */
 
   List<Workout> workoutList = [
     // Default workouts (Push, Pull, Legs)
     Workout(
+      key: uuid.v4(),
       name: 'Push',
       exercises: [
-        Exercise(name: 'Bench Press', weight: '60', reps: '5', sets: '5'),
         Exercise(
+            key: uuid.v4(),
+            name: 'Bench Press',
+            weight: '60',
+            reps: '5',
+            sets: '5'),
+        Exercise(
+            key: uuid.v4(),
             name: 'Dumbbell Shoulder Press',
             weight: '12',
             reps: '8',
             sets: '3'),
-        Exercise(name: 'Lateral Raise', weight: '5', reps: '10', sets: '3'),
         Exercise(
-            name: 'Triceps Extension', weight: '15', reps: '10', sets: '3'),
+            key: uuid.v4(),
+            name: 'Lateral Raise',
+            weight: '5',
+            reps: '10',
+            sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Triceps Extension',
+            weight: '15',
+            reps: '10',
+            sets: '3'),
       ],
     ),
     Workout(
+      key: uuid.v4(),
       name: 'Pull',
       exercises: [
-        Exercise(name: 'Pull Ups', weight: '0', reps: '6', sets: '4'),
-        Exercise(name: 'Dumbbell Row', weight: '15', reps: '8', sets: '4'),
-        Exercise(name: 'Lat Pulldown', weight: '60', reps: '8', sets: '3'),
-        Exercise(name: 'Dumbbell Curl', weight: '10', reps: '10', sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Pull Ups',
+            weight: '0',
+            reps: '6',
+            sets: '4'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Dumbbell Row',
+            weight: '15',
+            reps: '8',
+            sets: '4'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Lat Pulldown',
+            weight: '60',
+            reps: '8',
+            sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Dumbbell Curl',
+            weight: '10',
+            reps: '10',
+            sets: '3'),
       ],
     ),
     Workout(
+      key: uuid.v4(),
       name: 'Legs',
       exercises: [
-        Exercise(name: 'Barbell Squats', weight: '80', reps: '8', sets: '5'),
-        Exercise(name: 'Leg Extensions', weight: '30', reps: '10', sets: '3'),
-        Exercise(name: 'Leg Curl', weight: '20', reps: '10', sets: '3'),
-        Exercise(name: 'Calf Raises', weight: '10', reps: '12', sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Barbell Squats',
+            weight: '80',
+            reps: '8',
+            sets: '5'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Leg Extensions',
+            weight: '30',
+            reps: '10',
+            sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Leg Curl',
+            weight: '20',
+            reps: '10',
+            sets: '3'),
+        Exercise(
+            key: uuid.v4(),
+            name: 'Calf Raises',
+            weight: '10',
+            reps: '12',
+            sets: '3'),
       ],
     ),
   ];
@@ -76,7 +137,14 @@ class WorkoutData extends ChangeNotifier {
 
   void addWorkout(String name) {
     // Adds new workout with blank list of exercises
-    workoutList.add(Workout(name: name, exercises: []));
+    workoutList.add(Workout(key: uuid.v4(), name: name, exercises: []));
+
+    notifyListeners();
+    db.saveToDatabase(workoutList);
+  }
+
+  void deleteWorkout(String key) {
+    workoutList.removeWhere((workout) => workout.key == key);
 
     notifyListeners();
     db.saveToDatabase(workoutList);
@@ -89,11 +157,23 @@ class WorkoutData extends ChangeNotifier {
         workoutList.firstWhere((workout) => workout.name == workoutName);
 
     relevantWorkout.exercises.add(Exercise(
+      key: uuid.v4(),
       name: exerciseName,
       weight: weight,
       reps: reps,
       sets: sets,
     ));
+
+    notifyListeners();
+    db.saveToDatabase(workoutList);
+  }
+
+  void deleteExercise(String workoutKey, String exerciseKey) {
+    Workout relevantWorkout =
+        workoutList.firstWhere((workout) => workout.key == workoutKey);
+
+    relevantWorkout.exercises
+        .removeWhere((exercise) => exercise.key == exerciseKey);
 
     notifyListeners();
     db.saveToDatabase(workoutList);

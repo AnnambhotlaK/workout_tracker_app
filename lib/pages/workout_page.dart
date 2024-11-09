@@ -161,10 +161,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         .isCompleted;
                   }
                   setState(() {
-                    value
-                        .getRelevantWorkout(widget.workoutName)
-                        .exercises
-                        .removeAt(index);
+                    value.deleteExercise(
+                        value.getRelevantWorkout(widget.workoutName).key,
+                        value
+                            .getRelevantWorkout(widget.workoutName)
+                            .exercises[index]
+                            .key);
                   });
                 },
                 // Show indicator of deleting workout
