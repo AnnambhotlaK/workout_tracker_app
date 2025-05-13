@@ -26,9 +26,9 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
         ),
         darkTheme: ThemeData(
-          brightness: Brightness.light,
+          brightness: Brightness.dark,
         ),
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
         home: const HomePage(),
       ),

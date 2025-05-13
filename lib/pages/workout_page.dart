@@ -34,20 +34,20 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    decoration: const InputDecoration(label: Text('Name: ')),
+                    decoration: const InputDecoration(label: Text('Name')),
                     controller: exerciseNameController,
                   ),
                   TextField(
                     decoration:
-                        const InputDecoration(label: Text('Weight (kg): ')),
+                        const InputDecoration(label: Text('Weight')),
                     controller: weightController,
                   ),
                   TextField(
-                    decoration: const InputDecoration(label: Text('Reps: ')),
+                    decoration: const InputDecoration(label: Text('Reps')),
                     controller: repsController,
                   ),
                   TextField(
-                    decoration: const InputDecoration(label: Text('Sets: ')),
+                    decoration: const InputDecoration(label: Text('Sets')),
                     controller: setsController,
                   ),
                 ],
@@ -115,14 +115,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
             const Text('Carefully review the exercise details you entered.'),
         actions: [
           // OK Button
-          MaterialButton(onPressed: ok, child: const Text('OK')),
+          MaterialButton(onPressed: closePopup, child: const Text('OK')),
         ],
       ),
     );
   }
 
   // Close invalid exercise alert dialog
-  void ok() {
+  void closePopup() {
     Navigator.pop(context);
     clear();
   }

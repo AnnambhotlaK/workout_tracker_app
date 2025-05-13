@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
       builder: (context) => AlertDialog(
           title: const Text('Create New Workout'),
           content: TextField(
+            decoration: const InputDecoration(label: Text('Name')),
             controller: newWorkoutNameController,
           ),
           actions: [
@@ -54,6 +55,17 @@ class _HomePageState extends State<HomePage> {
         MaterialPageRoute(
           builder: (context) => WorkoutPage(workoutName: workoutName),
         ));
+  }
+
+  // Start a new workout
+  void startWorkout(String workoutName) {
+    goToWorkoutPage(workoutName);
+    // In workout page, should "initiate" a workout
+    // Will have a visible timer
+    // User can leave the page, but workout
+    // will only end when user presses the button
+    // After ending, app should display popup showing workout
+    // summary and take user back to home menu
   }
 
   // Save Workout
@@ -94,14 +106,31 @@ class _HomePageState extends State<HomePage> {
         content: const Text('Please enter a valid workout name.'),
         actions: [
           // OK Button
-          MaterialButton(onPressed: ok, child: const Text('OK')),
+          MaterialButton(onPressed: closePopup, child: const Text('OK')),
         ],
       ),
     );
   }
 
+  // Show popup to confirm or deny starting a new workout
+  void confirmStartWorkoutPopup() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Confirm Workout'),
+              content: const Text('Would you like to start this workout?'),
+              actions: [
+                // Yes, to initiate workout
+                // implement startWorkout, which initiates a "workout"
+                //MaterialButton(onPressed: startWorkout, child: const Text('Yes')),
+                // No, to return to home page
+                MaterialButton(onPressed: closePopup, child: const Text('No')),
+              ],
+            ));
+  }
+
   // Closes invalid workout alert dialog
-  void ok() {
+  void closePopup() {
     Navigator.pop(context);
     clear();
   }
@@ -142,7 +171,8 @@ class _HomePageState extends State<HomePage> {
                                 content: Text(
                                     '${value.getWorkoutList()[index].name} deleted')));
                             setState(() {
-                              value.deleteWorkout(value.getWorkoutList()[index].key);
+                              value.deleteWorkout(
+                                  value.getWorkoutList()[index].key);
                             });
                           },
                           // Red "delete" background with trash symbol
@@ -159,6 +189,10 @@ class _HomePageState extends State<HomePage> {
                             title: Text(value.getWorkoutList()[index].name),
                             onTap: () => goToWorkoutPage(
                                 value.getWorkoutList()[index].name),
+                            /*
+                            onTap: () => confirmStartWorkoutPopup(
+                                value.getWorkoutList()[index].name),
+                            */
                             trailing: const Icon(Icons.arrow_forward_ios),
                           ),
                         );
