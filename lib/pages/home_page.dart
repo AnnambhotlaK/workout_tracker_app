@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/data/workout_data.dart';
 import 'package:main/pages/workout_page.dart';
+import '../models/workout.dart';
+import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -48,26 +50,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // Go to the workout page after clicking on it
-  void goToWorkoutPage(String workoutName) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WorkoutPage(workoutName: workoutName),
-        ));
-  }
-
-  // Start a new workout
-  void startWorkout(String workoutName) {
-    goToWorkoutPage(workoutName);
-    // In workout page, should "initiate" a workout
-    // Will have a visible timer
-    // User can leave the page, but workout
-    // will only end when user presses the button
-    // After ending, app should display popup showing workout
-    // summary and take user back to home menu
-  }
-
   // Save Workout
   void save() {
     // Get workout name from text controller
@@ -97,6 +79,32 @@ class _HomePageState extends State<HomePage> {
     newWorkoutNameController.clear();
   }
 
+  // Go to the workout page after clicking on it
+  void goToWorkoutPage(String workoutName) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutPage(workoutName: workoutName),
+        ));
+  }
+
+  // Start a new workout session
+  void startSession(String workoutName, List<Exercise> exercises) {
+    closePopup();
+    goToWorkoutPage(workoutName);
+    // set relevant workout to active
+    Workout relevantWorkout = Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(workoutName);
+    relevantWorkout.isActive = true;
+    // In workout page, should "initiate" a workout
+    // Will have a visible timer
+    // User can leave the page, but workout
+    // will only end when user presses the button
+    // After ending, app should display popup showing workout
+    // summary w/ only completed exercises and take user back to home menu
+    // Then, save this as a "session"
+  }
+
   // Show error message for not filling out workout name
   void invalidWorkoutNamePopup() {
     showDialog(
@@ -113,7 +121,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Show popup to confirm or deny starting a new workout
-  void confirmStartWorkoutPopup() {
+  void confirmStartWorkoutPopup(String workoutName, List<Exercise> exercises) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -122,7 +130,9 @@ class _HomePageState extends State<HomePage> {
               actions: [
                 // Yes, to initiate workout
                 // implement startWorkout, which initiates a "workout"
-                //MaterialButton(onPressed: startWorkout, child: const Text('Yes')),
+                MaterialButton(
+                    onPressed: () => startSession(workoutName, exercises),
+                    child: const Text('Yes')),
                 // No, to return to home page
                 MaterialButton(onPressed: closePopup, child: const Text('No')),
               ],
@@ -187,12 +197,23 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: ListTile(
                             title: Text(value.getWorkoutList()[index].name),
+                            /*
                             onTap: () => goToWorkoutPage(
                                 value.getWorkoutList()[index].name),
-                            /*
-                            onTap: () => confirmStartWorkoutPopup(
-                                value.getWorkoutList()[index].name),
                             */
+                            onTap: () {
+                              if (!value.getWorkoutList()[index].isActive) {
+                                confirmStartWorkoutPopup(
+                                    value.getWorkoutList()[index].name,
+                                    value.getWorkoutList()[index].exercises,
+                                );
+                              }
+                              else {
+                                goToWorkoutPage(
+                                    value.getWorkoutList()[index].name,
+                                );
+                              }
+                            },
                             trailing: const Icon(Icons.arrow_forward_ios),
                           ),
                         );
