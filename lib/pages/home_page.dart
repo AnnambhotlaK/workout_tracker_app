@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/data/workout_data.dart';
+import 'package:main/models/session.dart';
 import 'package:main/pages/workout_page.dart';
 import '../models/workout.dart';
 import '../models/exercise.dart';
@@ -202,15 +203,20 @@ class _HomePageState extends State<HomePage> {
                                 value.getWorkoutList()[index].name),
                             */
                             onTap: () {
-                              if (!value.getWorkoutList()[index].isActive) {
-                                confirmStartWorkoutPopup(
-                                    value.getWorkoutList()[index].name,
-                                    value.getWorkoutList()[index].exercises,
+                              // If tapping on active workout: go to page
+                              if (value.getWorkoutList()[index].isActive) {
+                                goToWorkoutPage(
+                                  value.getWorkoutList()[index].name,
                                 );
                               }
-                              else {
-                                goToWorkoutPage(
-                                    value.getWorkoutList()[index].name,
+                              // If tapping on inactive workout + none others active: go to popup
+                              if (!value.getWorkoutList()[index].isActive &&
+                                  !Provider.of<WorkoutData>(context,
+                                          listen: false)
+                                      .isWorkoutActive()) {
+                                confirmStartWorkoutPopup(
+                                  value.getWorkoutList()[index].name,
+                                  value.getWorkoutList()[index].exercises,
                                 );
                               }
                             },

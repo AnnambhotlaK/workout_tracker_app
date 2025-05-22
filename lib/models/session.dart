@@ -2,14 +2,14 @@
 // Includes workout time, plus details on workout
 
 import 'package:main/models/exercise.dart';
-import 'dart:async';
 
 class Session {
+  final String key;
   final String workoutName; // workout name
   final List<Exercise> exercises; // exercises in workout
-  final Stopwatch time = Stopwatch(); // time elapsed for workout
 
   Session({
+    required this.key,
     required this.workoutName,
     required this.exercises,
   });

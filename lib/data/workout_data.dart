@@ -4,6 +4,7 @@ import 'package:main/datetime/date_time.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/workout.dart';
+import '../models/session.dart';
 import 'package:main/models/exercise.dart';
 
 var uuid = const Uuid();
@@ -114,6 +115,8 @@ class WorkoutData extends ChangeNotifier {
     ),
   ];
 
+  List<Session> sessionList = [];
+
   // If there are workouts already in database, get that workout list
   // Otherwise, use default workouts
   void initializeWorkoutList() {
@@ -148,6 +151,18 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
     db.saveToDatabase(workoutList);
+  }
+
+  void addSession(String workoutName, List<Exercise> exercises) {
+    sessionList.add(Session(key: uuid.v4(), workoutName: workoutName, exercises: exercises));
+
+    notifyListeners();
+  }
+
+  void deleteSession(String key) {
+    sessionList.removeWhere((session) => session.key == key);
+
+    notifyListeners();
   }
 
   void addExercise(String workoutName, String exerciseName, String weight,
@@ -206,6 +221,18 @@ class WorkoutData extends ChangeNotifier {
     Exercise relevantExercise = relevantWorkout.exercises
         .firstWhere((exercise) => exercise.name == exerciseName);
     return relevantExercise;
+  }
+
+  // Check if any workout is active currently
+  // Ensures no more than two workouts can be active at same time
+  // True if a workout is active, false if not
+  bool isWorkoutActive() {
+    for (int i = 0; i < workoutList.length; i++) {
+      if (workoutList[i].isActive) {
+        return true;
+      }
+    }
+    return false;
   }
 
   String getStartDate() {
