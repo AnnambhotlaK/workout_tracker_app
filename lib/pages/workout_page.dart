@@ -12,6 +12,8 @@ class WorkoutPage extends StatefulWidget {
 }
 
 class _WorkoutPageState extends State<WorkoutPage> {
+  bool isEndSessionButtonActive = true;
+
   // Checkbox was ticked
   void onCheckboxChanged(String workoutName, String exerciseName) {
     Provider.of<WorkoutData>(context, listen: false)
@@ -38,8 +40,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     controller: exerciseNameController,
                   ),
                   TextField(
-                    decoration:
-                        const InputDecoration(label: Text('Weight')),
+                    decoration: const InputDecoration(label: Text('Weight')),
                     controller: weightController,
                   ),
                   TextField(
@@ -81,7 +82,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
         (sets.isEmpty || sets.trim().isEmpty)) {
       invalidExercisePopup();
     } else {
-      // Add workout to workoutdata list
+      // Add workout to workout data list
       Provider.of<WorkoutData>(context, listen: false)
           .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
 
@@ -121,10 +122,56 @@ class _WorkoutPageState extends State<WorkoutPage> {
     );
   }
 
+  // Confirm the end of a workout session
+  void confirmEndWorkoutPopup(String workoutName) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: const Text('End Session'),
+                content: const Text('Would you like to end this session?'),
+                actions: [
+                  // Yes Button
+                  /* TODO: On ending session, we should save this workout as a session
+                      - Send user back to home and show details of workout
+                      - Show activity completed on heatmap
+                      - Call it something like saveSession
+                    */
+                  MaterialButton(
+                      onPressed: /*closePopup*/ () => saveSession(workoutName),
+                      child: const Text('Yes')),
+                  // No Button
+                  MaterialButton(
+                      onPressed: closePopup, child: const Text('No')),
+                ]));
+  }
+
   // Close invalid exercise alert dialog
   void closePopup() {
     Navigator.pop(context);
     clear();
+  }
+
+  // Actions to save session to sessionData
+  void saveSession(String workoutName) {
+    // Send user back to home menu
+    Navigator.pop(context);
+    clear();
+    //TODO: Show details of workout
+    //For now, just say that session was completed
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+                title: const Text("Session Completed!"),
+                content: const Text("Congrats on finishing a workout today!"),
+                actions: [
+                  MaterialButton(
+                      onPressed: closePopup, child: const Text('Great!'))
+                ]));
+    Navigator.pop(context);
+    clear();
+    Navigator.pop(context);
+    clear();
+    // Last, check off workout completed on heat map
   }
 
   @override
@@ -136,11 +183,32 @@ class _WorkoutPageState extends State<WorkoutPage> {
           foregroundColor: Colors.white,
           title: Text(widget.workoutName),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          foregroundColor: Colors.white,
-          onPressed: createNewExercise,
-          child: const Icon(Icons.add),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(left: 30),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              // Add Exercise button
+              FloatingActionButton(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                onPressed: createNewExercise,
+                child: const Icon(Icons.add),
+              ),
+              Expanded(child: Container()),
+              // End Session button
+              FloatingActionButton(
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                onPressed:
+                    //TODO: Can't end workout if no exercises are checked/none exist
+                    (isEndSessionButtonActive
+                        ? () => confirmEndWorkoutPopup(widget.workoutName)
+                        : null),
+                child: const Icon(Icons.check),
+              )
+            ],
+          ),
         ),
         body: ListView.builder(
             itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
@@ -155,10 +223,13 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       .getRelevantWorkout(widget.workoutName)
                       .exercises[index]
                       .isCompleted) {
-                    !value
-                        .getRelevantWorkout(widget.workoutName)
-                        .exercises[index]
-                        .isCompleted;
+                    Provider.of<WorkoutData>(context, listen: false)
+                        .checkOffExercise(
+                            widget.workoutName,
+                            value
+                                .getRelevantWorkout(widget.workoutName)
+                                .exercises[index]
+                                .name);
                   }
                   setState(() {
                     value.deleteExercise(

@@ -198,10 +198,11 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: ListTile(
                             title: Text(value.getWorkoutList()[index].name),
-                            /*
+
                             onTap: () => goToWorkoutPage(
                                 value.getWorkoutList()[index].name),
-                            */
+
+                            /*
                             onTap: () {
                               // If tapping on active workout: go to page
                               if (value.getWorkoutList()[index].isActive) {
@@ -220,6 +221,8 @@ class _HomePageState extends State<HomePage> {
                                 );
                               }
                             },
+
+                             */
                             trailing: const Icon(Icons.arrow_forward_ios),
                           ),
                         );
