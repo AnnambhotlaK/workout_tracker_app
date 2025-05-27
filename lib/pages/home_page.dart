@@ -94,9 +94,8 @@ class _HomePageState extends State<HomePage> {
     closePopup();
     goToWorkoutPage(workoutName);
     // set relevant workout to active
-    Workout relevantWorkout = Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName);
-    relevantWorkout.isActive = true;
+    Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(workoutName).isActive = true;
     // In workout page, should "initiate" a workout
     // Will have a visible timer
     // User can leave the page, but workout

@@ -3,6 +3,8 @@ import 'package:main/components/exercise_tile.dart';
 import 'package:main/data/workout_data.dart';
 import 'package:provider/provider.dart';
 
+import '../models/exercise.dart';
+
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
   const WorkoutPage({super.key, required this.workoutName});
@@ -130,14 +132,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 title: const Text('End Session'),
                 content: const Text('Would you like to end this session?'),
                 actions: [
-                  // Yes Button
-                  /* TODO: On ending session, we should save this workout as a session
-                      - Send user back to home and show details of workout
-                      - Show activity completed on heatmap
-                      - Call it something like saveSession
-                    */
+                  // Save Session Button
                   MaterialButton(
-                      onPressed: /*closePopup*/ () => saveSession(workoutName),
+                      onPressed: () => saveSession(workoutName),
                       child: const Text('Yes')),
                   // No Button
                   MaterialButton(
@@ -152,26 +149,42 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   // Actions to save session to sessionData
-  void saveSession(String workoutName) {
-    // Send user back to home menu
+  Future<void> saveSession(String workoutName) async {
+    // Deactivate current workout
+    Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(workoutName).isActive = false;
+    // Pop dialog confirming session end
     Navigator.pop(context);
     clear();
-    //TODO: Show details of workout
-    //For now, just say that session was completed
+    //TODO: Show details of workout with completed message
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
                 title: const Text("Session Completed!"),
                 content: const Text("Congrats on finishing a workout today!"),
-                actions: [
-                  MaterialButton(
-                      onPressed: closePopup, child: const Text('Great!'))
-                ]));
-    Navigator.pop(context);
+          actions: [
+            // Sends user back to home page on press
+            MaterialButton(
+                onPressed: closeCongratulatoryPopup, child: const Text('Great!')),
+          ],
+        ),
+    );
+    // Next, uncheck all checked exercises in the workout
+    for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false).getRelevantWorkout(workoutName).exercises) {
+      if (exercise.isCompleted) {
+        Provider.of<WorkoutData>(context, listen: false).checkOffExercise(
+            workoutName, exercise.name);
+      }
+    }
+    // TODO: Save session in session data
+    // TODO: Show that session was completed on heatmap
+  }
+
+  // Special helper for closing "congrats" popup
+  void closeCongratulatoryPopup() {
+    Navigator.pop(context); // close popup itself
     clear();
-    Navigator.pop(context);
-    clear();
-    // Last, check off workout completed on heat map
+    Navigator.pop(context); // return to home page
   }
 
   @override
@@ -200,11 +213,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
               FloatingActionButton(
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
-                onPressed:
-                    //TODO: Can't end workout if no exercises are checked/none exist
-                    (isEndSessionButtonActive
-                        ? () => confirmEndWorkoutPopup(widget.workoutName)
-                        : null),
+                //TODO: Make it so button is greyed if workout is invalid
+                onPressed: () => confirmEndWorkoutPopup(widget.workoutName),
                 child: const Icon(Icons.check),
               )
             ],
