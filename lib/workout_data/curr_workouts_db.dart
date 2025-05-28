@@ -3,6 +3,8 @@ import 'package:main/datetime/date_time.dart';
 import 'package:main/models/exercise.dart';
 import 'package:main/models/workout.dart';
 
+/* Database for current workouts/exercises */
+
 class HiveDatabase {
   // Reference hive box
   final _myBox = Hive.box('workout_database');

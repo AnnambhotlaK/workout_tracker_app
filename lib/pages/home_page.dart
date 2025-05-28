@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
-import 'package:main/data/workout_data.dart';
+import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:main/models/session.dart';
 import 'package:main/pages/workout_page.dart';
 import '../models/workout.dart';
@@ -163,9 +163,12 @@ class _HomePageState extends State<HomePage> {
               body: ListView(
                 children: [
                   // Activity heat map
+                  //TODO: Get heat map working with session data here
+                  /*
                   MyHeatMap(
                       datasets: value.heatMapDataset,
                       startDateYYYYMMDD: value.getStartDate()),
+                   */
                   // List of workouts
                   Material(
                     type: MaterialType.transparency,

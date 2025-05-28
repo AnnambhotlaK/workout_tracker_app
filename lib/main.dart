@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:main/data/workout_data.dart';
+import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 import 'pages/home_page.dart';
 
