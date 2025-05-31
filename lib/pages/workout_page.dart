@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
+import 'package:main/models/session.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 
 import '../models/exercise.dart';
+import '../session_data/session_data.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
@@ -150,34 +152,45 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
   // Actions to save session to sessionData
   Future<void> saveSession(String workoutName) async {
+    // Get current datetime (useful for later)
+    DateTime now = new DateTime.now();
+    DateTime date = new DateTime(now.year, now.month, now.day);
     // Deactivate current workout
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName).isActive = false;
+        .getRelevantWorkout(workoutName)
+        .isActive = false;
     // Pop dialog confirming session end
     Navigator.pop(context);
     clear();
     //TODO: Show details of workout with completed message
     showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-                title: const Text("Session Completed!"),
-                content: const Text("Congrats on finishing a workout today!"),
-          actions: [
-            // Sends user back to home page on press
-            MaterialButton(
-                onPressed: closeCongratulatoryPopup, child: const Text('Great!')),
-          ],
-        ),
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Session Completed!"),
+        content: const Text("Congrats on finishing a workout today!"),
+        actions: [
+          // Sends user back to home page on press
+          MaterialButton(
+              onPressed: closeCongratulatoryPopup, child: const Text('Great!')),
+        ],
+      ),
     );
     // Next, uncheck all checked exercises in the workout
-    for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false).getRelevantWorkout(workoutName).exercises) {
+    for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false)
+        .getRelevantWorkout(workoutName)
+        .exercises) {
       if (exercise.isCompleted) {
-        Provider.of<WorkoutData>(context, listen: false).checkOffExercise(
-            workoutName, exercise.name);
+        Provider.of<WorkoutData>(context, listen: false)
+            .checkOffExercise(workoutName, exercise.name);
       }
     }
-    // TODO: Save session in session data
-    // TODO: Show that session was completed on heatmap
+    // Save session in sessionList
+    Provider.of<SessionData>(context, listen: false).addSession(
+        workoutName,
+        Provider.of<WorkoutData>(context, listen: false)
+            .getRelevantWorkout(workoutName)
+            .exercises,
+        date);
   }
 
   // Special helper for closing "congrats" popup

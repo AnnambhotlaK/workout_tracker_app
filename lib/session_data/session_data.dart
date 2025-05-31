@@ -51,8 +51,13 @@ class SessionData extends ChangeNotifier {
     return sessionList;
   }
 
-  void addSession(String workoutName, List<Exercise> exercises) {
-    sessionList.add(Session(key: uuid.v4(), workoutName: workoutName, exercises: exercises));
+  void addSession(
+      String workoutName, List<Exercise> exercises, DateTime dateCompleted) {
+    sessionList.add(Session(
+        key: uuid.v4(),
+        workoutName: workoutName,
+        exercises: exercises,
+        dateCompleted: dateCompleted));
 
     notifyListeners();
     //sessionDb.saveToDatabase(sessionList);
@@ -65,7 +70,6 @@ class SessionData extends ChangeNotifier {
     //sessionDb.saveToDatabase(sessionList);
   }
 
-
   void loadHeatMap() {
     DateTime startDate = createDateTimeObject(sessionDb.getStartDate());
 
@@ -75,7 +79,7 @@ class SessionData extends ChangeNotifier {
     // From start date to today, load each completion status in the dataset
     for (int i = 0; i < daysInBetween + 1; i++) {
       String yyyymmdd =
-      convertDateTimeToYYYYMMDD(startDate.add(Duration(days: i)));
+          convertDateTimeToYYYYMMDD(startDate.add(Duration(days: i)));
 
       int completionStatus = sessionDb.getCompletionStatus(yyyymmdd);
 

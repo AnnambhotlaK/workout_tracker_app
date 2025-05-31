@@ -7,11 +7,13 @@ class Session {
   final String key;
   final String workoutName; // workout name
   final List<Exercise> exercises; // exercises in workout
+  final DateTime dateCompleted; // date + time of completion
 
   Session({
     required this.key,
     required this.workoutName,
     required this.exercises,
+    required this.dateCompleted,
   });
 
 }
