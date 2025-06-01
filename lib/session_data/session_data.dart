@@ -4,7 +4,7 @@
  */
 
 import 'package:flutter/material.dart';
-import 'package:main/workout_data/curr_workouts_db.dart';
+import 'package:main/session_data/session_data_db.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:uuid/uuid.dart';
 
@@ -39,12 +39,12 @@ class SessionData extends ChangeNotifier {
   // Otherwise, use nothing
   void initializeSessionList() {
     if (sessionDb.previousDataExists()) {
-      //sessionList = sessionList.readFromDatabase();
+      sessionList = sessionDb.readFromDatabase();
     } else {
-      //sessionDb.saveToDatabase(workoutList);
+      sessionDb.saveToDatabase(sessionList);
     }
 
-    //loadHeatMap();
+    loadHeatMap();
   }
 
   List<Session> getSessionList() {
@@ -60,16 +60,17 @@ class SessionData extends ChangeNotifier {
         dateCompleted: dateCompleted));
 
     notifyListeners();
-    //sessionDb.saveToDatabase(sessionList);
+    sessionDb.saveToDatabase(sessionList);
   }
 
   void deleteSession(String key) {
     sessionList.removeWhere((session) => session.key == key);
 
     notifyListeners();
-    //sessionDb.saveToDatabase(sessionList);
+    sessionDb.saveToDatabase(sessionList);
   }
 
+  // Want to load heat map based on days with sessions
   void loadHeatMap() {
     DateTime startDate = createDateTimeObject(sessionDb.getStartDate());
 

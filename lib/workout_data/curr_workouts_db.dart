@@ -103,12 +103,14 @@ class HiveDatabase {
     return false;
   }
 
+  /*
   // Return workout completion status on date yyyymmdd
   int getCompletionStatus(String yyyymmdd) {
     // returns 0 or 1, if null then return 0
     int completionStatus = _myBox.get("COMPLETION_STATUS_$yyyymmdd") ?? 0;
     return completionStatus;
   }
+   */
 }
 
 // Convert workout objects into lists of Strings -> [ upperBody, lowerBody ]

@@ -130,8 +130,6 @@ class WorkoutData extends ChangeNotifier {
     } else {
       currWorkoutsDb.saveToDatabase(workoutList);
     }
-
-    //loadHeatMap();
   }
 
   List<Workout> getWorkoutList() {

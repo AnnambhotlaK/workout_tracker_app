@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
+import 'package:main/session_data/session_data.dart';
 import 'package:main/models/session.dart';
 import 'package:main/pages/workout_page.dart';
 import '../models/workout.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
+
+import '../session_data/session_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +23,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     Provider.of<WorkoutData>(context, listen: false).initializeWorkoutList();
+    Provider.of<SessionData>(context, listen: false).initializeSessionList();
   }
 
   // Text controller for saving user text
@@ -150,7 +154,7 @@ class _HomePageState extends State<HomePage> {
     return Consumer<WorkoutData>(
         builder: (context, value, child) => Scaffold(
               appBar: AppBar(
-                title: const Text('My Workout Journal'),
+                title: const Text('Home'),
                 backgroundColor: Colors.blueAccent,
                 foregroundColor: Colors.white,
               ),
