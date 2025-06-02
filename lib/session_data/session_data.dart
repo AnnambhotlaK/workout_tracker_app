@@ -44,6 +44,7 @@ class SessionData extends ChangeNotifier {
       sessionDb.saveToDatabase(sessionList);
     }
 
+    // Show session activity
     loadHeatMap();
   }
 
@@ -61,6 +62,7 @@ class SessionData extends ChangeNotifier {
 
     notifyListeners();
     sessionDb.saveToDatabase(sessionList);
+    loadHeatMap();
   }
 
   void deleteSession(String key) {
@@ -77,7 +79,7 @@ class SessionData extends ChangeNotifier {
     // Count number of days to load
     int daysInBetween = DateTime.now().difference(startDate).inDays;
 
-    // From start date to today, load each completion status in the dataset
+    // From start date to today, load each completion status in the database
     for (int i = 0; i < daysInBetween + 1; i++) {
       String yyyymmdd =
           convertDateTimeToYYYYMMDD(startDate.add(Duration(days: i)));
@@ -97,6 +99,10 @@ class SessionData extends ChangeNotifier {
       // Add entry to heat map dataset
       heatMapDataset.addEntries(percentForEachDay.entries);
     }
+  }
+
+  String getStartDate() {
+    return sessionDb.getStartDate();
   }
 
   /*

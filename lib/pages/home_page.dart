@@ -99,7 +99,8 @@ class _HomePageState extends State<HomePage> {
     goToWorkoutPage(workoutName);
     // set relevant workout to active
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName).isActive = true;
+        .getRelevantWorkout(workoutName)
+        .isActive = true;
     // In workout page, should "initiate" a workout
     // Will have a visible timer
     // User can leave the page, but workout
@@ -151,92 +152,94 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WorkoutData>(
-        builder: (context, value, child) => Scaffold(
-              appBar: AppBar(
-                title: const Text('Home'),
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-              ),
-              floatingActionButton: FloatingActionButton(
-                onPressed: createNewWorkout,
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                child: const Icon(Icons.add),
-              ),
-              body: ListView(
-                children: [
-                  // Activity heat map
-                  //TODO: Get heat map working with session data here
-                  /*
-                  MyHeatMap(
-                      datasets: value.heatMapDataset,
-                      startDateYYYYMMDD: value.getStartDate()),
-                   */
-                  // List of workouts
-                  Material(
-                    type: MaterialType.transparency,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: value.getWorkoutList().length,
-                      itemBuilder: (context, index) {
-                        return Dismissible(
-                          key: UniqueKey(),
-                          onDismissed: (direction) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Text(
-                                    '${value.getWorkoutList()[index].name} deleted')));
-                            setState(() {
-                              value.deleteWorkout(
-                                  value.getWorkoutList()[index].key);
-                            });
-                          },
-                          // Red "delete" background with trash symbol
-                          background: Container(
-                            color: Colors.red,
-                            padding: const EdgeInsets.only(right: 20),
-                            child: const Icon(
-                              Icons.delete,
-                              color: Colors.white,
-                              size: 36,
-                            ),
-                          ),
-                          child: ListTile(
-                            title: Text(value.getWorkoutList()[index].name),
-
-                            onTap: () => goToWorkoutPage(
-                                value.getWorkoutList()[index].name),
-
-                            /*
-                            onTap: () {
-                              // If tapping on active workout: go to page
-                              if (value.getWorkoutList()[index].isActive) {
-                                goToWorkoutPage(
-                                  value.getWorkoutList()[index].name,
-                                );
-                              }
-                              // If tapping on inactive workout + none others active: go to popup
-                              if (!value.getWorkoutList()[index].isActive &&
-                                  !Provider.of<WorkoutData>(context,
-                                          listen: false)
-                                      .isWorkoutActive()) {
-                                confirmStartWorkoutPopup(
-                                  value.getWorkoutList()[index].name,
-                                  value.getWorkoutList()[index].exercises,
-                                );
-                              }
-                            },
-
-                             */
-                            trailing: const Icon(Icons.arrow_forward_ios),
-                          ),
-                        );
+    return Consumer2<WorkoutData, SessionData>(
+      builder: (context, workoutValue, sessionValue, child) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Home'),
+            backgroundColor: Colors.blueAccent,
+            foregroundColor: Colors.white,
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: createNewWorkout,
+            backgroundColor: Colors.red,
+            foregroundColor: Colors.white,
+            child: const Icon(Icons.add),
+          ),
+          body: ListView(
+            children: [
+              // Activity heat map for sessions completed
+              MyHeatMap(
+                  datasets: sessionValue.heatMapDataset,
+                  startDateYYYYMMDD: sessionValue.getStartDate()),
+              // List of workouts
+              Material(
+                type: MaterialType.transparency,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: workoutValue.getWorkoutList().length,
+                  itemBuilder: (context, index) {
+                    return Dismissible(
+                      key: UniqueKey(),
+                      onDismissed: (direction) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                '${workoutValue.getWorkoutList()[index].name} deleted')));
+                        setState(() {
+                          workoutValue.deleteWorkout(
+                              workoutValue.getWorkoutList()[index].key);
+                        });
                       },
-                    ),
-                  )
-                ],
-              ),
-            ));
+                      // Red "delete" background with trash symbol
+                      background: Container(
+                        color: Colors.red,
+                        padding: const EdgeInsets.only(right: 20),
+                        child: const Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 36,
+                        ),
+                      ),
+                      child: ListTile(
+                        title: Text(workoutValue.getWorkoutList()[index].name),
+                        onTap: () {
+                          // If tapping on active workout: go to page
+                          if (workoutValue.getWorkoutList()[index].isActive) {
+                            goToWorkoutPage(
+                              workoutValue.getWorkoutList()[index].name,
+                            );
+                          }
+                          // If tapping on inactive workout + none others active: go to popup
+                          if (!workoutValue.getWorkoutList()[index].isActive &&
+                              !Provider.of<WorkoutData>(context, listen: false)
+                                  .isWorkoutActive()) {
+                            confirmStartWorkoutPopup(
+                              workoutValue.getWorkoutList()[index].name,
+                              workoutValue.getWorkoutList()[index].exercises,
+                            );
+                          }
+                          // If tapping on inactive workout + one other active: send notification
+                          if (!workoutValue.getWorkoutList()[index].isActive &&
+                              Provider.of<WorkoutData>(context, listen: false)
+                                  .isWorkoutActive()) {
+                            String name = workoutValue.getActiveWorkout();
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text(
+                                        'Can\'t start with $name already active!')));
+                          }
+                        },
+                        trailing: const Icon(Icons.arrow_forward_ios),
+                      ),
+                    );
+                  },
+                ),
+              )
+            ],
+          ),
+        );
+      },
+    );
   }
 }

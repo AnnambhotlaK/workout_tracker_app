@@ -17,7 +17,7 @@ class MyHeatMap extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(25),
       child: HeatMapCalendar(
-        //initDate: createDateTimeObject(startDateYYYYMMDD),
+        initDate: createDateTimeObject(startDateYYYYMMDD),
         datasets: datasets,
         colorMode: ColorMode.color,
         defaultColor: Colors.black,

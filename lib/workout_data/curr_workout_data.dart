@@ -195,8 +195,6 @@ class WorkoutData extends ChangeNotifier {
 
     notifyListeners();
     currWorkoutsDb.saveToDatabase(workoutList);
-    // load heat map with new exercise activity
-    //loadHeatMap();
   }
 
   // Returns relevant workout object given desired workout name
@@ -226,8 +224,20 @@ class WorkoutData extends ChangeNotifier {
     return false;
   }
 
+  // Similar to isWorkoutActive, but actually gets workout
+  // Returns String name if one active, empty string otherwise
+  String getActiveWorkout() {
+    for (int i = 0; i < workoutList.length; i++) {
+      if (workoutList[i].isActive) {
+        return workoutList[i].name;
+      }
+    }
+    return "";
+  }
+
+  /*
   String getStartDate() {
     return currWorkoutsDb.getStartDate();
   }
-
+  */
 }

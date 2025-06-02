@@ -153,8 +153,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
   // Actions to save session to sessionData
   Future<void> saveSession(String workoutName) async {
     // Get current datetime (useful for later)
-    DateTime now = new DateTime.now();
-    DateTime date = new DateTime(now.year, now.month, now.day);
+    DateTime now = DateTime.now();
+    DateTime date = DateTime(now.year, now.month, now.day);
     // Deactivate current workout
     Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutName)
@@ -190,7 +190,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
         Provider.of<WorkoutData>(context, listen: false)
             .getRelevantWorkout(workoutName)
             .exercises,
-        date);
+        date
+    );
   }
 
   // Special helper for closing "congrats" popup
