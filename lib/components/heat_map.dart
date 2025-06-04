@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:main/datetime/date_time.dart';
+import 'package:main/session_data/session_data.dart';
+import 'package:provider/provider.dart';
 
 class MyHeatMap extends StatelessWidget {
   final Map<DateTime, int>? datasets;
@@ -28,6 +30,10 @@ class MyHeatMap extends StatelessWidget {
         monthFontSize: 20,
         weekFontSize: 15,
         colorsets: const {1: Colors.green},
+        onClick: (value) {
+          Provider.of<SessionData>(context, listen: false).showActivityOnDay(value);
+          //TODO: Show scrollable list of sessions on date value
+        },
       ),
     );
   }

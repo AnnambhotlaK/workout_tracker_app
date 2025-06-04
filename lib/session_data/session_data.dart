@@ -52,16 +52,21 @@ class SessionData extends ChangeNotifier {
     return sessionList;
   }
 
-  void addSession(
-      String workoutName, List<Exercise> exercises, DateTime dateCompleted) {
-    sessionList.add(Session(
+  void addSession(String workoutName, List<Exercise> exercises, DateTime dateCompleted) {
+    Session newSession = Session(
         key: uuid.v4(),
         workoutName: workoutName,
         exercises: exercises,
-        dateCompleted: dateCompleted));
-
+        dateCompleted: dateCompleted
+    );
+    sessionList.add(newSession);
     notifyListeners();
     sessionDb.saveToDatabase(sessionList);
+    // Add session completed to dataset for heatmap onclick
+    if (heatMapSessionDataset[dateCompleted] == null) {
+      heatMapSessionDataset[dateCompleted] = [];
+    }
+    (heatMapSessionDataset[dateCompleted])!.add(newSession);
     loadHeatMap();
   }
 
@@ -105,8 +110,20 @@ class SessionData extends ChangeNotifier {
     return sessionDb.getStartDate();
   }
 
+  // When clicking on a day on heatmap, show scrollable list of
+  // sessions completed on date
+  void showActivityOnDay(DateTime date) {
+    // load list of sessions on date
+    List<Session> activityList = (heatMapSessionDataset[date] ?? []);
+    // TODO: show list of sessions formatted neatly in popup with X
+    // for now, just print number of sessions on day
+    print(activityList.length);
+  }
+
   /*
     HEAT MAP
   */
   Map<DateTime, int> heatMapDataset = {};
+  // Used to key datetimes to the list of sessions completed on date
+  Map<DateTime, List<Session>> heatMapSessionDataset = {};
 }
