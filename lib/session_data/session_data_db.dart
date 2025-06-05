@@ -29,16 +29,10 @@ class HiveDatabase {
   }
 
   // Save a session to the database
-  // TODO: Implement
   void saveToDatabase(List<Session> sessions) {
     // convert workout objects to String lists
     final sessionList = convertObjectToSessionList(sessions);
     final exerciseList = convertObjectToExerciseList(sessions);
-
-    /*
-      Check if a session has the corresponding date (activity on that day)
-      Put a 0 (not done) or 1 (done) for today's yyyymmdd date
-    */
 
     /*
     if (/*exerciseCompleted(workouts)*/ false) {
@@ -101,7 +95,7 @@ class HiveDatabase {
   }
 
   // Check if any exercises have been done
-  //TODO: Might be unnecessary
+  /*
   bool exerciseCompleted(List<Workout> workouts) {
     // Go through workouts
     for (var workout in workouts) {
@@ -114,6 +108,7 @@ class HiveDatabase {
     }
     return false;
   }
+  */
 
   // Return workout completion status on date yyyymmdd
   int getCompletionStatus(String yyyymmdd) {
@@ -184,4 +179,3 @@ class HiveDatabase {
     }
     return exerciseList;
   }
-

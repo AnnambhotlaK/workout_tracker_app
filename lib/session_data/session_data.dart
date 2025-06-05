@@ -28,7 +28,8 @@ class SessionData extends ChangeNotifier {
     - List contains completed sessions, first is earliest, last is latest.
     - Each session has a String key,
        String name and
-       List<Exercise> of exercises
+       List<Exercise> of exercises,
+       and DateTime dateCompleted
        for now.
     - Note that session data also corresponds to heat map updates.
       (if completed session, show activity on heat map for today)
@@ -42,6 +43,15 @@ class SessionData extends ChangeNotifier {
       sessionList = sessionDb.readFromDatabase();
     } else {
       sessionDb.saveToDatabase(sessionList);
+    }
+
+    // Initialize heatMapSessionDataset
+    for (int i = 0; i < sessionList.length; i++) {
+      DateTime date = sessionList[i].dateCompleted;
+      if (heatMapSessionDataset[date] == null) {
+        heatMapSessionDataset[date] = [];
+      }
+      heatMapSessionDataset[date]!.add(sessionList[i]);
     }
 
     // Show session activity
@@ -86,16 +96,15 @@ class SessionData extends ChangeNotifier {
 
     // From start date to today, load each completion status in the database
     for (int i = 0; i < daysInBetween + 1; i++) {
-      String yyyymmdd =
-          convertDateTimeToYYYYMMDD(startDate.add(Duration(days: i)));
+      // use date to load to heatmapsessiondataset
+      DateTime date = startDate.add(Duration(days: i));
+      String yyyymmdd = convertDateTimeToYYYYMMDD(date);
 
       int completionStatus = sessionDb.getCompletionStatus(yyyymmdd);
 
-      int year = startDate.add(Duration(days: i)).year;
-
-      int month = startDate.add(Duration(days: i)).month;
-
-      int day = startDate.add(Duration(days: i)).day;
+      int year = date.year;
+      int month = date.month;
+      int day = date.day;
 
       final percentForEachDay = <DateTime, int>{
         DateTime(year, month, day): completionStatus,
