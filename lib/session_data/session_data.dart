@@ -121,12 +121,80 @@ class SessionData extends ChangeNotifier {
 
   // When clicking on a day on heatmap, show scrollable list of
   // sessions completed on date
-  void showActivityOnDay(DateTime date) {
+  void showActivityOnDay(BuildContext context, DateTime date) {
     // load list of sessions on date
     List<Session> activityList = (heatMapSessionDataset[date] ?? []);
-    // TODO: show list of sessions formatted neatly in popup with X
-    // for now, just print number of sessions on day
-    print(activityList.length);
+    // Print noti and return if activityList is empty
+    if (activityList.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No sessions completed on this day.')),
+      );
+      return;
+    }
+    // Else, show dialog with list of workouts
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Sessions on ${date.toLocal().toString().split(' ')[0]}'), // Display date nicely
+          content: SizedBox( // Constrain the size of the dialog content
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true, // Important for ListView inside AlertDialog
+              itemCount: activityList.length,
+              itemBuilder: (BuildContext context, int index) {
+                Session session = activityList[index];
+                return Card( // Use Card for better visual separation
+                  margin: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          session.workoutName, // Assuming Session has 'workoutName'
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        const Text(
+                          'Exercises:',
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const SizedBox(height: 4.0),
+                        // Assuming Session has a list of 'exercises' (e.g., List<String> or List<ExerciseModel>)
+                        if (session.exercises.isNotEmpty)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: session.exercises.map((exercise) {
+                              return Text('- ${exercise.name} | ${exercise.sets}x${exercise.reps}');
+                            }).toList(),
+                          )
+                        else
+                          const Text('No exercises listed for this session.'),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   /*

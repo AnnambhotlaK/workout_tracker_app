@@ -34,14 +34,6 @@ class HiveDatabase {
     final sessionList = convertObjectToSessionList(sessions);
     final exerciseList = convertObjectToExerciseList(sessions);
 
-    /*
-    if (/*exerciseCompleted(workouts)*/ false) {
-      _myBox.put("COMPLETION_STATUS_${todaysDateYYYYMMDD()}", 1);
-    } else {
-      _myBox.put("COMPLETION_STATUS_${todaysDateYYYYMMDD()}", 0);
-    }
-    */
-
     // for each session, add completion status on that day
     for (int i = 0; i < sessions.length; i++) {
       DateTime dateCompleted = sessions[i].dateCompleted;
@@ -93,22 +85,6 @@ class HiveDatabase {
     // return final list of saved workouts
     return mySavedSessions;
   }
-
-  // Check if any exercises have been done
-  /*
-  bool exerciseCompleted(List<Workout> workouts) {
-    // Go through workouts
-    for (var workout in workouts) {
-      // go through each exercise in workout
-      for (var exercise in workout.exercises) {
-        if (exercise.isCompleted) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-  */
 
   // Return workout completion status on date yyyymmdd
   int getCompletionStatus(String yyyymmdd) {
