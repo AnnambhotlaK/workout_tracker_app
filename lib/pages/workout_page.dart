@@ -163,6 +163,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     Navigator.pop(context);
     clear();
     //TODO: Show details of workout with completed message
+    // note: could get this from the heatmap gemini code
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -176,21 +177,22 @@ class _WorkoutPageState extends State<WorkoutPage> {
       ),
     );
     // Next, uncheck all checked exercises in the workout
+    // Also add completed exercises to list of exercises
+    List<Exercise> completedExercises = [];
     for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutName)
         .exercises) {
       if (exercise.isCompleted) {
+        completedExercises.add(exercise);
         Provider.of<WorkoutData>(context, listen: false)
             .checkOffExercise(workoutName, exercise.name);
       }
     }
     // Save session in sessionList
     Provider.of<SessionData>(context, listen: false).addSession(
-        workoutName,
-        Provider.of<WorkoutData>(context, listen: false)
-            .getRelevantWorkout(workoutName)
-            .exercises,
-        date
+      workoutName,
+      completedExercises,
+      date,
     );
   }
 
@@ -217,6 +219,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
             children: [
               // Add Exercise button
               FloatingActionButton(
+                heroTag: "addBtn",
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
                 onPressed: createNewExercise,
@@ -225,10 +228,22 @@ class _WorkoutPageState extends State<WorkoutPage> {
               Expanded(child: Container()),
               // End Session button
               FloatingActionButton(
+                heroTag: "endSessionBtn",
                 backgroundColor: Colors.green,
                 foregroundColor: Colors.white,
                 //TODO: Make it so button is greyed if workout is invalid
-                onPressed: () => confirmEndWorkoutPopup(widget.workoutName),
+                onPressed: () {
+                  // if no exercises done in workout
+                  if (value.getNumCompletedExercises(
+                          value.getRelevantWorkout(widget.workoutName)) ==
+                      0) {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text(
+                            'Please complete at least one exercise before ending the session.')));
+                  } else {
+                    confirmEndWorkoutPopup(widget.workoutName);
+                  }
+                },
                 child: const Icon(Icons.check),
               )
             ],

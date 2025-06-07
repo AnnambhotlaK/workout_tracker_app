@@ -62,13 +62,13 @@ class SessionData extends ChangeNotifier {
     return sessionList;
   }
 
-  void addSession(String workoutName, List<Exercise> exercises, DateTime dateCompleted) {
+  void addSession(
+      String workoutName, List<Exercise> exercises, DateTime dateCompleted) {
     Session newSession = Session(
         key: uuid.v4(),
         workoutName: workoutName,
         exercises: exercises,
-        dateCompleted: dateCompleted
-    );
+        dateCompleted: dateCompleted);
     sessionList.add(newSession);
     notifyListeners();
     sessionDb.saveToDatabase(sessionList);
@@ -124,7 +124,7 @@ class SessionData extends ChangeNotifier {
   void showActivityOnDay(BuildContext context, DateTime date) {
     // load list of sessions on date
     List<Session> activityList = (heatMapSessionDataset[date] ?? []);
-    // Print noti and return if activityList is empty
+    // Print notification and return if activityList is empty
     if (activityList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('No sessions completed on this day.')),
@@ -136,15 +136,18 @@ class SessionData extends ChangeNotifier {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Sessions on ${date.toLocal().toString().split(' ')[0]}'), // Display date nicely
-          content: SizedBox( // Constrain the size of the dialog content
+          title: Text(
+              'Sessions on ${date.toLocal().toString().split(' ')[0]}'), // Display date nicely
+          content: SizedBox(
+            // Constrain the size of the dialog content
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true, // Important for ListView inside AlertDialog
               itemCount: activityList.length,
               itemBuilder: (BuildContext context, int index) {
                 Session session = activityList[index];
-                return Card( // Use Card for better visual separation
+                return Card(
+                  // Use Card for better visual separation
                   margin: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
@@ -152,7 +155,8 @@ class SessionData extends ChangeNotifier {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          session.workoutName, // Assuming Session has 'workoutName'
+                          session
+                              .workoutName, // Assuming Session has 'workoutName'
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
@@ -172,7 +176,8 @@ class SessionData extends ChangeNotifier {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: session.exercises.map((exercise) {
-                              return Text('- ${exercise.name} | ${exercise.sets}x${exercise.reps}');
+                              return Text(
+                                  '- ${exercise.name} | ${exercise.sets}x${exercise.reps}');
                             }).toList(),
                           )
                         else

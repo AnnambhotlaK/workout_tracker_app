@@ -235,6 +235,17 @@ class WorkoutData extends ChangeNotifier {
     return "";
   }
 
+  // Returns number of completed exercises in a workout
+  int getNumCompletedExercises(Workout workout) {
+    int sum = 0;
+    for (int i = 0; i < workout.exercises.length; i++) {
+      if (workout.exercises[i].isCompleted) {
+        sum++;
+      }
+    }
+    return sum;
+  }
+
   /*
   String getStartDate() {
     return currWorkoutsDb.getStartDate();
