@@ -177,7 +177,7 @@ class SessionData extends ChangeNotifier {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: session.exercises.map((exercise) {
                               return Text(
-                                  '- ${exercise.name} | ${exercise.sets}x${exercise.reps}');
+                                  '- ${exercise.name} | ${exercise.sets}x${exercise.reps} | ${exercise.weight} kg');
                             }).toList(),
                           )
                         else

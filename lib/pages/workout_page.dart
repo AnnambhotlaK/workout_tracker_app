@@ -155,27 +155,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
     // Get current datetime (useful for later)
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
+
     // Deactivate current workout
     Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutName)
         .isActive = false;
+
     // Pop dialog confirming session end
     Navigator.pop(context);
     clear();
-    //TODO: Show details of workout with completed message
-    // note: could get this from the heatmap gemini code
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Session Completed!"),
-        content: const Text("Congrats on finishing a workout today!"),
-        actions: [
-          // Sends user back to home page on press
-          MaterialButton(
-              onPressed: closeCongratulatoryPopup, child: const Text('Great!')),
-        ],
-      ),
-    );
+
     // Next, uncheck all checked exercises in the workout
     // Also add completed exercises to list of exercises
     List<Exercise> completedExercises = [];
@@ -188,6 +177,70 @@ class _WorkoutPageState extends State<WorkoutPage> {
             .checkOffExercise(workoutName, exercise.name);
       }
     }
+
+    //TODO: Show details of workout with completed message
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title:
+                const Text('Congrats on the workout!'), // Display date nicely
+            content: SingleChildScrollView(
+                child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                // WORKOUT NAME
+                Text(
+                  workoutName,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).primaryColor),
+                ),
+                // EXERCISES LIST
+                const Text(
+                  "Exercises Completed:",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: completedExercises.map((exercise) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '- ', // Bullet point
+                            style: TextStyle(
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              ('${exercise.name} | ${exercise.sets}x${exercise.reps} | ${exercise.weight} kg'),
+                              style: const TextStyle(
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
+            )),
+            actions: [
+              MaterialButton(
+                onPressed: closeCongratulatoryPopup,
+                child: const Text('Great!'),
+              ),
+            ],
+          );
+        });
+
     // Save session in sessionList
     Provider.of<SessionData>(context, listen: false).addSession(
       workoutName,
