@@ -159,6 +159,15 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Home'),
             backgroundColor: Colors.blueAccent,
             foregroundColor: Colors.white,
+            actions:
+              <Widget>[
+                //TODO: Get a good fire icon for streak
+                Text(
+                  '🔥 ${Provider.of<SessionData>(context, listen: false).getCurrentStreak()}',
+                  style: const TextStyle(color: Colors.orange, fontSize: 20),
+                ),
+                const Padding(padding: EdgeInsets.only(right: 15)),
+              ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: createNewWorkout,
@@ -224,10 +233,9 @@ class _HomePageState extends State<HomePage> {
                               Provider.of<WorkoutData>(context, listen: false)
                                   .isWorkoutActive()) {
                             String name = workoutValue.getActiveWorkout();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                    content: Text(
-                                        'Can\'t start with $name already active!')));
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    'Can\'t start with $name already active!')));
                           }
                         },
                         trailing: const Icon(Icons.arrow_forward_ios),

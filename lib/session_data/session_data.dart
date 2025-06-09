@@ -119,6 +119,30 @@ class SessionData extends ChangeNotifier {
     return sessionDb.getStartDate();
   }
 
+  // Get current streak of workouts active
+  // Need to count backwards from current day
+  int getCurrentStreak() {
+    DateTime today = DateTime.now().subtract(const Duration(days: 1));
+    DateTime currDay = DateTime(today.year, today.month, today.day);
+    bool isStreak = true;
+    // streak = 0 if no activity today, else = 1
+    int streak = (heatMapSessionDataset[currDay.add(const Duration(days: 1))] == null) ? 0 : 1;
+    while (isStreak) {
+      // there was activity on day
+      if (heatMapSessionDataset[currDay] == null) {
+        isStreak = false;
+      }
+      // there was not activity on day
+      else {
+        streak++;
+      }
+      // move day to previous
+      currDay = currDay.subtract(const Duration(days: 1));
+    }
+    // Account for today as well
+    return streak;
+  }
+
   // When clicking on a day on heatmap, show scrollable list of
   // sessions completed on date
   void showActivityOnDay(BuildContext context, DateTime date) {
