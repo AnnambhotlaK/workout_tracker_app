@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:main/pages/main_page.dart';
 import 'package:main/session_data/session_data.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: const HomePage(),
+        home: /*const HomePage()*/const MainPage(),
       ),
     );
   }
