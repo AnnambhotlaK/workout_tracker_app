@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:main/session_data/session_data.dart';
-import 'package:main/models/session.dart';
 import 'package:main/pages/workout_page.dart';
-import '../models/workout.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 
-import '../session_data/session_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -101,13 +98,6 @@ class _HomePageState extends State<HomePage> {
     Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutName)
         .isActive = true;
-    // In workout page, should "initiate" a workout
-    // Will have a visible timer
-    // User can leave the page, but workout
-    // will only end when user presses the button
-    // After ending, app should display popup showing workout
-    // summary w/ only completed exercises and take user back to home menu
-    // Then, save this as a "session"
   }
 
   // Show error message for not filling out workout name

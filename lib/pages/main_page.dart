@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:main/pages/stats_page.dart';
 
 import 'home_page.dart';
 
@@ -11,18 +11,48 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  int currentPage = 0;
+  int selectedPage = 0;
   final List<Widget> pages = [
     const HomePage(),
+    const StatsPage(),
     const HomePage(),
-    const HomePage()
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentPage],
-      bottomNavigationBar: BottomNavigationBar(
+      body: pages[selectedPage],
+      bottomNavigationBar: NavigationBar(
+        indicatorColor: Colors.blue,
+        shadowColor: Colors.blue,
+        height: 70,
+        selectedIndex: selectedPage,
+        onDestinationSelected: (value) {
+          setState(() {
+            selectedPage = value;
+            print(pages[selectedPage]);
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home), // Icon when selected
+            icon: Icon(Icons.home_outlined), // Icon when not selected
+            label: "Home",
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.stacked_line_chart),
+            icon: Icon(Icons.stacked_line_chart_outlined),
+            label: "Stats",
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
+            label: "Settings",
+          ),
+        ]
+      )
+      /*
+      BottomNavigationBar(
           currentIndex: currentPage,
           onTap: (value) {
             setState(() {
@@ -35,6 +65,7 @@ class _MainPageState extends State<MainPage> {
               BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
           ],
       ),
+    */
     );
   }
 }
