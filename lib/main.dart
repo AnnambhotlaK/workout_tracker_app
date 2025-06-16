@@ -4,14 +4,13 @@ import 'package:main/pages/main_page.dart';
 import 'package:main/session_data/session_data.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
-import 'pages/home_page.dart';
 
 List<Box> boxList = [];
 Future<List<Box>> _openBox() async {
-  var workout_box = await Hive.openBox("curr_workouts_database");
-  var session_box = await Hive.openBox("session_database");
-  boxList.add(workout_box);
-  boxList.add(session_box);
+  var workoutBox = await Hive.openBox("curr_workouts_database");
+  var sessionBox = await Hive.openBox("session_database");
+  boxList.add(workoutBox);
+  boxList.add(sessionBox);
   return boxList;
 }
 

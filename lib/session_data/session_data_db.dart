@@ -2,7 +2,6 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:main/models/exercise.dart';
-import 'package:main/models/workout.dart';
 import 'package:main/models/session.dart';
 
 class HiveDatabase {

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:main/workout_data/curr_workouts_db.dart';
-import 'package:main/datetime/date_time.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/workout.dart';
-import '../models/session.dart';
 import 'package:main/models/exercise.dart';
 
  /* Workout Data refers to the workouts and exercises

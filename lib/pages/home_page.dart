@@ -6,7 +6,6 @@ import 'package:main/pages/workout_page.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -149,15 +148,14 @@ class _HomePageState extends State<HomePage> {
             title: const Text('Home'),
             backgroundColor: Colors.blueAccent,
             foregroundColor: Colors.white,
-            actions:
-              <Widget>[
-                //TODO: Get a good fire icon for streak
-                Text(
-                  '🔥 ${Provider.of<SessionData>(context, listen: false).getCurrentStreak()}',
-                  style: const TextStyle(color: Colors.orange, fontSize: 20),
-                ),
-                const Padding(padding: EdgeInsets.only(right: 15)),
-              ],
+            actions: <Widget>[
+              //TODO: Get a good fire icon for streak
+              Text(
+                '🔥 ${sessionValue.getCurrentStreak()}',
+                style: const TextStyle(color: Colors.orange, fontSize: 20),
+              ),
+              const Padding(padding: EdgeInsets.only(right: 15)),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: createNewWorkout,
@@ -211,8 +209,7 @@ class _HomePageState extends State<HomePage> {
                           }
                           // If tapping on inactive workout + none others active: go to popup
                           if (!workoutValue.getWorkoutList()[index].isActive &&
-                              !Provider.of<WorkoutData>(context, listen: false)
-                                  .isWorkoutActive()) {
+                              !workoutValue.isWorkoutActive()) {
                             confirmStartWorkoutPopup(
                               workoutValue.getWorkoutList()[index].name,
                               workoutValue.getWorkoutList()[index].exercises,
@@ -220,8 +217,7 @@ class _HomePageState extends State<HomePage> {
                           }
                           // If tapping on inactive workout + one other active: send notification
                           if (!workoutValue.getWorkoutList()[index].isActive &&
-                              Provider.of<WorkoutData>(context, listen: false)
-                                  .isWorkoutActive()) {
+                              workoutValue.isWorkoutActive()) {
                             String name = workoutValue.getActiveWorkout();
                             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                 content: Text(

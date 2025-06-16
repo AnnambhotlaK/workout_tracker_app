@@ -8,7 +8,6 @@ import 'package:main/session_data/session_data_db.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models/workout.dart';
 import 'package:main/models/exercise.dart';
 import '../models/session.dart';
 
@@ -126,7 +125,10 @@ class SessionData extends ChangeNotifier {
     DateTime currDay = DateTime(today.year, today.month, today.day);
     bool isStreak = true;
     // streak = 0 if no activity today, else = 1
-    int streak = (heatMapSessionDataset[currDay.add(const Duration(days: 1))] == null) ? 0 : 1;
+    int streak =
+        (heatMapSessionDataset[currDay.add(const Duration(days: 1))] == null)
+            ? 0
+            : 1;
     while (isStreak) {
       // there was activity on day
       if (heatMapSessionDataset[currDay] == null) {

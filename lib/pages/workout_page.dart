@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
-import 'package:main/models/session.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 
