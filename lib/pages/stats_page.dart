@@ -3,6 +3,8 @@ import 'package:main/session_data/session_data.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import '../models/session.dart';
+
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
 
@@ -24,6 +26,16 @@ class _StatsPageState extends State<StatsPage> {
         .length;
   }
 
+  int getLifetimeExercises() {
+    List<Session> sessionList =
+        Provider.of<SessionData>(context, listen: false).getSessionList();
+    int exercises = 0;
+    for (int i = 0; i < sessionList.length; i++) {
+      exercises += sessionList[i].exercises.length;
+    }
+    return exercises;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SessionData>(
@@ -35,17 +47,48 @@ class _StatsPageState extends State<StatsPage> {
             foregroundColor: Colors.white,
           ),
           body: ListView(children: [
-            Padding(
-              padding: EdgeInsetsGeometry.fromLTRB(10, 10, 0, 0),
-              child: Material(
 
-                color: Colors.indigo,
-                shape: RoundedRectangleBorder(
-                    side: BorderSide.none, borderRadius: BorderRadius.circular(5)),
-                textStyle: TextStyle(fontSize: 20),
-                child: Text('Lifetime Sessions: ${getLifetimeSessions()}'),
+            // LAST 5 WEEK ACTIVITY CHART
+
+            // LIFETIME SESSIONS
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.indigo,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Lifetime Sessions: ${getLifetimeSessions()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
+
+            // LIFETIME EXERCISES
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Lifetime Exercises: ${getLifetimeExercises()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+
           ]),
         );
       },

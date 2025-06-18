@@ -30,7 +30,6 @@ class _MainPageState extends State<MainPage> {
         onDestinationSelected: (value) {
           setState(() {
             selectedPage = value;
-            print(pages[selectedPage]);
           });
         },
         destinations: const [
