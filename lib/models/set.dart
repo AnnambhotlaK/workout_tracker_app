@@ -1,20 +1,17 @@
-import 'package:main/models/set.dart';
-
-class Exercise {
+/*
+  Each exercise includes a list of sets
+  Each set has a key, weight, number of reps, completed or not
+ */
+class Set {
   final String key;
-  final String name;
   final String weight;
   final String reps;
-  //final String sets;
-  final List<Set> sets;
   bool isCompleted;
 
-  Exercise({
+  Set({
     required this.key,
-    required this.name,
     required this.weight,
     required this.reps,
-    required this.sets,
     this.isCompleted = false,
   });
 }

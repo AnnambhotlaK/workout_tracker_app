@@ -4,8 +4,9 @@ import 'package:uuid/uuid.dart';
 
 import '../models/workout.dart';
 import 'package:main/models/exercise.dart';
+import 'package:main/models/set.dart';
 
- /* Workout Data refers to the workouts and exercises
+/* Workout Data refers to the workouts and exercises
  *  that are currently in the user's page. Deleted
  *  workouts and exercises are removed from the db,
  *  and this does not include sessions or (potentially)
@@ -23,11 +24,12 @@ class WorkoutData extends ChangeNotifier {
 
     - List contains different workouts.
     - Each workout has a String key, String name and List<Exercise> of exercises.
-    
+
   */
 
   List<Workout> workoutList = [
     // Default workouts (Push, Pull, Legs)
+    // TODO: Update default workouts with actual sets
     Workout(
       key: uuid.v4(),
       name: 'Push',
@@ -37,25 +39,25 @@ class WorkoutData extends ChangeNotifier {
             name: 'Bench Press',
             weight: '60',
             reps: '5',
-            sets: '5'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Shoulder Press',
             weight: '12',
             reps: '8',
-            sets: '3'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Lateral Raise',
             weight: '5',
             reps: '10',
-            sets: '3'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Triceps Extension',
             weight: '15',
             reps: '10',
-            sets: '3'),
+            sets: []),
       ],
     ),
     Workout(
@@ -63,29 +65,25 @@ class WorkoutData extends ChangeNotifier {
       name: 'Pull',
       exercises: [
         Exercise(
-            key: uuid.v4(),
-            name: 'Pull Ups',
-            weight: '0',
-            reps: '6',
-            sets: '4'),
+            key: uuid.v4(), name: 'Pull Ups', weight: '0', reps: '6', sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Row',
             weight: '15',
             reps: '8',
-            sets: '4'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Lat Pulldown',
             weight: '60',
             reps: '8',
-            sets: '3'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Curl',
             weight: '10',
             reps: '10',
-            sets: '3'),
+            sets: []),
       ],
     ),
     Workout(
@@ -97,25 +95,25 @@ class WorkoutData extends ChangeNotifier {
             name: 'Barbell Squats',
             weight: '80',
             reps: '8',
-            sets: '5'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Leg Extensions',
             weight: '30',
             reps: '10',
-            sets: '3'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Leg Curl',
             weight: '20',
             reps: '10',
-            sets: '3'),
+            sets: []),
         Exercise(
             key: uuid.v4(),
             name: 'Calf Raises',
             weight: '10',
             reps: '12',
-            sets: '3'),
+            sets: []),
       ],
     ),
   ];
@@ -154,8 +152,8 @@ class WorkoutData extends ChangeNotifier {
     currWorkoutsDb.saveToDatabase(workoutList);
   }
 
-  void addExercise(String workoutName, String exerciseName, String weight,
-      String reps, String sets) {
+  void addExercise(
+      String workoutName, String exerciseName, String weight, String reps) {
     // Find the relevant workouts
     Workout relevantWorkout =
         workoutList.firstWhere((workout) => workout.name == workoutName);
@@ -165,7 +163,7 @@ class WorkoutData extends ChangeNotifier {
       name: exerciseName,
       weight: weight,
       reps: reps,
-      sets: sets,
+      sets: [],
     ));
 
     notifyListeners();
@@ -195,19 +193,60 @@ class WorkoutData extends ChangeNotifier {
     currWorkoutsDb.saveToDatabase(workoutList);
   }
 
-  // Returns relevant workout object given desired workout name
-  Workout getRelevantWorkout(String workoutName) {
+  void addSet(
+      String workoutKey, String exerciseKey, String setWeight, String setReps) {
+    Exercise relevantExercise = getRelevantExercise(workoutKey, exerciseKey);
+    // Adds new set
+    relevantExercise.sets.add(Set(
+      key: uuid.v4(),
+      weight: setWeight,
+      reps: setReps,
+      isCompleted: false,
+    ));
+
+    notifyListeners();
+    currWorkoutsDb.saveToDatabase(workoutList);
+  }
+
+  void deleteSet(String workoutKey, String exerciseKey, String setKey) {
+    Exercise relevantExercise = getRelevantExercise(workoutKey, exerciseKey);
+    relevantExercise.sets.removeWhere((set) => set.key == setKey);
+
+    notifyListeners();
+    currWorkoutsDb.saveToDatabase(workoutList);
+  }
+
+  // User can check off each exercise
+  void checkOffSet(String workoutKey, String exerciseKey, String setKey) {
+    Set relevantSet = getRelevantSet(workoutKey, exerciseKey, setKey);
+    relevantSet.isCompleted = !relevantSet.isCompleted;
+
+    notifyListeners();
+    currWorkoutsDb.saveToDatabase(workoutList);
+  }
+
+  // Returns relevant workout object given desired workout key
+  Workout getRelevantWorkout(String workoutKey) {
     Workout relevantWorkout =
-        workoutList.firstWhere((workout) => workout.name == workoutName);
+        workoutList.firstWhere((workout) => workout.key == workoutKey);
     return relevantWorkout;
   }
 
-  // Returns relevant exercise object given desired exercise name
-  Exercise getRelevantExercise(String workoutName, String exerciseName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
+  // Returns relevant exercise object given desired exercise key
+  Exercise getRelevantExercise(String workoutKey, String exerciseKey) {
+    Workout relevantWorkout = getRelevantWorkout(workoutKey);
     Exercise relevantExercise = relevantWorkout.exercises
-        .firstWhere((exercise) => exercise.name == exerciseName);
+        .firstWhere((exercise) => exercise.key == exerciseKey);
     return relevantExercise;
+  }
+
+  // Returns relevant set given relevant workout and exercise keys
+  Set getRelevantSet(String workoutKey, String exerciseKey, String setKey) {
+    Workout relevantWorkout = getRelevantWorkout(workoutKey);
+    Exercise relevantExercise = getRelevantExercise(workoutKey, exerciseKey);
+    Set relevantSet =
+        relevantExercise.sets.firstWhere((set) => set.key == exerciseKey);
+    return relevantSet;
   }
 
   // Check if any workout is active currently
@@ -243,10 +282,4 @@ class WorkoutData extends ChangeNotifier {
     }
     return sum;
   }
-
-  /*
-  String getStartDate() {
-    return currWorkoutsDb.getStartDate();
-  }
-  */
 }

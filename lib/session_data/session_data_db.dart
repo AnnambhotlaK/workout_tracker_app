@@ -32,6 +32,7 @@ class HiveDatabase {
     // convert workout objects to String lists
     final sessionList = convertObjectToSessionList(sessions);
     final exerciseList = convertObjectToExerciseList(sessions);
+    //final setList = convertObjectToSetList(sessions);
 
     // for each session, add completion status on that day
     for (int i = 0; i < sessions.length; i++) {
@@ -43,6 +44,7 @@ class HiveDatabase {
     // Save into hive
     _myBox.put("SESSIONS", sessionList);
     _myBox.put("EXERCISES", exerciseList);
+    //_myBox.put("SETS", setList);
   }
 
   // Read data, return list of workouts
@@ -55,6 +57,7 @@ class HiveDatabase {
 
     // Create session objects
     for (int i = 0; i < sessions.length; i++) {
+
       // Each session has exercises
       List<Exercise> exercisesInSession = [];
 
@@ -121,7 +124,7 @@ class HiveDatabase {
     List<List<List<String>>> exerciseList = [
       /*
         [upperBody, lowerBody]
-        [ [ ['biceps', 10kg, 10 reps, 3 sets], [another exercise] ], [ [lower body], [lower body] ] ]
+        [ [ ['biceps', 10kg, 10 reps, []], [another exercise] ], [ [lower body], [lower body] ] ]
       */
     ];
 
