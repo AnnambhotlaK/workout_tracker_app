@@ -87,7 +87,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     } else {
       // Add workout to workout data list
       Provider.of<WorkoutData>(context, listen: false)
-          .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
+          .addExercise(widget.workoutName, newExerciseName, weight, reps);
 
       Navigator.pop(context);
       clear();
@@ -354,6 +354,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       .getRelevantWorkout(widget.workoutName)
                       .exercises[index]
                       .reps,
+                  //TODO: Replace with builder of SetTiles
                   sets: value
                       .getRelevantWorkout(widget.workoutName)
                       .exercises[index]

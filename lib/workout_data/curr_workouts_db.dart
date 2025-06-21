@@ -1,7 +1,9 @@
+import 'dart:core';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:main/models/exercise.dart';
 import 'package:main/models/workout.dart';
+import 'package:main/models/set.dart';
 
 /* Database for current workouts/exercises */
 
@@ -34,6 +36,7 @@ class HiveDatabase {
     // convert workout objects to String lists
     final workoutList = convertObjectToWorkoutList(workouts);
     final exerciseList = convertObjectToExerciseList(workouts);
+    final setList = convertObjectToSetList(workouts);
 
     /*
       Check if any exercises have been done
@@ -49,6 +52,7 @@ class HiveDatabase {
     // Save into hive
     _myBox.put("WORKOUTS", workoutList);
     _myBox.put("EXERCISES", exerciseList);
+    _myBox.put("SETS", setList);
   }
 
   // Read data, return list of workouts
@@ -58,6 +62,7 @@ class HiveDatabase {
     List<List<String>> workouts =
         List<List<String>>.from(_myBox.get("WORKOUTS"));
     final exerciseDetails = _myBox.get("EXERCISES");
+    final setDetails = _myBox.get("SETS");
 
     // Create workout objects
     for (int i = 0; i < workouts.length; i++) {
@@ -65,13 +70,26 @@ class HiveDatabase {
       List<Exercise> exercisesInEachWorkout = [];
 
       for (int j = 0; j < exerciseDetails[i].length; j++) {
+        // Each exercise can have multiple sets
+        List<Set> setsInEachExercise = [];
+
+        for (int k = 0; k < setDetails[i][j].length; k++) {
+          setsInEachExercise.add(
+            Set(
+                key: setDetails[i][j][k][0],
+                weight: setDetails[i][j][k][1],
+                reps: setDetails[i][j][k][2],
+                isCompleted: setDetails[i][j][k][3] == 'true' ? true : false),
+          );
+        }
+
         exercisesInEachWorkout.add(
           Exercise(
               key: exerciseDetails[i][j][0],
               name: exerciseDetails[i][j][1],
               weight: exerciseDetails[i][j][2],
               reps: exerciseDetails[i][j][3],
-              sets: exerciseDetails[i][j][4],
+              sets: setsInEachExercise,
               isCompleted: exerciseDetails[i][j][5] == 'true' ? true : false),
         );
       }
@@ -121,7 +139,8 @@ List<List<String>> convertObjectToWorkoutList(List<Workout> workouts) {
   ];
 
   for (int i = 0; i < workouts.length; i++) {
-    workoutList.add([workouts[i].key, workouts[i].name]);
+    workoutList.add(
+        [workouts[i].key, workouts[i].name, workouts[i].isActive.toString()]);
   }
 
   return workoutList;
@@ -147,24 +166,65 @@ List<List<List<String>>> convertObjectToExerciseList(List<Workout> workouts) {
       // [ ['biceps', 10 kg, 10 reps, 3 sets] ]
     ];
 
-    // Go through each exercise in exerciseList
+    // Go through each exercise in the workout
     for (int j = 0; j < exercisesInWorkout.length; j++) {
-      List<String> individualExercise = [
-        // ['biceps', 10 kg, 10 reps, 3 sets]
-      ];
+      List<String> individualExercise = [];
       individualExercise.addAll(
         [
           exercisesInWorkout[j].key,
           exercisesInWorkout[j].name,
           exercisesInWorkout[j].weight,
           exercisesInWorkout[j].reps,
-          exercisesInWorkout[j].sets,
+          //exercisesInWorkout[j].sets,
           exercisesInWorkout[j].isCompleted.toString(),
         ],
       );
       individualWorkout.add(individualExercise);
     }
+
     exerciseList.add(individualWorkout);
   }
   return exerciseList;
+}
+
+// Convert workouts into list of all strings
+// List of workouts (1d)
+// Each workout is its own list (2d)
+// Each exercise in each workout is its own list (3d)
+// Each set in each exercise is its own list (4d)
+// Example:
+// Workouts: [ [key1, 'Push'], [key2, 'Pull'], []... ]
+// Exercises: [ [ ['Bench', 10 reps, 100 lbs, 3 sets], []
+// Sets: [ [ [[set1], [set2]], ] ]
+List<List<List<List<String>>>> convertObjectToSetList(List<Workout> workouts) {
+  List<List<List<List<String>>>> setList = [];
+
+  // Iterate over each Workout
+  for (int i = 0; i < workouts.length; i++) {
+    // In workout, iterate over each Exercise
+    List<Exercise> exercisesInWorkout = workouts[i].exercises;
+    List<List<List<String>>> individualWorkout = [];
+
+    for (int j = 0; j < exercisesInWorkout.length; j++) {
+      // In each exercise, iterate over the sets
+      List<Set> setsInExercise = exercisesInWorkout[j].sets;
+      List<List<String>> individualExercise = [];
+
+      for (int k = 0; k < setsInExercise.length; k++) {
+        List<String> individualSet = [];
+        individualSet.addAll([
+          setsInExercise[k].key,
+          setsInExercise[k].weight,
+          setsInExercise[k].reps,
+          setsInExercise[k].isCompleted.toString(),
+        ]);
+        individualExercise.add(individualSet);
+      }
+
+      individualWorkout.add(individualExercise);
+    }
+
+    setList.add(individualWorkout);
+  }
+  return setList;
 }

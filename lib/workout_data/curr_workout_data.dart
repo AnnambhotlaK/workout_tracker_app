@@ -216,7 +216,7 @@ class WorkoutData extends ChangeNotifier {
     currWorkoutsDb.saveToDatabase(workoutList);
   }
 
-  // User can check off each exercise
+  // User can check off each set
   void checkOffSet(String workoutKey, String exerciseKey, String setKey) {
     Set relevantSet = getRelevantSet(workoutKey, exerciseKey, setKey);
     relevantSet.isCompleted = !relevantSet.isCompleted;
