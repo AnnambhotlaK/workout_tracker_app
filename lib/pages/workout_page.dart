@@ -8,7 +8,8 @@ import '../session_data/session_data.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
-  const WorkoutPage({super.key, required this.workoutName});
+  final String workoutKey;
+  const WorkoutPage({super.key, required this.workoutName, required this.workoutKey});
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -18,9 +19,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
   bool isEndSessionButtonActive = true;
 
   // Checkbox was ticked
-  void onCheckboxChanged(String workoutName, String exerciseName) {
+  void onCheckboxChanged(String workoutKey, String exerciseKey, String setKey) {
     Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(workoutName, exerciseName);
+        .checkOffSet(workoutKey, exerciseKey, setKey);
   }
 
   // Text controllers for creating new exercise
@@ -343,32 +344,73 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 ),
                 child: ExerciseTile(
                   exerciseName: value
-                      .getRelevantWorkout(widget.workoutName)
+                      .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .name,
                   weight: value
-                      .getRelevantWorkout(widget.workoutName)
+                      .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .weight,
                   reps: value
-                      .getRelevantWorkout(widget.workoutName)
+                      .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .reps,
                   //TODO: Replace with builder of SetTiles
-                  sets: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .sets,
+                  sets: ListView.builder(
+                    itemCount: value.numberOfSetsInExercise(widget.workoutKey, value
+                        .getRelevantWorkout(widget.workoutKey)
+                        .exercises[index]
+                        .key),
+                    itemBuilder: (context, setIndex) {
+                      return Dismissible(
+                        key: UniqueKey(),
+                        onDismissed: (direction) {
+                          if (value
+                              .getRelevantWorkout(widget.workoutName)
+                              .exercises[index]
+                              .sets[setIndex].isCompleted) {
+                            Provider.of<WorkoutData>(context, listen: false)
+                                .checkOffSet(
+                                widget.workoutKey,
+                                value
+                                    .getRelevantWorkout(widget.workoutName)
+                                    .exercises[index]
+                                    .key,
+                                value
+                                    .getRelevantWorkout(widget.workoutName)
+                                    .exercises[index]
+                                    .sets[setIndex].key);
+                          }
+                          setState(() {
+                            value.deleteSet(
+                                value
+                                    .getRelevantWorkout(widget.workoutName)
+                                    .key,
+                                value
+                                    .getRelevantWorkout(widget.workoutName)
+                                    .exercises[index]
+                                    .key,
+                                value
+                                    .getRelevantWorkout(widget.workoutName)
+                                    .exercises[index]
+                                    .sets[setIndex].key);
+                          });
+                        }, child: null,
+                      );
+                    }
+                  ),
                   isCompleted: value
-                      .getRelevantWorkout(widget.workoutName)
+                      .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .isCompleted,
+                  /*
                   onCheckboxChanged: (val) => onCheckboxChanged(
-                      widget.workoutName,
+                      widget.workoutKey,
                       value
-                          .getRelevantWorkout(widget.workoutName)
+                          .getRelevantWorkout(widget.workoutKey)
                           .exercises[index]
-                          .name),
+                          .key,),
+                   */
                 ),
               );
             }),

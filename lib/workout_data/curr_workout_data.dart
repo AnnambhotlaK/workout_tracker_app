@@ -132,9 +132,12 @@ class WorkoutData extends ChangeNotifier {
     return workoutList;
   }
 
-  int numberOfExercisesInWorkout(String workoutName) {
-    Workout relevantWorkout = getRelevantWorkout(workoutName);
-    return relevantWorkout.exercises.length;
+  int numberOfExercisesInWorkout(String workoutKey) {
+    return getRelevantWorkout(workoutKey).exercises.length;
+  }
+
+  int numberOfSetsInExercise(String workoutKey, String exerciseKey) {
+    return getRelevantExercise(workoutKey, exerciseKey).sets.length;
   }
 
   void addWorkout(String name) {
@@ -182,9 +185,9 @@ class WorkoutData extends ChangeNotifier {
   }
 
   // User can check off each exercise
-  void checkOffExercise(String workoutName, String exerciseName) {
+  void checkOffExercise(String workoutKey, String exerciseKey) {
     // Find the relevant exercise
-    Exercise relevantExercise = getRelevantExercise(workoutName, exerciseName);
+    Exercise relevantExercise = getRelevantExercise(workoutKey, exerciseKey);
 
     // Check off boolean showing user finished this workout
     relevantExercise.isCompleted = !relevantExercise.isCompleted;
