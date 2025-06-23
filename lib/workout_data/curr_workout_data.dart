@@ -39,7 +39,7 @@ class WorkoutData extends ChangeNotifier {
             name: 'Bench Press',
             weight: '60',
             reps: '5',
-            sets: []),
+            sets: [Set(key: uuid.v4(), weight: '135', reps: '10')]),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Shoulder Press',

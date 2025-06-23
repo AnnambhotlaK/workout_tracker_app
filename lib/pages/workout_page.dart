@@ -3,13 +3,15 @@ import 'package:main/components/exercise_tile.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 
+import '../components/set_tile.dart';
 import '../models/exercise.dart';
 import '../session_data/session_data.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
   final String workoutKey;
-  const WorkoutPage({super.key, required this.workoutName, required this.workoutKey});
+  const WorkoutPage(
+      {super.key, required this.workoutName, required this.workoutKey});
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -151,14 +153,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   // Actions to save session to sessionData
-  Future<void> saveSession(String workoutName) async {
+  Future<void> saveSession(String workoutKey) async {
     // Get current datetime (useful for later)
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
 
     // Deactivate current workout
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .isActive = false;
 
     // Pop dialog confirming session end
@@ -169,12 +171,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
     // Also add completed exercises to list of exercises
     List<Exercise> completedExercises = [];
     for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .exercises) {
       if (exercise.isCompleted) {
         completedExercises.add(exercise);
         Provider.of<WorkoutData>(context, listen: false)
-            .checkOffExercise(workoutName, exercise.name);
+            .checkOffExercise(workoutKey, exercise.key);
       }
     }
 
@@ -192,7 +194,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
               children: <Widget>[
                 // WORKOUT NAME
                 Text(
-                  workoutName,
+                  widget.workoutName,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor),
@@ -221,8 +223,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           Expanded(
                             child: Text(
                               ('${exercise.name} | ${exercise.sets}x${exercise.reps} | ${exercise.weight} kg'),
-                              style: const TextStyle(
-                              ),
+                              style: const TextStyle(),
                             ),
                           ),
                         ],
@@ -243,7 +244,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     // Save session in sessionList
     Provider.of<SessionData>(context, listen: false).addSession(
-      workoutName,
+      widget.workoutName,
       completedExercises,
       date,
     );
@@ -288,7 +289,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 onPressed: () {
                   // if no exercises done in workout
                   if (value.getNumCompletedExercises(
-                          value.getRelevantWorkout(widget.workoutName)) ==
+                          value.getRelevantWorkout(widget.workoutKey)) ==
                       0) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text(
@@ -297,7 +298,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     confirmEndWorkoutPopup(widget.workoutName);
                   }
                 },
-                child: const Icon(Icons.check),
+                child: const Icon(Icons.cabin_rounded),
               )
             ],
           ),
@@ -310,24 +311,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 onDismissed: (direction) {
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text(
-                          '${value.getRelevantWorkout(widget.workoutName).exercises[index].name} deleted')));
+                          '${value.getRelevantWorkout(widget.workoutKey).exercises[index].name} deleted')));
                   if (value
-                      .getRelevantWorkout(widget.workoutName)
+                      .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .isCompleted) {
                     Provider.of<WorkoutData>(context, listen: false)
                         .checkOffExercise(
                             widget.workoutName,
                             value
-                                .getRelevantWorkout(widget.workoutName)
+                                .getRelevantWorkout(widget.workoutKey)
                                 .exercises[index]
                                 .name);
                   }
                   setState(() {
                     value.deleteExercise(
-                        value.getRelevantWorkout(widget.workoutName).key,
+                        widget.workoutKey,
                         value
-                            .getRelevantWorkout(widget.workoutName)
+                            .getRelevantWorkout(widget.workoutKey)
                             .exercises[index]
                             .key);
                   });
@@ -347,6 +348,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .name,
+                  /*
                   weight: value
                       .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
@@ -355,62 +357,97 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .reps,
-                  //TODO: Replace with builder of SetTiles
+                   */
                   sets: ListView.builder(
-                    itemCount: value.numberOfSetsInExercise(widget.workoutKey, value
-                        .getRelevantWorkout(widget.workoutKey)
-                        .exercises[index]
-                        .key),
-                    itemBuilder: (context, setIndex) {
-                      return Dismissible(
-                        key: UniqueKey(),
-                        onDismissed: (direction) {
-                          if (value
-                              .getRelevantWorkout(widget.workoutName)
+                      itemCount: value.numberOfSetsInExercise(
+                          widget.workoutKey,
+                          value
+                              .getRelevantWorkout(widget.workoutKey)
                               .exercises[index]
-                              .sets[setIndex].isCompleted) {
-                            Provider.of<WorkoutData>(context, listen: false)
-                                .checkOffSet(
+                              .key),
+                      itemBuilder: (context, setIndex) {
+                        return Dismissible(
+                          key: UniqueKey(),
+                          onDismissed: (direction) {
+                            if (value
+                                .getRelevantWorkout(widget.workoutKey)
+                                .exercises[index]
+                                .sets[setIndex]
+                                .isCompleted) {
+                              Provider.of<WorkoutData>(context, listen: false)
+                                  .checkOffSet(
+                                      widget.workoutKey,
+                                      value
+                                          .getRelevantWorkout(
+                                              widget.workoutKey)
+                                          .exercises[index]
+                                          .key,
+                                      value
+                                          .getRelevantWorkout(
+                                              widget.workoutKey)
+                                          .exercises[index]
+                                          .sets[setIndex]
+                                          .key);
+                            }
+                            setState(() {
+                              value.deleteSet(
+                                  widget.workoutKey,
+                                  value
+                                      .getRelevantWorkout(widget.workoutKey)
+                                      .exercises[index]
+                                      .key,
+                                  value
+                                      .getRelevantWorkout(widget.workoutKey)
+                                      .exercises[index]
+                                      .sets[setIndex]
+                                      .key);
+                            });
+                          },
+                          // Background for deletion
+                          background: Container(
+                            color: Colors.red,
+                            padding: const EdgeInsets.only(right: 20),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                              size: 36,
+                            ),
+                          ),
+                          // Set Tiles
+                          child: SetTile(
+                            weight: value
+                                .getRelevantWorkout(widget.workoutKey)
+                                .exercises[index]
+                                .sets[setIndex]
+                                .weight,
+                            reps: value
+                                .getRelevantWorkout(widget.workoutKey)
+                                .exercises[index]
+                                .sets[setIndex]
+                                .reps,
+                            isCompleted: value
+                                .getRelevantWorkout(widget.workoutKey)
+                                .exercises[index]
+                                .sets[setIndex]
+                                .isCompleted,
+                            onCheckboxChanged: (val) => onCheckboxChanged(
                                 widget.workoutKey,
                                 value
-                                    .getRelevantWorkout(widget.workoutName)
+                                    .getRelevantWorkout(widget.workoutKey)
                                     .exercises[index]
                                     .key,
                                 value
-                                    .getRelevantWorkout(widget.workoutName)
+                                    .getRelevantWorkout(widget.workoutKey)
                                     .exercises[index]
-                                    .sets[setIndex].key);
-                          }
-                          setState(() {
-                            value.deleteSet(
-                                value
-                                    .getRelevantWorkout(widget.workoutName)
-                                    .key,
-                                value
-                                    .getRelevantWorkout(widget.workoutName)
-                                    .exercises[index]
-                                    .key,
-                                value
-                                    .getRelevantWorkout(widget.workoutName)
-                                    .exercises[index]
-                                    .sets[setIndex].key);
-                          });
-                        }, child: null,
-                      );
-                    }
-                  ),
+                                    .sets[setIndex]
+                                    .key),
+                          ),
+                        );
+                      }),
                   isCompleted: value
                       .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .isCompleted,
-                  /*
-                  onCheckboxChanged: (val) => onCheckboxChanged(
-                      widget.workoutKey,
-                      value
-                          .getRelevantWorkout(widget.workoutKey)
-                          .exercises[index]
-                          .key,),
-                   */
                 ),
               );
             }),

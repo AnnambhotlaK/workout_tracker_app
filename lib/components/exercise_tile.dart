@@ -3,20 +3,20 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ExerciseTile extends StatelessWidget {
   final String exerciseName;
-  final String weight;
-  final String reps;
+  //final String weight;
+  //final String reps;
   final ListView sets;
   final bool isCompleted;
-  void Function(bool?)? onCheckboxChanged;
+  //void Function(bool?)? onCheckboxChanged;
 
-  ExerciseTile({
+  const ExerciseTile({
     super.key,
     required this.exerciseName,
-    required this.weight,
-    required this.reps,
+    //required this.weight,
+    //required this.reps,
     required this.sets,
     required this.isCompleted,
-    required this.onCheckboxChanged,
+    //required this.onCheckboxChanged,
   });
 
   @override
@@ -31,9 +31,7 @@ class ExerciseTile extends StatelessWidget {
                 sets
               ],
             ),
-            trailing: Checkbox(
-              value: isCompleted,
-              onChanged: (value) => onCheckboxChanged!(value),
-            )));
+        ),
+    );
   }
 }

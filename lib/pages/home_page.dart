@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage> {
     goToWorkoutPage(workoutName, workoutKey);
     // set relevant workout to active
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .isActive = true;
   }
 

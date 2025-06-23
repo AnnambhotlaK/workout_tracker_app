@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
         ),
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: /*const HomePage()*/const MainPage(),
+        home: const MainPage(),
       ),
     );
   }

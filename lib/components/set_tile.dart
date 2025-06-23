@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class SetTile extends StatelessWidget {
+class SetTile extends StatefulWidget {
   //final String exerciseName;
   final String weight;
   final String reps;
@@ -20,26 +20,30 @@ class SetTile extends StatelessWidget {
   });
 
   @override
+  State<SetTile> createState() => _SetTileState();
+}
+
+class _SetTileState extends State<SetTile> {
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
         // Color changes upon checking off exercise
-        color: isCompleted ? Colors.green : Colors.grey,
+        color: widget.isCompleted ? Colors.green : Colors.grey,
         child: ListTile(
             //title: Text(exerciseName),
             subtitle: Row(
               children: [
-                Chip(label: Text("${weight}kg")),
-                Chip(label: Text("$reps reps")),
+                Chip(label: Text("${widget.weight}kg")),
+                Chip(label: Text("${widget.reps} reps")),
                 Checkbox(
-                  value: isCompleted,
-                  onChanged: (value) => onCheckboxChanged!(value),
+                  value: widget.isCompleted,
+                  onChanged: (value) => widget.onCheckboxChanged!(value),
                 )
               ],
             ),
             trailing: Checkbox(
-              value: isCompleted,
-              onChanged: (value) => onCheckboxChanged!(value),
+              value: widget.isCompleted,
+              onChanged: (value) => widget.onCheckboxChanged!(value),
             )));
   }
 }
