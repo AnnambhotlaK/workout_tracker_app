@@ -80,10 +80,11 @@ class HiveDatabase {
           Exercise(
               key: exerciseDetails[i][j][0],
               name: exerciseDetails[i][j][1],
-              weight: exerciseDetails[i][j][2],
-              reps: exerciseDetails[i][j][3],
+              isCompleted: exerciseDetails[i][j][2] == 'true' ? true : false,
+              //weight: exerciseDetails[i][j][2],
+              //reps: exerciseDetails[i][j][3],
               sets: setsInEachExercise,
-              isCompleted: exerciseDetails[i][j][5] == 'true' ? true : false),
+              ),
         );
       }
 
@@ -158,8 +159,8 @@ List<List<List<String>>> convertObjectToExerciseList(List<Session> sessions) {
         [
           exercisesInSession[j].key,
           exercisesInSession[j].name,
-          exercisesInSession[j].weight,
-          exercisesInSession[j].reps,
+          //exercisesInSession[j].weight,
+          //exercisesInSession[j].reps,
           //exercisesInSession[j].sets,
           exercisesInSession[j].isCompleted.toString(),
         ],

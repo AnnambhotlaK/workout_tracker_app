@@ -222,7 +222,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           ),
                           Expanded(
                             child: Text(
-                              ('${exercise.name} | ${exercise.sets}x${exercise.reps} | ${exercise.weight} kg'),
+                              ('${exercise.name} | ${exercise.sets.length} sets'),
                               style: const TextStyle(),
                             ),
                           ),
@@ -348,16 +348,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                       .getRelevantWorkout(widget.workoutKey)
                       .exercises[index]
                       .name,
-                  /*
-                  weight: value
-                      .getRelevantWorkout(widget.workoutKey)
-                      .exercises[index]
-                      .weight,
-                  reps: value
-                      .getRelevantWorkout(widget.workoutKey)
-                      .exercises[index]
-                      .reps,
-                   */
                   sets: ListView.builder(
                       itemCount: value.numberOfSetsInExercise(
                           widget.workoutKey,
