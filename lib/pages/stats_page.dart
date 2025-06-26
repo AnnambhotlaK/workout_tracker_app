@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:main/session_data/session_data.dart';
 import 'package:provider/provider.dart';
-import 'package:fl_chart/fl_chart.dart';
 
 import '../models/session.dart';
 

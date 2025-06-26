@@ -34,9 +34,9 @@ class HiveDatabase {
   // Write data
   void saveToDatabase(List<Workout> workouts) {
     // convert workout objects to String lists
-    final workoutList = convertObjectToWorkoutList(workouts);
-    final exerciseList = convertObjectToExerciseList(workouts);
-    final setList = convertObjectToSetList(workouts);
+    //final workoutList = convertObjectToWorkoutList(workouts);
+    //final exerciseList = convertObjectToExerciseList(workouts);
+    //final setList = convertObjectToSetList(workouts);
 
     /*
       Check if any exercises have been done
@@ -50,13 +50,21 @@ class HiveDatabase {
     }
 
     // Save into hive
-    _myBox.put("WORKOUTS", workoutList);
-    _myBox.put("EXERCISES", exerciseList);
-    _myBox.put("SETS", setList);
+    //_myBox.put("WORKOUTS", workoutList);
+    _myBox.put("CURRENT_WORKOUTS", workouts);
+    print("Database saved with ${workouts.length} workouts.");
+    //_myBox.put("EXERCISES", exerciseList);
+    //_myBox.put("SETS", setList);
   }
 
   // Read data, return list of workouts
   List<Workout> readFromDatabase() {
+    final dynamic workouts = _myBox.get("CURRENT_WORKOUTS");
+    if (workouts is List) {
+      return workouts.cast<Workout>().toList();
+    }
+    return [];
+    /*
     List<Workout> mySavedWorkouts = [];
 
     List<List<String>> workouts =
@@ -106,6 +114,7 @@ class HiveDatabase {
     }
     // return final list of saved workouts
     return mySavedWorkouts;
+     */
   }
 
   // Check if any exercises have been done

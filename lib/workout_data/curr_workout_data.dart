@@ -29,95 +29,109 @@ class WorkoutData extends ChangeNotifier {
 
   List<Workout> workoutList = [
     // Default workouts (Push, Pull, Legs)
-    // TODO: Update default workouts with actual sets
     Workout(
       key: uuid.v4(),
       name: 'Push',
+      isActive: false,
       exercises: [
         Exercise(
             key: uuid.v4(),
             name: 'Bench Press',
+            isCompleted: false,
             //weight: '60',
             //reps: '5',
-            sets: [Set(key: uuid.v4(), weight: '135', reps: '10')]),
+            sets: [Set(key: uuid.v4(), weight: '135', reps: '10', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Shoulder Press',
+            isCompleted: false,
             //weight: '12',
             //reps: '8',
-            sets: [Set(key: uuid.v4(), weight: '60', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '60', reps: '8', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Lateral Raise',
+            isCompleted: false,
             //weight: '5',
             //reps: '10',
-            sets: [Set(key: uuid.v4(), weight: '15', reps: '12')]),
+            sets: [Set(key: uuid.v4(), weight: '15', reps: '12', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Triceps Extension',
+            isCompleted: false,
             //weight: '15',
             //reps: '10',
-            sets: [Set(key: uuid.v4(), weight: '60', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '60', reps: '8', isCompleted: false)]),
       ],
     ),
     Workout(
       key: uuid.v4(),
       name: 'Pull',
+      isActive: false,
       exercises: [
         Exercise(
             key: uuid.v4(),
             name: 'Pull Ups',
+            isCompleted: false,
             //weight: '0',
             //reps: '6',
-            sets: [Set(key: uuid.v4(), weight: '0', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '0', reps: '8', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Row',
+            isCompleted: false,
             //weight: '15',
             //reps: '8',
-            sets: [Set(key: uuid.v4(), weight: '50', reps: '6')]),
+            sets: [Set(key: uuid.v4(), weight: '50', reps: '6', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Lat Pulldown',
+            isCompleted: false,
             //weight: '60',
             //reps: '8',
-            sets: [Set(key: uuid.v4(), weight: '110', reps: '7')]),
+            sets: [Set(key: uuid.v4(), weight: '110', reps: '7', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Dumbbell Curl',
+            isCompleted: false,
             //weight: '10',
             //reps: '10',
-            sets: [Set(key: uuid.v4(), weight: '40', reps: '10')]),
+            sets: [Set(key: uuid.v4(), weight: '40', reps: '10', isCompleted: false)]),
       ],
     ),
     Workout(
       key: uuid.v4(),
       name: 'Legs',
+      isActive: false,
       exercises: [
         Exercise(
             key: uuid.v4(),
             name: 'Barbell Squats',
+            isCompleted: false,
             //weight: '80',
             //reps: '8',
-            sets: [Set(key: uuid.v4(), weight: '135', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '135', reps: '8', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Leg Extensions',
+            isCompleted: false,
             //weight: '30',
             //reps: '10',
-            sets: [Set(key: uuid.v4(), weight: '100', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '100', reps: '8', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Leg Curl',
+            isCompleted: false,
             //weight: '20',
             //reps: '10',
-            sets: [Set(key: uuid.v4(), weight: '80', reps: '8')]),
+            sets: [Set(key: uuid.v4(), weight: '80', reps: '8', isCompleted: false)]),
         Exercise(
             key: uuid.v4(),
             name: 'Calf Raises',
+            isCompleted: false,
             //weight: '10',
             //reps: '12',
-            sets: [Set(key: uuid.v4(), weight: '0', reps: '20')]),
+            sets: [Set(key: uuid.v4(), weight: '0', reps: '20', isCompleted: false)]),
       ],
     ),
   ];

@@ -31,9 +31,11 @@ class HiveDatabase {
   // Save a session to the database
   void saveToDatabase(List<Session> sessions) {
     // convert workout objects to String lists
-    final sessionList = convertObjectToSessionList(sessions);
-    final exerciseList = convertObjectToExerciseList(sessions);
-    final setList = convertObjectToSetList(sessions);
+    //final sessionList = convertObjectToSessionList(sessions);
+    //final exerciseList = convertObjectToExerciseList(sessions);
+    //final setList = convertObjectToSetList(sessions);
+    _myBox.put("SAVED_SESSIONS", sessions);
+    print("Database saved with ${sessions.length} sessions.");
 
     // for each session, add completion status on that day
     for (int i = 0; i < sessions.length; i++) {
@@ -43,13 +45,21 @@ class HiveDatabase {
     }
 
     // Save into hive
-    _myBox.put("SESSIONS", sessionList);
-    _myBox.put("EXERCISES", exerciseList);
-    _myBox.put("SETS", setList);
+    //_myBox.put("SESSIONS", sessionList);
+    //_myBox.put("EXERCISES", exerciseList);
+    //_myBox.put("SETS", setList);
   }
 
   // Read data, return list of workouts
   List<Session> readFromDatabase() {
+
+    final dynamic sessions = _myBox.get("SAVED_SESSIONS");
+    if (sessions is List) {
+      return sessions.cast<Session>().toList();
+    }
+    return [];
+
+    /*
     List<Session> mySavedSessions = [];
 
     List<List<String>> sessions =
@@ -101,6 +111,7 @@ class HiveDatabase {
     }
     // return final list of saved workouts
     return mySavedSessions;
+     */
   }
 
   // Return workout completion status on date yyyymmdd

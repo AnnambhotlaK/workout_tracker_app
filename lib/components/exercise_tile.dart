@@ -5,7 +5,7 @@ class ExerciseTile extends StatelessWidget {
   final String exerciseName;
   //final String weight;
   //final String reps;
-  final ListView sets;
+  final SizedBox sets;
   final bool isCompleted;
   //void Function(bool?)? onCheckboxChanged;
 
