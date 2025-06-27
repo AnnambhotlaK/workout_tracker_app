@@ -1,49 +1,31 @@
 import 'package:flutter/material.dart';
 
-class SetTile extends StatefulWidget {
-  //final String exerciseName;
+class SetTile extends StatelessWidget {
   final String weight;
   final String reps;
-
-  //final String sets;
   final bool isCompleted;
-  void Function(bool?)? onCheckboxChanged;
+  final ValueChanged<bool?> onCheckboxChanged;
 
-  SetTile({
+  const SetTile({
     super.key,
-    //required this.exerciseName,
     required this.weight,
     required this.reps,
-    //required this.sets,
     required this.isCompleted,
     required this.onCheckboxChanged,
   });
 
   @override
-  State<SetTile> createState() => _SetTileState();
-}
-
-class _SetTileState extends State<SetTile> {
-  @override
   Widget build(BuildContext context) {
-    return Container(
-        // Color changes upon checking off exercise
-        color: widget.isCompleted ? Colors.green : Colors.grey,
-        child: ListTile(
-            //title: Text(exerciseName),
-            subtitle: Row(
-              children: [
-                Chip(label: Text("${widget.weight}kg")),
-                Chip(label: Text("${widget.reps} reps")),
-                Checkbox(
-                  value: widget.isCompleted,
-                  onChanged: (value) => widget.onCheckboxChanged!(value),
-                )
-              ],
-            ),
-            trailing: Checkbox(
-              value: widget.isCompleted,
-              onChanged: (value) => widget.onCheckboxChanged!(value),
-            )));
+    return ListTile( // ListTile is good for set rows
+      tileColor: Colors.blueGrey,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+      leading: Checkbox(
+        value: isCompleted,
+        onChanged: onCheckboxChanged,
+      ),
+      title: Text('Weight: $weight', style: TextStyle(fontSize: 14)),
+      subtitle: Text('Reps: $reps', style: TextStyle(fontSize: 14)),
+      dense: true,
+    );
   }
 }

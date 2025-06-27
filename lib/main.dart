@@ -10,16 +10,6 @@ import 'models/session.dart';
 import 'models/set.dart';
 import 'models/workout.dart';
 
-/*
-List<Box> boxList = [];
-Future<List<Box>> _openBox() async {
-  var workoutBox = await Hive.openBox("curr_workouts_database");
-  var sessionBox = await Hive.openBox("session_database");
-  boxList.add(workoutBox);
-  boxList.add(sessionBox);
-  return boxList;
-}
-*/
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
@@ -29,18 +19,8 @@ Future<void> main() async {
   Hive.registerAdapter(SessionAdapter());
   var workoutBox = await Hive.openBox("curr_workouts_database");
   var sessionBox = await Hive.openBox("session_database");
-  workoutBox.clear();
-  sessionBox.clear();
   runApp(const MyApp());
 }
-/*
-void main() async {
-  // Initialize hive
-  await Hive.initFlutter();
-  await _openBox();
-  runApp(const MyApp());
-}
- */
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -174,7 +174,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void addExercise(
-      String workoutName, String exerciseName, String weight, String reps) {
+      String workoutName, String exerciseName) {
     // Find the relevant workouts
     Workout relevantWorkout =
         workoutList.firstWhere((workout) => workout.name == workoutName);
