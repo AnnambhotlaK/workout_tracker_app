@@ -16,16 +16,22 @@ class SetTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile( // ListTile is good for set rows
-      tileColor: Colors.blueGrey,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-      leading: Checkbox(
-        value: isCompleted,
-        onChanged: onCheckboxChanged,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: ListTile(
+        // ListTile is good for set rows
+        tileColor: (isCompleted) ? Colors.green: Colors.grey[300],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+        leading: Checkbox(
+          checkColor: Colors.white,
+          //activeColor: Colors.green,
+          value: isCompleted,
+          onChanged: onCheckboxChanged,
+        ),
+        title: Text('Weight: $weight', style: TextStyle(fontSize: 14, color: (isCompleted) ? Colors.white : Colors.black)),
+        subtitle: Text('Reps: $reps', style: TextStyle(fontSize: 14, color: (isCompleted) ? Colors.white : Colors.black)),
+        dense: true,
       ),
-      title: Text('Weight: $weight', style: TextStyle(fontSize: 14)),
-      subtitle: Text('Reps: $reps', style: TextStyle(fontSize: 14)),
-      dense: true,
     );
   }
 }

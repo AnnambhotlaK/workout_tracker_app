@@ -1,11 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
-
-import '../components/exercise_tile_with_sets.dart';
+import '../models/set.dart';
+import '../components/exercise_tile.dart';
 import '../components/set_tile.dart';
 import '../models/exercise.dart';
+import '../models/workout.dart';
 import '../session_data/session_data.dart';
 
 class WorkoutPage extends StatefulWidget {
@@ -289,12 +292,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 //TODO: Make it so button is greyed if workout is invalid
                 onPressed: () {
                   // if no exercises done in workout
-                  if (value.getNumCompletedExercises(
-                          value.getRelevantWorkout(widget.workoutKey)) ==
-                      0) {
+                  bool readyToFinish = false;
+                  Workout relevantWorkout = value.getRelevantWorkout(widget.workoutKey);
+                  for (Exercise exercise in relevantWorkout.exercises) {
+                    for (Set set in exercise.sets) {
+                      if (set.isCompleted) {
+                        readyToFinish = true;
+                      }
+                    }
+                  }
+                  if (!readyToFinish) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text(
-                            'Please complete at least one exercise before ending the session.')));
+                            'Please complete at least one set before ending the session.')));
                   } else {
                     confirmEndWorkoutPopup(widget.workoutName);
                   }
@@ -310,13 +320,20 @@ class _WorkoutPageState extends State<WorkoutPage> {
               Exercise currentExercise = value
                   .getRelevantWorkout(widget.workoutKey)
                   .exercises[exerciseIndex];
-              return ExerciseTileWithSets(
+              return ExerciseTile(
                   exerciseName: currentExercise.name,
                   isExerciseCompleted: currentExercise.isCompleted,
                   sets: currentExercise.sets,
                   workoutKey: widget.workoutKey,
                   exerciseKey: currentExercise.key,
                   onDeleteSet: (setKey) {
+                    Set currentSet = Provider.of<WorkoutData>(context, listen: false).getRelevantSet(widget.workoutKey, currentExercise.key, setKey);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Set deleted from ${currentExercise.name}')));
+                    if (currentSet.isCompleted) {
+                      Provider.of<WorkoutData>(context, listen: false)
+                          .checkOffSet(widget.workoutKey, currentExercise.key, setKey); // Assuming name is key here, better use exercise.key
+                    }
                     setState(() {
                       value.deleteSet(widget.workoutKey, currentExercise.key, setKey);
                     });
