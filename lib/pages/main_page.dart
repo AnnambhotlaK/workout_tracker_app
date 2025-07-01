@@ -23,8 +23,8 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: pages[selectedPage],
       bottomNavigationBar: NavigationBar(
-        indicatorColor: Colors.blue,
-        shadowColor: Colors.blue,
+        //indicatorColor: Colors.blue,
+        //shadowColor: Colors.blue,
         height: 70,
         selectedIndex: selectedPage,
         onDestinationSelected: (value) {
@@ -50,21 +50,6 @@ class _MainPageState extends State<MainPage> {
           ),
         ]
       )
-      /*
-      BottomNavigationBar(
-          currentIndex: currentPage,
-          onTap: (value) {
-            setState(() {
-              currentPage = value;
-            });
-          },
-          items: const [
-              BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-              BottomNavigationBarItem(icon: Icon(Icons.stacked_line_chart), label: "Stats"),
-              BottomNavigationBarItem(icon: Icon(Icons.settings), label: "Settings"),
-          ],
-      ),
-    */
     );
   }
 }

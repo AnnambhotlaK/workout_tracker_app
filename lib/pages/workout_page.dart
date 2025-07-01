@@ -1,14 +1,21 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
-
+import '../models/set.dart';
+import '../components/exercise_tile.dart';
+import '../components/set_tile.dart';
 import '../models/exercise.dart';
+import '../models/workout.dart';
 import '../session_data/session_data.dart';
 
 class WorkoutPage extends StatefulWidget {
   final String workoutName;
-  const WorkoutPage({super.key, required this.workoutName});
+  final String workoutKey;
+  const WorkoutPage(
+      {super.key, required this.workoutName, required this.workoutKey});
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -18,9 +25,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
   bool isEndSessionButtonActive = true;
 
   // Checkbox was ticked
-  void onCheckboxChanged(String workoutName, String exerciseName) {
+  void onCheckboxChanged(String workoutKey, String exerciseKey, String setKey) {
     Provider.of<WorkoutData>(context, listen: false)
-        .checkOffExercise(workoutName, exerciseName);
+        .checkOffSet(workoutKey, exerciseKey, setKey);
   }
 
   // Text controllers for creating new exercise
@@ -42,6 +49,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     decoration: const InputDecoration(label: Text('Name')),
                     controller: exerciseNameController,
                   ),
+                  /*
                   TextField(
                     decoration: const InputDecoration(label: Text('Weight')),
                     controller: weightController,
@@ -54,6 +62,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     decoration: const InputDecoration(label: Text('Sets')),
                     controller: setsController,
                   ),
+
+                   */
                 ],
               ),
               actions: [
@@ -75,19 +85,16 @@ class _WorkoutPageState extends State<WorkoutPage> {
   // Save exercise
   void save() {
     String newExerciseName = exerciseNameController.text;
-    String weight = weightController.text;
-    String reps = repsController.text;
-    String sets = setsController.text;
+    //String weight = weightController.text;
+    //String reps = repsController.text;
+    //String sets = setsController.text;
     // If any are incorrect, create error message
-    if ((newExerciseName.isEmpty || newExerciseName.trim().isEmpty) ||
-        (weight.isEmpty || weight.trim().isEmpty) ||
-        (reps.isEmpty || reps.trim().isEmpty) ||
-        (sets.isEmpty || sets.trim().isEmpty)) {
+    if ((newExerciseName.isEmpty || newExerciseName.trim().isEmpty)) {
       invalidExercisePopup();
     } else {
       // Add workout to workout data list
       Provider.of<WorkoutData>(context, listen: false)
-          .addExercise(widget.workoutName, newExerciseName, weight, reps, sets);
+          .addExercise(widget.workoutName, newExerciseName);
 
       Navigator.pop(context);
       clear();
@@ -126,7 +133,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   // Confirm the end of a workout session
-  void confirmEndWorkoutPopup(String workoutName) {
+  void confirmEndWorkoutPopup(String workoutKey) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -135,7 +142,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 actions: [
                   // Save Session Button
                   MaterialButton(
-                      onPressed: () => saveSession(workoutName),
+                      onPressed: () => saveSession(workoutKey),
                       child: const Text('Yes')),
                   // No Button
                   MaterialButton(
@@ -150,14 +157,15 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   // Actions to save session to sessionData
-  Future<void> saveSession(String workoutName) async {
+  Future<void> saveSession(String workoutKey) async {
     // Get current datetime (useful for later)
     DateTime now = DateTime.now();
     DateTime date = DateTime(now.year, now.month, now.day);
 
     // Deactivate current workout
+    print("WORKOUT KEY: $workoutKey");
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .isActive = false;
 
     // Pop dialog confirming session end
@@ -167,13 +175,21 @@ class _WorkoutPageState extends State<WorkoutPage> {
     // Next, uncheck all checked exercises in the workout
     // Also add completed exercises to list of exercises
     List<Exercise> completedExercises = [];
+    bool setWasCompleted = false;
     for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .exercises) {
-      if (exercise.isCompleted) {
+      for (Set set in exercise.sets) {
+        if (set.isCompleted) {
+          setWasCompleted = true;
+          Provider.of<WorkoutData>(context, listen: false)
+              .checkOffSet(workoutKey, exercise.key, set.key);
+        }
+      }
+      if (setWasCompleted) {
         completedExercises.add(exercise);
         Provider.of<WorkoutData>(context, listen: false)
-            .checkOffExercise(workoutName, exercise.name);
+            .checkOffExercise(workoutKey, exercise.key);
       }
     }
 
@@ -191,10 +207,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
               children: <Widget>[
                 // WORKOUT NAME
                 Text(
-                  workoutName,
+                  widget.workoutName,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor),
+                      color: Colors.white),
                 ),
                 // EXERCISES LIST
                 const Text(
@@ -219,9 +235,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
                           ),
                           Expanded(
                             child: Text(
-                              ('${exercise.name} | ${exercise.sets}x${exercise.reps} | ${exercise.weight} kg'),
-                              style: const TextStyle(
-                              ),
+                              ('${exercise.name} | ${exercise.sets.length} sets'),
+                              style: const TextStyle(),
                             ),
                           ),
                         ],
@@ -242,7 +257,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
 
     // Save session in sessionList
     Provider.of<SessionData>(context, listen: false).addSession(
-      workoutName,
+      widget.workoutName,
       completedExercises,
       date,
     );
@@ -286,14 +301,21 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 //TODO: Make it so button is greyed if workout is invalid
                 onPressed: () {
                   // if no exercises done in workout
-                  if (value.getNumCompletedExercises(
-                          value.getRelevantWorkout(widget.workoutName)) ==
-                      0) {
+                  bool readyToFinish = false;
+                  Workout relevantWorkout = value.getRelevantWorkout(widget.workoutKey);
+                  for (Exercise exercise in relevantWorkout.exercises) {
+                    for (Set set in exercise.sets) {
+                      if (set.isCompleted) {
+                        readyToFinish = true;
+                      }
+                    }
+                  }
+                  if (!readyToFinish) {
                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text(
-                            'Please complete at least one exercise before ending the session.')));
+                            'Please complete at least one set before ending the session.')));
                   } else {
-                    confirmEndWorkoutPopup(widget.workoutName);
+                    confirmEndWorkoutPopup(widget.workoutKey);
                   }
                 },
                 child: const Icon(Icons.check),
@@ -301,74 +323,47 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ],
           ),
         ),
-        body: ListView.builder(
-            itemCount: value.numberOfExercisesInWorkout(widget.workoutName),
-            itemBuilder: (context, index) {
-              return Dismissible(
-                key: UniqueKey(),
-                onDismissed: (direction) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          '${value.getRelevantWorkout(widget.workoutName).exercises[index].name} deleted')));
-                  if (value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .isCompleted) {
-                    Provider.of<WorkoutData>(context, listen: false)
-                        .checkOffExercise(
-                            widget.workoutName,
-                            value
-                                .getRelevantWorkout(widget.workoutName)
-                                .exercises[index]
-                                .name);
+        body: ListView.builder( // OUTER ListView for Exercises
+            itemCount: value.numberOfExercisesInWorkout(widget.workoutKey),
+            itemBuilder: (context, exerciseIndex) {
+              Exercise currentExercise = value
+                  .getRelevantWorkout(widget.workoutKey)
+                  .exercises[exerciseIndex];
+              return ExerciseTile(
+                  exerciseName: currentExercise.name,
+                  isExerciseCompleted: currentExercise.isCompleted,
+                  sets: currentExercise.sets,
+                  workoutKey: widget.workoutKey,
+                  exerciseKey: currentExercise.key,
+                  onDeleteSet: (setKey) {
+                    Set currentSet = Provider.of<WorkoutData>(context, listen: false).getRelevantSet(widget.workoutKey, currentExercise.key, setKey);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('Set deleted from ${currentExercise.name}')));
+                    if (currentSet.isCompleted) {
+                      Provider.of<WorkoutData>(context, listen: false)
+                          .checkOffSet(widget.workoutKey, currentExercise.key, setKey); // Assuming name is key here, better use exercise.key
+                    }
+                    setState(() {
+                      value.deleteSet(widget.workoutKey, currentExercise.key, setKey);
+                    });
+                  },
+                  onToggleSetCompletion: (setKey) {
+                    // ... your logic to toggle set completion ...
+                    Provider.of<WorkoutData>(context, listen: false).checkOffSet(
+                        widget.workoutKey, currentExercise.key, setKey);
+                  },
+                  // Add similar callbacks for deleting the whole exercise if needed
+                  onDeleteExercise: () {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text('${currentExercise.name} deleted')));
+                    if (currentExercise.isCompleted) {
+                      Provider.of<WorkoutData>(context, listen: false)
+                          .checkOffExercise(widget.workoutKey, currentExercise.key); // Assuming name is key here, better use exercise.key
+                    }
+                    setState(() {
+                      value.deleteExercise(widget.workoutKey, currentExercise.key);
+                    });
                   }
-                  setState(() {
-                    value.deleteExercise(
-                        value.getRelevantWorkout(widget.workoutName).key,
-                        value
-                            .getRelevantWorkout(widget.workoutName)
-                            .exercises[index]
-                            .key);
-                  });
-                },
-                // Show indicator of deleting workout
-                background: Container(
-                  color: Colors.red,
-                  padding: const EdgeInsets.only(right: 20),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                    size: 36,
-                  ),
-                ),
-                child: ExerciseTile(
-                  exerciseName: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .name,
-                  weight: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .weight,
-                  reps: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .reps,
-                  sets: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .sets,
-                  isCompleted: value
-                      .getRelevantWorkout(widget.workoutName)
-                      .exercises[index]
-                      .isCompleted,
-                  onCheckboxChanged: (val) => onCheckboxChanged(
-                      widget.workoutName,
-                      value
-                          .getRelevantWorkout(widget.workoutName)
-                          .exercises[index]
-                          .name),
-                ),
               );
             }),
       ),

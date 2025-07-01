@@ -5,19 +5,20 @@ import 'package:main/session_data/session_data.dart';
 import 'package:main/workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 
-List<Box> boxList = [];
-Future<List<Box>> _openBox() async {
+import 'models/exercise.dart';
+import 'models/session.dart';
+import 'models/set.dart';
+import 'models/workout.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(WorkoutAdapter());
+  Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(SetAdapter());
+  Hive.registerAdapter(SessionAdapter());
   var workoutBox = await Hive.openBox("curr_workouts_database");
   var sessionBox = await Hive.openBox("session_database");
-  boxList.add(workoutBox);
-  boxList.add(sessionBox);
-  return boxList;
-}
-
-void main() async {
-  // Initialize hive
-  await Hive.initFlutter();
-  await _openBox();
   runApp(const MyApp());
 }
 
@@ -34,13 +35,18 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           brightness: Brightness.light,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.black,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+          ),
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
         ),
         themeMode: ThemeMode.dark,
         debugShowCheckedModeBanner: false,
-        home: /*const HomePage()*/const MainPage(),
+        home: const MainPage(),
       ),
     );
   }

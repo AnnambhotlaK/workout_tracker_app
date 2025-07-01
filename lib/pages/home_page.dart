@@ -81,21 +81,21 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Go to the workout page after clicking on it
-  void goToWorkoutPage(String workoutName) {
+  void goToWorkoutPage(String workoutName, String workoutKey) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => WorkoutPage(workoutName: workoutName),
+          builder: (context) => WorkoutPage(workoutName: workoutName, workoutKey: workoutKey),
         ));
   }
 
   // Start a new workout session
-  void startSession(String workoutName, List<Exercise> exercises) {
+  void startSession(String workoutName, String workoutKey, List<Exercise> exercises) {
     closePopup();
-    goToWorkoutPage(workoutName);
+    goToWorkoutPage(workoutName, workoutKey);
     // set relevant workout to active
     Provider.of<WorkoutData>(context, listen: false)
-        .getRelevantWorkout(workoutName)
+        .getRelevantWorkout(workoutKey)
         .isActive = true;
   }
 
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Show popup to confirm or deny starting a new workout
-  void confirmStartWorkoutPopup(String workoutName, List<Exercise> exercises) {
+  void confirmStartWorkoutPopup(String workoutName, String workoutKey, List<Exercise> exercises) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -125,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                 // Yes, to initiate workout
                 // implement startWorkout, which initiates a "workout"
                 MaterialButton(
-                    onPressed: () => startSession(workoutName, exercises),
+                    onPressed: () => startSession(workoutName, workoutKey, exercises),
                     child: const Text('Yes')),
                 // No, to return to home page
                 MaterialButton(onPressed: closePopup, child: const Text('No')),
@@ -205,6 +205,7 @@ class _HomePageState extends State<HomePage> {
                           if (workoutValue.getWorkoutList()[index].isActive) {
                             goToWorkoutPage(
                               workoutValue.getWorkoutList()[index].name,
+                              workoutValue.getWorkoutList()[index].key,
                             );
                           }
                           // If tapping on inactive workout + none others active: go to popup
@@ -212,6 +213,7 @@ class _HomePageState extends State<HomePage> {
                               !workoutValue.isWorkoutActive()) {
                             confirmStartWorkoutPopup(
                               workoutValue.getWorkoutList()[index].name,
+                              workoutValue.getWorkoutList()[index].key,
                               workoutValue.getWorkoutList()[index].exercises,
                             );
                           }

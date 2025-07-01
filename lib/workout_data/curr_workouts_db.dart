@@ -1,9 +1,9 @@
+import 'dart:core';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/datetime/date_time.dart';
-import 'package:main/models/exercise.dart';
 import 'package:main/models/workout.dart';
 
-/* Database for current workouts/exercises */
+/* Database for workouts, exercises, and sets in user's "library"*/
 
 class HiveDatabase {
   // Reference hive box
@@ -31,62 +31,25 @@ class HiveDatabase {
 
   // Write data
   void saveToDatabase(List<Workout> workouts) {
-    // convert workout objects to String lists
-    final workoutList = convertObjectToWorkoutList(workouts);
-    final exerciseList = convertObjectToExerciseList(workouts);
+    _myBox.put("CURRENT_WORKOUTS", workouts);
+    print("Database saved with ${workouts.length} workouts.");
 
-    /*
-      Check if any exercises have been done
-      Put a 0 (not done) or 1 (done) for each yyyymmdd date
-    */
-
+    //Check if any exercises have been done
+    //Put a 0 (not done) or 1 (done) for each yyyymmdd date
     if (exerciseCompleted(workouts)) {
       _myBox.put("COMPLETION_STATUS_${todaysDateYYYYMMDD()}", 1);
     } else {
       _myBox.put("COMPLETION_STATUS_${todaysDateYYYYMMDD()}", 0);
     }
-
-    // Save into hive
-    _myBox.put("WORKOUTS", workoutList);
-    _myBox.put("EXERCISES", exerciseList);
   }
 
   // Read data, return list of workouts
   List<Workout> readFromDatabase() {
-    List<Workout> mySavedWorkouts = [];
-
-    List<List<String>> workouts =
-        List<List<String>>.from(_myBox.get("WORKOUTS"));
-    final exerciseDetails = _myBox.get("EXERCISES");
-
-    // Create workout objects
-    for (int i = 0; i < workouts.length; i++) {
-      // Each workout can have multiple exercises
-      List<Exercise> exercisesInEachWorkout = [];
-
-      for (int j = 0; j < exerciseDetails[i].length; j++) {
-        exercisesInEachWorkout.add(
-          Exercise(
-              key: exerciseDetails[i][j][0],
-              name: exerciseDetails[i][j][1],
-              weight: exerciseDetails[i][j][2],
-              reps: exerciseDetails[i][j][3],
-              sets: exerciseDetails[i][j][4],
-              isCompleted: exerciseDetails[i][j][5] == 'true' ? true : false),
-        );
-      }
-
-      // Create individual workout
-      Workout workout = Workout(
-          key: workouts[i][0],
-          name: workouts[i][1],
-          exercises: exercisesInEachWorkout);
-
-      // Add workout to overall list
-      mySavedWorkouts.add(workout);
+    final dynamic workouts = _myBox.get("CURRENT_WORKOUTS");
+    if (workouts is List) {
+      return workouts.cast<Workout>().toList();
     }
-    // return final list of saved workouts
-    return mySavedWorkouts;
+    return [];
   }
 
   // Check if any exercises have been done
@@ -102,69 +65,4 @@ class HiveDatabase {
     }
     return false;
   }
-
-  /*
-  // Return workout completion status on date yyyymmdd
-  int getCompletionStatus(String yyyymmdd) {
-    // returns 0 or 1, if null then return 0
-    int completionStatus = _myBox.get("COMPLETION_STATUS_$yyyymmdd") ?? 0;
-    return completionStatus;
-  }
-   */
-}
-
-// Convert workout objects into lists of Strings -> [ upperBody, lowerBody ]
-// (Hive is best with primitive data types)
-List<List<String>> convertObjectToWorkoutList(List<Workout> workouts) {
-  List<List<String>> workoutList = [
-    // [upperbody, lowerbody]
-  ];
-
-  for (int i = 0; i < workouts.length; i++) {
-    workoutList.add([workouts[i].key, workouts[i].name]);
-  }
-
-  return workoutList;
-}
-
-// Convert exercise objects in each workout object into lists
-// List of workouts (1d)
-// Each workout is a list of exercises (2d)
-// Each exercise is a list of exercise features (3d)
-List<List<List<String>>> convertObjectToExerciseList(List<Workout> workouts) {
-  List<List<List<String>>> exerciseList = [
-    /*
-        [upperBody, lowerBody]
-        [ [ ['biceps', 10kg, 10 reps, 3 sets], [another exercise] ], [ [lower body], [lower body] ] ]
-      */
-  ];
-
-  // Go through each workout
-  for (int i = 0; i < workouts.length; i++) {
-    List<Exercise> exercisesInWorkout = workouts[i].exercises;
-
-    List<List<String>> individualWorkout = [
-      // [ ['biceps', 10 kg, 10 reps, 3 sets] ]
-    ];
-
-    // Go through each exercise in exerciseList
-    for (int j = 0; j < exercisesInWorkout.length; j++) {
-      List<String> individualExercise = [
-        // ['biceps', 10 kg, 10 reps, 3 sets]
-      ];
-      individualExercise.addAll(
-        [
-          exercisesInWorkout[j].key,
-          exercisesInWorkout[j].name,
-          exercisesInWorkout[j].weight,
-          exercisesInWorkout[j].reps,
-          exercisesInWorkout[j].sets,
-          exercisesInWorkout[j].isCompleted.toString(),
-        ],
-      );
-      individualWorkout.add(individualExercise);
-    }
-    exerciseList.add(individualWorkout);
-  }
-  return exerciseList;
 }
