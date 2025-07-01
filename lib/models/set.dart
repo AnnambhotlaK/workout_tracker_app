@@ -11,10 +11,10 @@ class Set {
   final String key;
 
   @HiveField(1)
-  final String weight;
+  String weight;
 
   @HiveField(2)
-  final String reps;
+  String reps;
 
   @HiveField(3)
   bool isCompleted;

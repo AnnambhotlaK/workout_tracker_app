@@ -271,25 +271,44 @@ class WorkoutData extends ChangeNotifier {
 
   // Returns relevant workout object given desired workout key
   Workout getRelevantWorkout(String workoutKey) {
-    Workout relevantWorkout =
-        workoutList.firstWhere((workout) => workout.key == workoutKey);
-    return relevantWorkout;
+    try {
+      return workoutList.firstWhere((workout) => workout.key == workoutKey);
+    } catch (e) {
+      print(
+          "Error (getRelevantWorkout): Workout with key '$workoutKey' not found in workout list");
+      print(
+          "Available workout keys: ${workoutList.map((w) => w.key).toList()}");
+      rethrow;
+    }
   }
 
   // Returns relevant exercise object given desired exercise key
   Exercise getRelevantExercise(String workoutKey, String exerciseKey) {
-    Exercise relevantExercise = getRelevantWorkout(workoutKey)
-        .exercises
-        .firstWhere((exercise) => exercise.key == exerciseKey);
-    return relevantExercise;
+    Workout relevantWorkout = getRelevantWorkout(workoutKey);
+    try {
+      return relevantWorkout.exercises
+          .firstWhere((exercise) => exercise.key == exerciseKey);
+    } catch (e) {
+      print(
+          "Error (getRelevantExercise): Exercise with key '$exerciseKey' not found in workout '${relevantWorkout.name}");
+      print(
+          "Available exercise keys: ${relevantWorkout.exercises.map((e) => e.key).toList()}");
+      rethrow;
+    }
   }
 
   // Returns relevant set given relevant workout and exercise keys
   Set getRelevantSet(String workoutKey, String exerciseKey, String setKey) {
-    Set relevantSet = getRelevantExercise(workoutKey, exerciseKey)
-        .sets
-        .firstWhere((set) => set.key == setKey);
-    return relevantSet;
+    Exercise relevantExercise = getRelevantExercise(workoutKey, exerciseKey);
+    try {
+      return relevantExercise.sets.firstWhere((set) => set.key == setKey);
+    } catch (e) {
+      print(
+          "Error (getRelevantSet): Set with key '$setKey' not found in exercise '${relevantExercise.name}'.");
+      print(
+          "Available set keys: ${relevantExercise.sets.map((s) => s.key).toList()}");
+      rethrow;
+    }
   }
 
   // Check if any workout is active currently
@@ -324,5 +343,38 @@ class WorkoutData extends ChangeNotifier {
       }
     }
     return sum;
+  }
+
+  void updateSetWeight(
+      String workoutKey, String exerciseKey, String setKey, String newWeight) {
+    try {
+      Set relevantSet = getRelevantSet(workoutKey, exerciseKey, setKey);
+      if (relevantSet.weight != newWeight) {
+        relevantSet.weight = newWeight;
+        currWorkoutsDb.saveToDatabase(workoutList);
+        notifyListeners();
+        print("Updated weight for set '$setKey' to '$newWeight'");
+      }
+    } catch (e) {
+      print("Error updating weight: $e");
+    }
+  }
+
+  void updateSetReps(
+      String workoutKey, String exerciseKey, String setKey, String newReps) {
+    try {
+      Set relevantSet = getRelevantSet(
+          workoutKey, exerciseKey, setKey); // Use your existing getter
+      if (relevantSet.reps != newReps) {
+        relevantSet.reps = newReps;
+        currWorkoutsDb
+            .saveToDatabase(workoutList); // Your method to save to Hive
+        notifyListeners(); // Update UI
+        print("Updated reps for set '$setKey' to '$newReps'");
+      }
+    } catch (e) {
+      print("Failed to update set reps: $e");
+      // Handle error appropriately
+    }
   }
 }

@@ -133,7 +133,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   }
 
   // Confirm the end of a workout session
-  void confirmEndWorkoutPopup(String workoutName) {
+  void confirmEndWorkoutPopup(String workoutKey) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -142,7 +142,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 actions: [
                   // Save Session Button
                   MaterialButton(
-                      onPressed: () => saveSession(workoutName),
+                      onPressed: () => saveSession(workoutKey),
                       child: const Text('Yes')),
                   // No Button
                   MaterialButton(
@@ -163,6 +163,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     DateTime date = DateTime(now.year, now.month, now.day);
 
     // Deactivate current workout
+    print("WORKOUT KEY: $workoutKey");
     Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutKey)
         .isActive = false;
@@ -174,10 +175,18 @@ class _WorkoutPageState extends State<WorkoutPage> {
     // Next, uncheck all checked exercises in the workout
     // Also add completed exercises to list of exercises
     List<Exercise> completedExercises = [];
+    bool setWasCompleted = false;
     for (Exercise exercise in Provider.of<WorkoutData>(context, listen: false)
         .getRelevantWorkout(workoutKey)
         .exercises) {
-      if (exercise.isCompleted) {
+      for (Set set in exercise.sets) {
+        if (set.isCompleted) {
+          setWasCompleted = true;
+          Provider.of<WorkoutData>(context, listen: false)
+              .checkOffSet(workoutKey, exercise.key, set.key);
+        }
+      }
+      if (setWasCompleted) {
         completedExercises.add(exercise);
         Provider.of<WorkoutData>(context, listen: false)
             .checkOffExercise(workoutKey, exercise.key);
@@ -201,7 +210,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   widget.workoutName,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor),
+                      color: Colors.white),
                 ),
                 // EXERCISES LIST
                 const Text(
@@ -306,7 +315,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         content: Text(
                             'Please complete at least one set before ending the session.')));
                   } else {
-                    confirmEndWorkoutPopup(widget.workoutName);
+                    confirmEndWorkoutPopup(widget.workoutKey);
                   }
                 },
                 child: const Icon(Icons.check),

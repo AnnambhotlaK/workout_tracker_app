@@ -23,8 +23,8 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       body: pages[selectedPage],
       bottomNavigationBar: NavigationBar(
-        indicatorColor: Colors.blue,
-        shadowColor: Colors.blue,
+        //indicatorColor: Colors.blue,
+        //shadowColor: Colors.blue,
         height: 70,
         selectedIndex: selectedPage,
         onDestinationSelected: (value) {

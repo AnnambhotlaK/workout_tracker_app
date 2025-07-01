@@ -86,11 +86,19 @@ class ExerciseTile extends StatelessWidget {
                       ),
                       child: SetTile(
                         // Your existing SetTile
-                        weight: set.weight,
-                        reps: set.reps,
+                        initialWeight: set.weight,
+                        initialReps: set.reps,
                         isCompleted: set.isCompleted,
-                        onCheckboxChanged: (val) =>
-                            onToggleSetCompletion(set.key),
+                        onCheckboxChanged: (val) {
+                          onToggleSetCompletion(set.key);
+
+                        },
+                        onWeightChanged: (newWeight) {
+                          Provider.of<WorkoutData>(context, listen: false).updateSetWeight(workoutKey, exerciseKey, set.key, newWeight);
+                        },
+                        onRepsChanged: (newReps) {
+                          Provider.of<WorkoutData>(context, listen: false).updateSetReps(workoutKey, exerciseKey, set.key, newReps);
+                        },
                       ),
                     );
                   }).toList(),

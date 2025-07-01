@@ -35,6 +35,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         theme: ThemeData(
           brightness: Brightness.light,
+          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+            backgroundColor: Colors.black,
+            selectedItemColor: Colors.blue,
+            unselectedItemColor: Colors.grey,
+          ),
         ),
         darkTheme: ThemeData(
           brightness: Brightness.dark,
