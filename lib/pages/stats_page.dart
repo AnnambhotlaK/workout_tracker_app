@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:main/session_data/session_data.dart';
 import 'package:provider/provider.dart';
@@ -87,6 +88,7 @@ class _StatsPageState extends State<StatsPage> {
               ),
             ),
 
+            //TODO: CHART OF SESSIONS COMPLETED OVER PAST FIVE WEEKS
 
           ]),
         );

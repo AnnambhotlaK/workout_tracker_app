@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:main/session_data/session_data_db.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:uuid/uuid.dart';
-
+import 'package:week_number/iso.dart';
 import 'package:main/models/exercise.dart';
 import '../models/session.dart';
+import 'package:intl/intl.dart';
 
 /* Session Data refers to the completed workout sessions.
  */
@@ -47,10 +48,15 @@ class SessionData extends ChangeNotifier {
     // Initialize heatMapSessionDataset
     for (int i = 0; i < sessionList.length; i++) {
       DateTime date = sessionList[i].dateCompleted;
+      int week = sessionList[i].dateCompleted.weekNumber;
       if (heatMapSessionDataset[date] == null) {
         heatMapSessionDataset[date] = [];
       }
       heatMapSessionDataset[date]!.add(sessionList[i]);
+      if (heatMapWeekDataset[week] == null) {
+        heatMapWeekDataset[week] = [];
+      }
+      heatMapWeekDataset[week]!.add(sessionList[i]);
     }
 
     // Show session activity
@@ -163,7 +169,7 @@ class SessionData extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-              'Sessions on ${date.toLocal().toString().split(' ')[0]}'), // Display date nicely
+              'Sessions on ${DateFormat('MMMM d, yyyy').format(date)}'), // Display date nicely
           content: SizedBox(
             // Constrain the size of the dialog content
             width: double.maxFinite,
@@ -234,4 +240,6 @@ class SessionData extends ChangeNotifier {
   Map<DateTime, int> heatMapDataset = {};
   // Used to key datetimes to the list of sessions completed on date
   Map<DateTime, List<Session>> heatMapSessionDataset = {};
+  // Used to key a week to a list of sessions completed in that week
+  Map<int, List<Session>> heatMapWeekDataset = {};
 }

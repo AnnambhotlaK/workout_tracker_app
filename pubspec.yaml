@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_charts: ^29.1.38
   fl_chart: ^0.71.0
   week_of_year: ^2.2.0
+  week_number: ^1.1.1
 
 dev_dependencies:
   flutter_test:
