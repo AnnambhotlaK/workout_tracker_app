@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:main/workout_data/curr_workouts_db.dart';
+import 'package:main/curr_workout_data/curr_workouts_db.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/workout.dart';

@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
-import 'package:main/workout_data/curr_workout_data.dart';
+import 'package:main/curr_workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 import '../models/set.dart';
 import '../components/exercise_tile.dart';

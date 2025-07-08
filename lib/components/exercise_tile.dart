@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/set_tile.dart';
 import 'package:main/models/set.dart';
 import 'package:provider/provider.dart';
-import '../workout_data/curr_workout_data.dart';
+import '../curr_workout_data/curr_workout_data.dart';
 
 class ExerciseTile extends StatelessWidget {
   final String exerciseName;
