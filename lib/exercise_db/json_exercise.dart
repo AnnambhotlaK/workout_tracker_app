@@ -1,11 +1,11 @@
 /*
-  Exercise objects as stored/read from data.json
+  JsonExercise objects as stored/read from data.json
   Only select data from these objects will be included in
   workout/session data
 */
 import 'dart:convert'; // for jsonEncode/Decode
 
-class Exercise {
+class JsonExercise {
   final String id; // "Pushups"
   final String name; // "Pushups"
   final String? force; // "push"
@@ -19,7 +19,7 @@ class Exercise {
   final List<String> images; // Paths to images in your assets
   final bool isCustom; // In this case, false
 
-  Exercise({
+  JsonExercise({
     required this.id,
     required this.name,
     this.force,
@@ -34,9 +34,9 @@ class Exercise {
     this.isCustom = false,
   });
 
-  // Factory to get an Exercise from JSON
-  factory Exercise.fromJson(Map<String, dynamic> json, {bool isCustomOrigin = false}) {
-    return Exercise(
+  // Factory to get an JsonExercise from JSON
+  factory JsonExercise.fromJson(Map<String, dynamic> json, {bool isCustomOrigin = false}) {
+    return JsonExercise(
       id: json['id'] as String,
       name: json['name'] as String,
       force: json['force'] as String?,
@@ -72,9 +72,9 @@ class Exercise {
     };
   }
 
-  // Factory to create an Exercise from a database map (SQLite row)
-  factory Exercise.fromDbMap(Map<String, dynamic> map) {
-    return Exercise(
+  // Factory to create an JsonExercise from a database map (SQLite row)
+  factory JsonExercise.fromDbMap(Map<String, dynamic> map) {
+    return JsonExercise(
       id: map['id'] as String,
       name: map['name'] as String,
       force: map['force'] as String?,

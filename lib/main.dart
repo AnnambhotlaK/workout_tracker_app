@@ -14,7 +14,17 @@ import 'models/workout.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  await DatabaseHelper.instance.database;
+
+  // TEST ON DATABASEHELPER
+  print("Main: Calling DatabaseHelper.instance.database to initialize.");
+  try {
+    await DatabaseHelper.instance.database; // This triggers the getter and initialization
+    print("Main: Database initialization call completed.");
+  } catch (e) {
+    print("Main: Error during initial database call: $e");
+    // Handle critical initialization error if necessary
+  }
+
   Hive.registerAdapter(WorkoutAdapter());
   Hive.registerAdapter(ExerciseAdapter());
   Hive.registerAdapter(SetAdapter());

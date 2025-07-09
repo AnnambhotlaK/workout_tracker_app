@@ -5,9 +5,10 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shared_preferences/shared_preferences.dart'; // For checking if DB is populated
 import 'json_exercise.dart';
+import 'workout_log_entry.dart';
 
 const String dbName = 'app_database.db';
-const String exercisesTable = 'exercises';
+const String JsonExercisesTable = 'JsonExercises';
 const String workoutLogsTable = 'workout_logs'; // Example for PRs
 const String dbPopulatedKey = 'isDatabasePopulated';
 
@@ -18,24 +19,30 @@ class DatabaseHelper {
   DatabaseHelper._init();
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    if (_database != null) return _database!; // Returns immediately if already initialized
+    // THIS IS THE INITIALIZATION BLOCK
+    print("Database getter: _database is null, calling _initDB."); // Add this log
     _database = await _initDB(dbName);
+    print("Database getter: _initDB completed, _database is now set."); // Add this log
     return _database!;
   }
 
   Future<Database> _initDB(String filePath) async {
+    print("_initDB called."); // Add this log
     final dbPath = await getApplicationDocumentsDirectory();
     final path = join(dbPath.path, filePath);
+    print("_initDB: Opening database at $path"); // Add this log
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
   Future _createDB(Database db, int version) async {
+    print("_createDB called.");
     // TEXT for fields that can be long or are naturally strings
     // INTEGER for boolean flags (0 or 1)
     // REAL for floating-point numbers (like weight)
     // BLOB for raw binary data (not needed here for lists if using JSON strings)
     await db.execute('''
-      CREATE TABLE $exercisesTable (
+      CREATE TABLE $JsonExercisesTable (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         force TEXT,
@@ -54,124 +61,118 @@ class DatabaseHelper {
     await db.execute('''
       CREATE TABLE $workoutLogsTable (
         logId TEXT PRIMARY KEY, -- Or INTEGER AUTOINCREMENT
-        exerciseId TEXT NOT NULL,
-        exerciseName TEXT NOT NULL, -- Denormalized for easier display
+        JsonExerciseId TEXT NOT NULL,
+        JsonExerciseName TEXT NOT NULL, -- Denormalized for easier display
         date TEXT NOT NULL, -- Store as ISO8601 string
         weight REAL NOT NULL,
         reps INTEGER NOT NULL,
-        FOREIGN KEY (exerciseId) REFERENCES $exercisesTable (id) ON DELETE CASCADE
+        FOREIGN KEY (JsonExerciseId) REFERENCES $JsonExercisesTable (id) ON DELETE CASCADE
       )
     ''');
 
     // Populate after creating tables
-    await _populateInitialExercises(db);
+    await _populateInitialJsonExercises(db);
   }
 
-  Future<void> _populateInitialExercises(Database db) async {
+  Future<void> _populateInitialJsonExercises(Database db) async {
+    print("_populateInitialJsonExercises called.");
     final prefs = await SharedPreferences.getInstance();
     final bool isPopulated = prefs.getBool(dbPopulatedKey) ?? false;
 
     if (!isPopulated) {
       print("Database not populated. Populating now from data.json...");
       try {
-        // 1. Ensure 'data.json' is in your assets folder
-        // 2. Ensure 'data.json' is declared in your pubspec.yaml:
-        //    flutter:
-        //      assets:
-        //        - assets/data.json
-        //        - assets/exercise_images/ # If you have images
         String jsonString = await rootBundle.loadString('assets/data.json');
-
-        // The root of your data.json is an array of exercise objects
+        print("Successfully loaded data.json string."); // <--- ADD THIS
         final List<dynamic> jsonList = json.decode(jsonString) as List<dynamic>;
+        print("Successfully decoded JSON. Number of items: ${jsonList.length}"); // <--- ADD THIS
 
         Batch batch = db.batch();
+        int count = 0;
         for (var jsonObj in jsonList) {
+          print("Processing item ${count++}: $jsonObj"); // <--- ADD THIS
           if (jsonObj is Map<String, dynamic>) {
-            // isCustomOrigin: false because this is from the predefined dataset
-            Exercise exercise =
-                Exercise.fromJson(jsonObj, isCustomOrigin: false);
-            batch.insert(exercisesTable,
-                exercise.toMap()); // .toMap() serializes list fields
+            JsonExercise newJsonExercise = JsonExercise.fromJson(jsonObj, isCustomOrigin: false);
+            print("Converted to JsonExercise: ${newJsonExercise.name}"); // <--- ADD THIS
+            batch.insert(JsonExercisesTable, newJsonExercise.toMap());
           } else {
             print("Skipping invalid item in JSON data: $jsonObj");
           }
         }
+        print("Batch prepared. Committing..."); // <--- ADD THIS
         await batch.commit(noResult: true);
         await prefs.setBool(dbPopulatedKey, true);
         print("Database populated successfully from data.json.");
-      } catch (e) {
+      } catch (e, s) { // Also print stack trace
         print("Error populating database from data.json: $e");
-        // Consider more robust error handling:
-        // - Maybe delete the database file and retry on next launch if population fails mid-way.
-        // - Inform the user if essential data can't be loaded.
+        print("Stack trace: $s"); // <--- ADD STACK TRACE
       }
     } else {
       print("Database already populated.");
     }
   }
 
-  // --- CRUD for Exercises ---
-  Future<String> addExercise(Exercise exercise,
+  // --- CRUD for JsonExercises ---
+  Future<String> addJsonExercise(JsonExercise newJsonExercise,
       {bool isCustomEntry = true}) async {
     final db = await instance.database;
     // Ensure the 'isCustom' flag is correctly set before saving
-    Exercise exerciseToSave = Exercise(
-        id: exercise
+    JsonExercise newJsonExerciseToSave = JsonExercise(
+        id: newJsonExercise
             .id, // Or generate a new one if it's truly custom and 'id' isn't user-provided
-        name: exercise.name,
-        force: exercise.force,
-        level: exercise.level,
-        mechanic: exercise.mechanic,
-        equipment: exercise.equipment,
-        primaryMuscles: exercise.primaryMuscles,
-        secondaryMuscles: exercise.secondaryMuscles,
-        instructions: exercise.instructions,
-        category: exercise.category,
-        images: exercise.images,
+        name: newJsonExercise.name,
+        force: newJsonExercise.force,
+        level: newJsonExercise.level,
+        mechanic: newJsonExercise.mechanic,
+        equipment: newJsonExercise.equipment,
+        primaryMuscles: newJsonExercise.primaryMuscles,
+        secondaryMuscles: newJsonExercise.secondaryMuscles,
+        instructions: newJsonExercise.instructions,
+        category: newJsonExercise.category,
+        images: newJsonExercise.images,
         isCustom: isCustomEntry);
-    await db.insert(exercisesTable, exerciseToSave.toMap(),
+    await db.insert(JsonExercisesTable, newJsonExerciseToSave.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
-    return exerciseToSave.id;
+    return newJsonExerciseToSave.id;
   }
 
-  Future<Exercise?> getExercise(String id) async {
+  Future<JsonExercise?> getJsonExercise(String id) async {
     final db = await instance.database;
     final maps = await db.query(
-      exercisesTable,
+      JsonExercisesTable,
       where: 'id = ?',
       whereArgs: [id],
     );
 
     if (maps.isNotEmpty) {
-      return Exercise.fromDbMap(
+      return JsonExercise.fromDbMap(
           maps.first); // Use fromDbMap for deserialization
     } else {
       return null;
     }
   }
 
-  Future<List<Exercise>> getAllExercises({String? searchTerm}) async {
+  Future<List<JsonExercise>> getAllJsonExercises({String? searchTerm}) async {
     final db = await instance.database;
     List<Map<String, dynamic>> result;
 
     if (searchTerm != null && searchTerm.isNotEmpty) {
-      result = await db.query(exercisesTable,
+      result = await db.query(JsonExercisesTable,
           where: "name LIKE ?",
           whereArgs: [
             '%$searchTerm%'
           ], // Case-insensitive search might need LOWER() depending on SQLite version/config
           orderBy: 'name ASC');
     } else {
-      result = await db.query(exercisesTable, orderBy: 'name ASC');
+      result = await db.query(JsonExercisesTable, orderBy: 'name ASC');
     }
-    return result.map((json) => Exercise.fromDbMap(json)).toList();
+    return result.map((json) => JsonExercise.fromDbMap(json)).toList();
   }
 
-  Future<void> deleteExercise(String id) async {
+  Future<void> deleteJsonExercise(String id) async {
     final db = await instance.database;
     await db.delete(
-      exercisesTable,
+      JsonExercisesTable,
       where: 'id = ?',
       whereArgs: [id],
     );
@@ -181,7 +182,7 @@ class DatabaseHelper {
   // --- CRUD for Workout Logs (Personal Records) ---
   Future<String> addWorkoutLog(WorkoutLogEntry logEntry) async {
     final db = await instance.database;
-    // Assuming WorkoutLogEntry has a toMap() method similar to Exercise
+    // Assuming WorkoutLogEntry has a toMap() method similar to JsonExercise
     // And a unique id (e.g., generated using uuid package)
     // final String logId = Uuid().v4();
     // Map<String, dynamic> logMap = logEntry.toMap();
@@ -192,13 +193,13 @@ class DatabaseHelper {
     return logEntry.id; // Assuming logEntry has an id
   }
 
-  Future<List<WorkoutLogEntry>> getWorkoutLogsForExercise(
-      String exerciseId) async {
+  Future<List<WorkoutLogEntry>> getWorkoutLogsForJsonExercise(
+      String JsonExerciseId) async {
     final db = await instance.database;
     final result = await db.query(
       workoutLogsTable,
-      where: 'exerciseId = ?',
-      whereArgs: [exerciseId],
+      where: 'JsonExerciseId = ?',
+      whereArgs: [JsonExerciseId],
       orderBy: 'date ASC', // Important for progression charts
     );
     // Assuming WorkoutLogEntry has a fromMap factory

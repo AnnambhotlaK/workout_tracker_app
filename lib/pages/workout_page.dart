@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/curr_workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
+import '../components/exercise_selector.dart';
+import '../exercise_db/json_exercise.dart';
 import '../models/set.dart';
 import '../components/exercise_tile.dart';
 import '../components/set_tile.dart';
@@ -37,49 +39,24 @@ class _WorkoutPageState extends State<WorkoutPage> {
   final setsController = TextEditingController();
 
   // Creating a new exercise
-  void createNewExercise() {
-    showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-              title: const Text('Add a New Exercise'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    decoration: const InputDecoration(label: Text('Name')),
-                    controller: exerciseNameController,
-                  ),
-                  /*
-                  TextField(
-                    decoration: const InputDecoration(label: Text('Weight')),
-                    controller: weightController,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(label: Text('Reps')),
-                    controller: repsController,
-                  ),
-                  TextField(
-                    decoration: const InputDecoration(label: Text('Sets')),
-                    controller: setsController,
-                  ),
-
-                   */
-                ],
-              ),
-              actions: [
-                // Save button
-                MaterialButton(
-                  onPressed: save,
-                  child: const Text('Save'),
-                ),
-
-                // Cancel button
-                MaterialButton(
-                  onPressed: cancel,
-                  child: const Text('Cancel'),
-                ),
-              ],
-            ));
+  void _showExerciseSelector(BuildContext context) async {
+    final JsonExercise? selectedExercise = await showDialog<JsonExercise>(
+      context: context,
+      builder: (BuildContext context) {
+        return const ExerciseSelector();
+      }
+    );
+    if (selectedExercise != null) {
+      // User selected an exercise
+      print('Selected Exercise ID: ${selectedExercise.id}');
+      print('Selected Exercise Name: ${selectedExercise.name}');
+      // Now you can use this 'selectedExercise' object
+      // For example, add it to your current workout:
+      // Provider.of<CurrWorkoutData>(context, listen: false).addExerciseToWorkout(workoutKey, selectedExercise);
+    } else {
+      // User canceled the dialog (tapped outside or pressed Cancel)
+      print('Exercise selection canceled.');
+    }
   }
 
   // Save exercise
@@ -289,7 +266,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 heroTag: "addBtn",
                 backgroundColor: Colors.red,
                 foregroundColor: Colors.white,
-                onPressed: createNewExercise,
+                onPressed: () => _showExerciseSelector(context),
                 child: const Icon(Icons.add),
               ),
               Expanded(child: Container()),
