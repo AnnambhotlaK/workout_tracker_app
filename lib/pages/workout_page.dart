@@ -52,7 +52,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       print('Selected Exercise Name: ${selectedExercise.name}');
       // Now you can use this 'selectedExercise' object
       // For example, add it to your current workout:
-      // Provider.of<CurrWorkoutData>(context, listen: false).addExerciseToWorkout(workoutKey, selectedExercise);
+      // Provider.of<WorkoutData>(context, listen: false).addExercise(widget.workoutKey, selectedExercise);
     } else {
       // User canceled the dialog (tapped outside or pressed Cancel)
       print('Exercise selection canceled.');
@@ -325,7 +325,6 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     });
                   },
                   onToggleSetCompletion: (setKey) {
-                    // ... your logic to toggle set completion ...
                     Provider.of<WorkoutData>(context, listen: false).checkOffSet(
                         widget.workoutKey, currentExercise.key, setKey);
                   },
@@ -335,7 +334,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                         content: Text('${currentExercise.name} deleted')));
                     if (currentExercise.isCompleted) {
                       Provider.of<WorkoutData>(context, listen: false)
-                          .checkOffExercise(widget.workoutKey, currentExercise.key); // Assuming name is key here, better use exercise.key
+                          .checkOffExercise(widget.workoutKey, currentExercise.key);
                     }
                     setState(() {
                       value.deleteExercise(widget.workoutKey, currentExercise.key);

@@ -10,8 +10,6 @@ class Exercise {
 
   @HiveField(1)
   final String name;
-  //final String weight;
-  //final String reps;
 
   @HiveField(2)
   bool isCompleted;
@@ -22,8 +20,6 @@ class Exercise {
   Exercise({
     required this.key,
     required this.name,
-    //required this.weight,
-    //required this.reps
     this.isCompleted = false,
     required this.sets,
   });

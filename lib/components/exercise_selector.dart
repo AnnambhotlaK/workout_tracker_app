@@ -3,20 +3,18 @@
   from the exercise_db and add one to a workout
 */
 import 'package:flutter/material.dart';
-import 'package:main/components/set_tile.dart';
-import 'package:main/models/set.dart';
-import 'package:provider/provider.dart';
 import 'package:main/exercise_db/json_exercise.dart';
 import '../exercise_db/database_helper.dart';
+import 'exercise_adder.dart';
 
 class ExerciseSelector extends StatefulWidget {
   const ExerciseSelector({super.key});
 
   @override
-  State<ExerciseSelector> createState() => _ExerciseSelectionDialogState();
+  State<ExerciseSelector> createState() => _ExerciseSelectorState();
 }
 
-class _ExerciseSelectionDialogState extends State<ExerciseSelector> {
+class _ExerciseSelectorState extends State<ExerciseSelector> {
   late Future<List<JsonExercise>> _exercisesFuture;
   String _searchTerm = '';
 
@@ -131,7 +129,10 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelector> {
                       child: Container(
                         height: 100,
                         child: ElevatedButton(
-                          onPressed: () => Navigator.of(context).pop(),
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ExerciseAdder()));
+                            Navigator.of(context).pop();
+                          },
                           child: const Text('Add Custom'),
                         ),
                       ),
@@ -142,6 +143,9 @@ class _ExerciseSelectionDialogState extends State<ExerciseSelector> {
                         padding: EdgeInsets.only(left: 5),
                         height: 100,
                         child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red[400],
+                          ),
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Cancel'),
                         ),
