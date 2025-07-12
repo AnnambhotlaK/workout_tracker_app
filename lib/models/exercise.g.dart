@@ -18,23 +18,26 @@ class ExerciseAdapter extends TypeAdapter<Exercise> {
     };
     return Exercise(
       key: fields[0] as String,
-      name: fields[1] as String,
-      isCompleted: fields[2] as bool,
-      sets: (fields[3] as List).cast<Set>(),
+      jsonId: fields[1] as String,
+      name: fields[2] as String,
+      isCompleted: fields[3] as bool,
+      sets: (fields[4] as List).cast<Set>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Exercise obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.key)
       ..writeByte(1)
-      ..write(obj.name)
+      ..write(obj.jsonId)
       ..writeByte(2)
-      ..write(obj.isCompleted)
+      ..write(obj.name)
       ..writeByte(3)
+      ..write(obj.isCompleted)
+      ..writeByte(4)
       ..write(obj.sets);
   }
 

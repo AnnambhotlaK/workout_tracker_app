@@ -52,7 +52,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       print('Selected Exercise Name: ${selectedExercise.name}');
       // Now you can use this 'selectedExercise' object
       // For example, add it to your current workout:
-      // Provider.of<WorkoutData>(context, listen: false).addExercise(widget.workoutKey, selectedExercise);
+      Provider.of<WorkoutData>(context, listen: false).addExercise(widget.workoutKey, selectedExercise.id, selectedExercise.name);
     } else {
       // User canceled the dialog (tapped outside or pressed Cancel)
       print('Exercise selection canceled.');
@@ -70,8 +70,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
       invalidExercisePopup();
     } else {
       // Add workout to workout data list
-      Provider.of<WorkoutData>(context, listen: false)
-          .addExercise(widget.workoutName, newExerciseName);
+      //Provider.of<WorkoutData>(context, listen: false)
+      //    .addExercise(widget.workoutName, newExerciseName);
 
       Navigator.pop(context);
       clear();

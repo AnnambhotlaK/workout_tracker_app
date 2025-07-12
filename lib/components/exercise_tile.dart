@@ -49,13 +49,15 @@ class ExerciseTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    exerciseName,
-                    style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                  Flexible(
+                    child: Text(
+                      exerciseName,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                  // Maybe an overall completion checkbox for the exercise?
-                  // Checkbox(value: isExerciseCompleted, onChanged: (val) { /* ... */ })
                 ],
               ),
               const SizedBox(height: 8),
@@ -91,13 +93,16 @@ class ExerciseTile extends StatelessWidget {
                         isCompleted: set.isCompleted,
                         onCheckboxChanged: (val) {
                           onToggleSetCompletion(set.key);
-
                         },
                         onWeightChanged: (newWeight) {
-                          Provider.of<WorkoutData>(context, listen: false).updateSetWeight(workoutKey, exerciseKey, set.key, newWeight);
+                          Provider.of<WorkoutData>(context, listen: false)
+                              .updateSetWeight(
+                                  workoutKey, exerciseKey, set.key, newWeight);
                         },
                         onRepsChanged: (newReps) {
-                          Provider.of<WorkoutData>(context, listen: false).updateSetReps(workoutKey, exerciseKey, set.key, newReps);
+                          Provider.of<WorkoutData>(context, listen: false)
+                              .updateSetReps(
+                                  workoutKey, exerciseKey, set.key, newReps);
                         },
                       ),
                     );

@@ -9,16 +9,20 @@ class Exercise {
   final String key;
 
   @HiveField(1)
-  final String name;
+  final String jsonId;
 
   @HiveField(2)
-  bool isCompleted;
+  final String name;
 
   @HiveField(3)
+  bool isCompleted;
+
+  @HiveField(4)
   final List<Set> sets;
 
   Exercise({
     required this.key,
+    required this.jsonId,
     required this.name,
     this.isCompleted = false,
     required this.sets,

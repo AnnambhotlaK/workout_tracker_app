@@ -31,87 +31,97 @@ class WorkoutData extends ChangeNotifier {
     // Default workouts (Push, Pull, Legs)
     Workout(
       key: uuid.v4(),
-      name: 'Push',
+      name: 'Chest, Triceps, & Shoulders',
       isActive: false,
       exercises: [
         Exercise(
             key: uuid.v4(),
-            name: 'Bench Press',
+            jsonId: 'Dumbbell_Bench_Press',
+            name: 'Dumbbell Bench Press',
             isCompleted: false,
-            //weight: '60',
-            //reps: '5',
             sets: [
-              Set(key: uuid.v4(), weight: '135', reps: '10', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
+            jsonId: 'Dumbbell_Shoulder_Press',
             name: 'Dumbbell Shoulder Press',
             isCompleted: false,
-            //weight: '12',
-            //reps: '8',
             sets: [
-              Set(key: uuid.v4(), weight: '60', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Lateral Raise',
+            jsonId: 'Side_Lateral_Raise',
+            name: 'Side Lateral Raise',
             isCompleted: false,
-            //weight: '5',
-            //reps: '10',
             sets: [
-              Set(key: uuid.v4(), weight: '15', reps: '12', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Triceps Extension',
+            jsonId: 'Standing_Overhead_Barbell_Triceps_Extension',
+            name: 'Standing Overhead Barbell Triceps Extension',
             isCompleted: false,
-            //weight: '15',
-            //reps: '10',
             sets: [
-              Set(key: uuid.v4(), weight: '60', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
       ],
     ),
     Workout(
       key: uuid.v4(),
-      name: 'Pull',
+      name: 'Back & Biceps',
       isActive: false,
       exercises: [
         Exercise(
             key: uuid.v4(),
-            name: 'Pull Ups',
+            jsonId: 'Pullups',
+            name: 'Pullups',
             isCompleted: false,
-            //weight: '0',
-            //reps: '6',
             sets: [
-              Set(key: uuid.v4(), weight: '0', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Dumbbell Row',
+            jsonId: 'Bent_Over_Barbell_Row',
+            name: 'Bent Over Barbell Row',
             isCompleted: false,
-            //weight: '15',
-            //reps: '8',
             sets: [
-              Set(key: uuid.v4(), weight: '50', reps: '6', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Lat Pulldown',
+            jsonId: 'One_Arm_Lat_Pulldown',
+            name: 'One Arm Lat Pulldown',
             isCompleted: false,
-            //weight: '60',
-            //reps: '8',
             sets: [
-              Set(key: uuid.v4(), weight: '110', reps: '7', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Dumbbell Curl',
+            jsonId: 'Seated_Dumbbell_Curl',
+            name: 'Seated Dumbbell Curl',
             isCompleted: false,
-            //weight: '10',
-            //reps: '10',
             sets: [
-              Set(key: uuid.v4(), weight: '40', reps: '10', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
       ],
     ),
@@ -122,39 +132,42 @@ class WorkoutData extends ChangeNotifier {
       exercises: [
         Exercise(
             key: uuid.v4(),
-            name: 'Barbell Squats',
+            jsonId: 'Barbell_Squat',
+            name: 'Barbell Squat',
             isCompleted: false,
-            //weight: '80',
-            //reps: '8',
             sets: [
-              Set(key: uuid.v4(), weight: '135', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
+            jsonId: 'Leg_Extensions',
             name: 'Leg Extensions',
             isCompleted: false,
-            //weight: '30',
-            //reps: '10',
             sets: [
-              Set(key: uuid.v4(), weight: '100', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Leg Curl',
+            jsonId: 'Lying_Leg_Curls',
+            name: 'Lying Leg Curls',
             isCompleted: false,
-            //weight: '20',
-            //reps: '10',
             sets: [
-              Set(key: uuid.v4(), weight: '80', reps: '8', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
         Exercise(
             key: uuid.v4(),
-            name: 'Calf Raises',
+            jsonId: 'Standing_Calf_Raises',
+            name: 'Standing Calf Raises',
             isCompleted: false,
-            //weight: '10',
-            //reps: '12',
             sets: [
-              Set(key: uuid.v4(), weight: '0', reps: '20', isCompleted: false)
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
             ]),
       ],
     ),
@@ -197,16 +210,14 @@ class WorkoutData extends ChangeNotifier {
     currWorkoutsDb.saveToDatabase(workoutList);
   }
 
-  void addExercise(String workoutName, String exerciseName) {
+  void addExercise(String workoutKey, String exerciseJsonId, String exerciseName) {
     // Find the relevant workouts
-    Workout relevantWorkout =
-        workoutList.firstWhere((workout) => workout.name == workoutName);
+    Workout relevantWorkout = getRelevantWorkout(workoutKey);
 
     relevantWorkout.exercises.add(Exercise(
       key: uuid.v4(),
+      jsonId: exerciseJsonId,
       name: exerciseName,
-      //weight: weight,
-      //reps: reps,
       sets: [],
     ));
 
@@ -215,8 +226,7 @@ class WorkoutData extends ChangeNotifier {
   }
 
   void deleteExercise(String workoutKey, String exerciseKey) {
-    Workout relevantWorkout =
-        workoutList.firstWhere((workout) => workout.key == workoutKey);
+    Workout relevantWorkout = getRelevantWorkout(workoutKey);
 
     relevantWorkout.exercises
         .removeWhere((exercise) => exercise.key == exerciseKey);

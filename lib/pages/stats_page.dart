@@ -36,6 +36,18 @@ class _StatsPageState extends State<StatsPage> {
     return exercises;
   }
 
+  int getLifetimeSets() {
+    List<Session> sessionList =
+        Provider.of<SessionData>(context, listen: false).getSessionList();
+    int sets = 0;
+    for (int i = 0; i < sessionList.length; i++) {
+      for (int j = 0; j < sessionList[i].exercises.length; j++) {
+        sets += sessionList[i].exercises[j].sets.length;
+      }
+    }
+    return sets;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<SessionData>(
@@ -80,6 +92,25 @@ class _StatsPageState extends State<StatsPage> {
                 ),
                 child: Text(
                   'Lifetime Exercises: ${getLifetimeExercises()}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+
+            // LIFETIME SETS
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Text(
+                  'Lifetime Sets: ${getLifetimeSets()}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
