@@ -156,6 +156,7 @@ class SessionData extends ChangeNotifier {
   void showActivityOnDay(BuildContext context, DateTime date) {
     // load list of sessions on date
     List<Session> activityList = (heatMapSessionDataset[date] ?? []);
+    print(activityList.length);
     // Print notification and return if activityList is empty
     if (activityList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

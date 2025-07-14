@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/pages/main_page.dart';
+import 'package:main/pages/settings_page.dart';
 import 'package:main/session_data/session_data.dart';
 import 'package:main/curr_workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ import 'models/exercise.dart';
 import 'models/session.dart';
 import 'models/set.dart';
 import 'models/workout.dart';
+import 'theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,26 +43,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<WorkoutData>(create: (context) => WorkoutData()),
-        ChangeNotifierProvider<SessionData>(create: (context) => SessionData()),
-      ],
-      child: MaterialApp(
-        theme: ThemeData(
-          brightness: Brightness.light,
-          bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-            backgroundColor: Colors.black,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-          ),
+        providers: [
+          ChangeNotifierProvider<WorkoutData>(create: (context) => WorkoutData()),
+          ChangeNotifierProvider<SessionData>(create: (context) => SessionData()),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home: const MainPage(),
+          theme: lightMode,
+          darkTheme: darkMode,
         ),
-        darkTheme: ThemeData(
-          brightness: Brightness.dark,
-        ),
-        themeMode: ThemeMode.dark,
-        debugShowCheckedModeBanner: false,
-        home: const MainPage(),
-      ),
     );
   }
 }
