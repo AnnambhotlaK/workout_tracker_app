@@ -20,6 +20,11 @@ Future<void> main() async {
   await Settings.init();
   await Hive.initFlutter();
 
+  Hive.registerAdapter(WorkoutAdapter());
+  Hive.registerAdapter(ExerciseAdapter());
+  Hive.registerAdapter(SetAdapter());
+  Hive.registerAdapter(SessionAdapter());
+
   // TEST ON DATABASEHELPER
   print("Main: Calling DatabaseHelper.instance.database to initialize.");
   try {
@@ -31,10 +36,6 @@ Future<void> main() async {
     // Handle critical initialization error if necessary
   }
 
-  Hive.registerAdapter(WorkoutAdapter());
-  Hive.registerAdapter(ExerciseAdapter());
-  Hive.registerAdapter(SetAdapter());
-  Hive.registerAdapter(SessionAdapter());
   var workoutBox = await Hive.openBox("curr_workouts_database");
   var sessionBox = await Hive.openBox("session_database");
   runApp(ChangeNotifierProvider(
