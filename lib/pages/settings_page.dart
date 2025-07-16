@@ -3,6 +3,12 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'package:provider/provider.dart';
+
+import '../theme/theme_provider.dart';
+
+// Setting keys
+const String keyDarkMode = 'key-dark-mode';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -13,11 +19,14 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    // Initialize ThemeProvider for dark mode
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     return Scaffold(
         appBar: AppBar(
           title: const Text('Settings'),
-          backgroundColor: Colors.blueAccent,
-          foregroundColor: Colors.white,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          foregroundColor: Theme.of(context).appBarTheme.foregroundColor,
         ),
         body: SafeArea(
             child: ListView(
@@ -25,9 +34,9 @@ class _SettingsPageState extends State<SettingsPage> {
               // SETTINGS OPTIONS
               children: [
                 SettingsGroup(
-                    title: 'General',
+                    title: 'Appearance',
                     children: [
-                      //buildDarkMode(),
+                      _buildDarkModeSwitch(themeProvider),
                     ]
                 )
               ],
@@ -36,17 +45,17 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  /*
-  Widget buildDarkMode() =>
-      SwitchSettingsTile(
-        title: 'Dark Mode',
-        //settingKey: SettingsPage.keyDarkMode,
-        leading: Icon(Icons.dark_mode, color: Colors.purple),
-        onChange: (isDarkMode) {
-          setState(() {
-            isDarkMode = !isDarkMode;
-          });
-        },
-      );
-      */
+  Widget _buildDarkModeSwitch(ThemeProvider themeProvider) {
+    bool isCurrentlyDark;
+
+    return SwitchSettingsTile(
+      settingKey: keyDarkMode,
+      title: 'Dark Mode',
+      leading: Icon(Icons.dark_mode, color: Colors.purple),
+      onChange: (bool isDarkModeOn) {
+        themeProvider.toggleTheme(isDarkModeOn);
+      },
+    );
+  }
+
 }
