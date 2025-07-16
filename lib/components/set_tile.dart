@@ -45,11 +45,17 @@ class _SetTileState extends State<SetTile> {
           _weightController.text != widget.initialWeight) {
         widget.onWeightChanged(_weightController.text);
       }
+      if (_weightFocusNode.hasFocus) {
+        _weightController.selection = TextSelection(baseOffset: 0, extentOffset: _weightController.text.length);
+      }
     });
     _repsFocusNode.addListener(() {
       if (!_repsFocusNode.hasFocus &&
           _repsController.text != widget.initialReps) {
         widget.onRepsChanged(_repsController.text);
+      }
+      if (_repsFocusNode.hasFocus) {
+        _repsController.selection = TextSelection(baseOffset: 0, extentOffset: _repsController.text.length);
       }
     });
   }
@@ -88,8 +94,8 @@ class _SetTileState extends State<SetTile> {
         padding: EdgeInsetsGeometry.only(bottom: 5),
         child: Row(
           children: [
-            const Text("Weight",
-                style: TextStyle(fontSize: 16, color: Colors.white)),
+
+            // WEIGHT TEXT BOX
             Padding(
               padding: EdgeInsetsGeometry.fromLTRB(19, 0, 0, 0),
             ),
@@ -114,6 +120,7 @@ class _SetTileState extends State<SetTile> {
                   hintText: "0",
                   hintStyle: TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(5)),
                   focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blueAccent), borderRadius: BorderRadius.circular(5)),
                   fillColor: Colors.blue[100],
                   filled: true,
@@ -125,47 +132,42 @@ class _SetTileState extends State<SetTile> {
                 },
               ),
             ),
+            Padding(
+              padding: EdgeInsetsGeometry.fromLTRB(35, 0, 0, 0),
+            ),
+            Expanded(
+              child: TextFormField(
+                controller: _repsController,
+                focusNode: _repsFocusNode,
+                keyboardType: TextInputType.number,
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                // Allow only digits
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding:
+                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                  hintText: "0",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
+                  fillColor: Colors.red[100],
+                  filled: true,
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(5)),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.circular(5)),
+                ),
+                onFieldSubmitted: (value) {
+                  widget.onRepsChanged(value);
+                  _repsFocusNode.unfocus();
+                },
+              ),
+            ),
           ],
         ),
-      ),
-      subtitle: Row(
-        children: [
-          const Text("Reps",
-              style: TextStyle(fontSize: 16, color: Colors.white)),
-          Padding(
-            padding: EdgeInsetsGeometry.fromLTRB(35, 0, 0, 0),
-          ),
-          Expanded(
-            child: TextFormField(
-              controller: _repsController,
-              focusNode: _repsFocusNode,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              // Allow only digits
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-              ),
-              decoration: InputDecoration(
-                isDense: true,
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-                hintText: "0",
-                hintStyle: TextStyle(color: Colors.grey),
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                fillColor: Colors.red[100],
-                filled: true,
-                focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.circular(5)),
-              ),
-              onFieldSubmitted: (value) {
-                widget.onRepsChanged(value);
-                _repsFocusNode.unfocus();
-              },
-            ),
-          ),
-        ],
       ),
       dense: true,
     );

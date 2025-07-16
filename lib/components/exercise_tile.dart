@@ -45,7 +45,7 @@ class ExerciseTile extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Exercise Name and Controls (e.g., checkbox for whole exercise)
+              // Exercise Name
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -61,6 +61,44 @@ class ExerciseTile extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
+
+
+              // Weight and Reps headers
+              if (sets.isNotEmpty) // Only show headers if there are sets
+                Padding(
+                  padding: const EdgeInsets.only(left: 80.0, right: 8.0, bottom: 4.0),
+                  child: Row(
+                    children: [
+                      // "Weight" Header
+                      Expanded(
+                        child: Text(
+                          "Weight",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey[500]),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                        //child: SizedBox(width: 0), // Width of the "X" text in SetTile
+                      ),
+
+
+                      // "Reps" Header
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      Expanded(
+                        child: Text(
+                          "Reps",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, color: Colors.grey[500]),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
               // Sets List (using Column, not ListView.builder)
               if (sets.isEmpty)
