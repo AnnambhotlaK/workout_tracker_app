@@ -120,6 +120,7 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 
 # Firebase build and deployment files
+lib\firebase_options.dart
 /firebase-debug.log
 /firebase-debug.*.log
 .firebaserc
