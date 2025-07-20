@@ -7,7 +7,7 @@ import 'package:main/session_data/session_data.dart';
 import 'package:main/curr_workout_data/curr_workout_data.dart';
 import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'exercise_db/database_helper.dart';
 import 'models/exercise.dart';
 import 'models/session.dart';
@@ -17,6 +17,7 @@ import 'theme/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await Settings.init();
   await Hive.initFlutter();
 
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<SessionData>(create: (context) => SessionData()),
       ],
       child: MaterialApp(
-        title: 'Forma',
+        title: 'Setly',
         debugShowCheckedModeBanner: false,
         home: const MainPage(),
         theme: lightMode,
