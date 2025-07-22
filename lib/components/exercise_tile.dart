@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:main/components/set_tile.dart';
 import 'package:main/models/set.dart';
 import 'package:provider/provider.dart';
-import '../curr_workout_data/curr_workout_data.dart';
+import '../curr_workout_data/workout_data_provider.dart';
+import '../models/exercise.dart';
+import '../models/workout.dart';
 
 class ExerciseTile extends StatelessWidget {
-  final String exerciseName;
-  final bool isExerciseCompleted; // Assuming you might want to show this
+  final Workout workout;
+  final Exercise exercise;
   final List<Set> sets; // Your Set model
-  final String workoutKey;
-  final String exerciseKey;
-  final Function(String setKey) onDeleteSet;
-  final Function(String setKey) onToggleSetCompletion;
+  final bool isExerciseCompleted; // Assuming you might want to show this
+  final Function(Set set) onDeleteSet;
+  final Function(Set set) onToggleSetCompletion;
   final VoidCallback onDeleteExercise;
 
   ExerciseTile({
     super.key,
-    required this.exerciseName,
-    required this.isExerciseCompleted,
+    required this.workout,
+    required this.exercise,
     required this.sets,
-    required this.workoutKey,
-    required this.exerciseKey,
+    required this.isExerciseCompleted,
     required this.onDeleteSet,
     required this.onToggleSetCompletion,
     required this.onDeleteExercise,
@@ -51,7 +51,7 @@ class ExerciseTile extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Text(
-                      exerciseName,
+                      exercise.name,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
@@ -62,11 +62,11 @@ class ExerciseTile extends StatelessWidget {
               ),
               const SizedBox(height: 8),
 
-
               // Weight and Reps headers
               if (sets.isNotEmpty) // Only show headers if there are sets
                 Padding(
-                  padding: const EdgeInsets.only(left: 80.0, right: 8.0, bottom: 4.0),
+                  padding: const EdgeInsets.only(
+                      left: 80.0, right: 8.0, bottom: 4.0),
                   child: Row(
                     children: [
                       // "Weight" Header
@@ -75,25 +75,25 @@ class ExerciseTile extends StatelessWidget {
                           "Weight",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.grey[500]),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[500]),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
-                        //child: SizedBox(width: 0), // Width of the "X" text in SetTile
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 0.0),
                       ),
 
-
                       // "Reps" Header
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       Expanded(
                         child: Text(
                           "Reps",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.grey[500]),
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[500]),
                         ),
                       ),
                     ],
@@ -113,10 +113,10 @@ class ExerciseTile extends StatelessWidget {
                     // Each set is now directly part of the Column
                     return Dismissible(
                       // Dismissible for individual sets
-                      key: ValueKey(set.key),
+                      key: ValueKey(set),
                       // Use the set's unique key
                       direction: DismissDirection.endToStart,
-                      onDismissed: (direction) => onDeleteSet(set.key),
+                      onDismissed: (direction) => onDeleteSet(set),
                       background: Container(
                         color: Colors.redAccent,
                         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -130,17 +130,19 @@ class ExerciseTile extends StatelessWidget {
                         initialReps: set.reps,
                         isCompleted: set.isCompleted,
                         onCheckboxChanged: (val) {
-                          onToggleSetCompletion(set.key);
+                          onToggleSetCompletion(set);
                         },
                         onWeightChanged: (newWeight) {
-                          Provider.of<WorkoutData>(context, listen: false)
-                              .updateSetWeight(
-                                  workoutKey, exerciseKey, set.key, newWeight);
+                          set.weight = newWeight;
+                          Provider.of<WorkoutDataProvider>(context,
+                                  listen: false)
+                              .updateSet(workout, exercise, set);
                         },
                         onRepsChanged: (newReps) {
-                          Provider.of<WorkoutData>(context, listen: false)
-                              .updateSetReps(
-                                  workoutKey, exerciseKey, set.key, newReps);
+                          set.reps = newReps;
+                          Provider.of<WorkoutDataProvider>(context,
+                                  listen: false)
+                              .updateSet(workout, exercise, set);
                         },
                       ),
                     );
@@ -157,12 +159,17 @@ class ExerciseTile extends StatelessWidget {
                   label: Text("Add Set"),
                   onPressed: () {
                     // Call your function to add a new set to this specific exercise
-                    // Provider.of<WorkoutData>(context, listen: false).addSetToExercise(workoutKey, exerciseKey, "0", "0");
-                    Provider.of<WorkoutData>(context, listen: false).addSet(
-                        workoutKey,
-                        exerciseKey,
-                        '0',
-                        '0'); // Assuming you have such a method
+                    // Provider.of<WorkoutDataProvider>(context, listen: false).addSetToExercise(workoutKey, exerciseKey, "0", "0");
+                    Provider.of<WorkoutDataProvider>(context, listen: false)
+                        .addSet(
+                            workout,
+                            exercise,
+                            Set(
+                                id: '',
+                                weight: '0',
+                                reps: '0',
+                                isCompleted:
+                                    false)); // Assuming you have such a method
                   },
                 ),
               ),

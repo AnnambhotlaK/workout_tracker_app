@@ -4,6 +4,7 @@ import 'package:main/pages/stats_page.dart';
 import 'package:provider/provider.dart';
 
 import '../curr_workout_data/curr_workout_data.dart';
+import '../curr_workout_data/workout_data_provider.dart';
 import '../session_data/session_data.dart';
 import 'home_page.dart';
 
@@ -26,7 +27,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
-    Provider.of<WorkoutData>(context, listen: false).initializeWorkoutList();
+    //Provider.of<WorkoutDataProvider>(context, listen: false).workouts();
     Provider.of<SessionData>(context, listen: false).initializeSessionList();
   }
 

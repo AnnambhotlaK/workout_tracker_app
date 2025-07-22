@@ -49,6 +49,8 @@ dependencies:
   shared_preferences: ^2.5.3
   flutter_settings_screens: ^0.3.4
   firebase_core: ^3.15.1
+  cloud_firestore: ^5.6.12
+  firebase_auth: ^5.7.0
 
 dev_dependencies:
   flutter_test:

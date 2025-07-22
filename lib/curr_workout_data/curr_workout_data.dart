@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import 'package:main/curr_workout_data/curr_workouts_db.dart';
 import 'package:uuid/uuid.dart';
@@ -40,7 +41,7 @@ class WorkoutData extends ChangeNotifier {
             name: 'Dumbbell Bench Press',
             isCompleted: false,
             sets: [
-              Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
+              Set(weight: '0', reps: '0', isCompleted: false),
               Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
               Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
               Set(key: uuid.v4(), weight: '0', reps: '0', isCompleted: false),
@@ -388,3 +389,4 @@ class WorkoutData extends ChangeNotifier {
     }
   }
 }
+*/
