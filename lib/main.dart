@@ -5,8 +5,7 @@ import 'package:main/auth/auth.dart';
 import 'package:main/auth/login_or_register.dart';
 import 'package:main/pages/main_page.dart';
 import 'package:main/pages/settings_page.dart';
-import 'package:main/session_data/session_data.dart';
-import 'package:main/curr_workout_data/curr_workout_data.dart';
+import 'package:main/session_data/session_data_provider.dart';
 import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -22,7 +21,7 @@ import 'theme/theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await Hive.initFlutter();
+  //await Hive.initFlutter();
   await Settings.init();
 
   // TEST ON DATABASEHELPER
@@ -51,7 +50,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<WorkoutDataProvider>(create: (context) => WorkoutDataProvider()),
-        ChangeNotifierProvider<SessionData>(create: (context) => SessionData()),
+        ChangeNotifierProvider<SessionDataProvider>(create: (context) => SessionDataProvider()),
       ],
       child: MaterialApp(
         title: 'Setly',

@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
 
     //Provider.of<WorkoutDataProvider>(context, listen: false).workouts();
-    Provider.of<SessionData>(context, listen: false).initializeSessionList();
+    //Provider.of<SessionDataProvider>(context, listen: false).initializeSessionList();
   }
 
   @override

@@ -2,7 +2,7 @@
   Used to store history of workouts completed
   Could be viewed by the user?
  */
-
+/*
 import 'package:flutter/material.dart';
 import 'package:main/session_data/session_data_db.dart';
 import 'package:main/datetime/date_time.dart';
@@ -244,3 +244,4 @@ class SessionData extends ChangeNotifier {
   // Used to key a week to a list of sessions completed in that week
   Map<int, List<Session>> heatMapWeekDataset = {};
 }
+*/

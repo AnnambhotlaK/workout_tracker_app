@@ -1,9 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:main/session_data/session_data.dart';
 import 'package:provider/provider.dart';
 
 import '../models/session.dart';
+import '../session_data/session_data_provider.dart';
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});
@@ -21,14 +21,12 @@ class _StatsPageState extends State<StatsPage> {
   }
 
   int getLifetimeSessions() {
-    return Provider.of<SessionData>(context, listen: false)
-        .getSessionList()
-        .length;
+    return Provider.of<SessionDataProvider>(context, listen: false)
+        .sessions.length;
   }
 
   int getLifetimeExercises() {
-    List<Session> sessionList =
-        Provider.of<SessionData>(context, listen: false).getSessionList();
+    List<Session> sessionList = Provider.of<SessionDataProvider>(context, listen: false).sessions;
     int exercises = 0;
     for (int i = 0; i < sessionList.length; i++) {
       exercises += sessionList[i].exercises.length;
@@ -38,7 +36,7 @@ class _StatsPageState extends State<StatsPage> {
 
   int getLifetimeSets() {
     List<Session> sessionList =
-        Provider.of<SessionData>(context, listen: false).getSessionList();
+        Provider.of<SessionDataProvider>(context, listen: false).sessions;
     int sets = 0;
     for (int i = 0; i < sessionList.length; i++) {
       for (int j = 0; j < sessionList[i].exercises.length; j++) {
@@ -50,8 +48,8 @@ class _StatsPageState extends State<StatsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SessionData>(
-      builder: (BuildContext context, value, child) {
+    return Consumer<SessionDataProvider>(
+      builder: (BuildContext context, sessionProvider, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Statistics'),

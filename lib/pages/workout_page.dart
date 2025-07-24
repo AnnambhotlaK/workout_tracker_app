@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/curr_workout_data/curr_workout_data.dart';
@@ -6,17 +5,18 @@ import 'package:provider/provider.dart';
 import '../components/exercise_selector.dart';
 import '../curr_workout_data/workout_data_provider.dart';
 import '../exercise_db/json_exercise.dart';
+import '../models/session.dart';
 import '../models/set.dart';
 import '../components/exercise_tile.dart';
 import '../components/set_tile.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import '../session_data/session_data.dart';
+import '../session_data/session_data_provider.dart';
 
 class WorkoutPage extends StatefulWidget {
   final Workout workout;
-  const WorkoutPage(
-      {super.key, required this.workout});
+  const WorkoutPage({super.key, required this.workout});
 
   @override
   State<WorkoutPage> createState() => _WorkoutPageState();
@@ -44,18 +44,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
   // Creating a new exercise
   void _showExerciseSelector(BuildContext context) async {
     final JsonExercise? selectedExercise = await showDialog<JsonExercise>(
-      context: context,
-      builder: (BuildContext context) {
-        return const ExerciseSelector();
-      }
-    );
+        context: context,
+        builder: (BuildContext context) {
+          return const ExerciseSelector();
+        });
     if (selectedExercise != null) {
       // User selected an exercise
       print('Selected Exercise ID: ${selectedExercise.id}');
       print('Selected Exercise Name: ${selectedExercise.name}');
       // Now you can use this 'selectedExercise' object
-      Exercise newExercise = Exercise(id: selectedExercise.id, name: selectedExercise.name, sets: []);
-      Provider.of<WorkoutDataProvider>(context, listen: false).addExercise(widget.workout, newExercise);
+      Exercise newExercise = Exercise(
+          id: selectedExercise.id, name: selectedExercise.name, sets: []);
+      Provider.of<WorkoutDataProvider>(context, listen: false)
+          .addExercise(widget.workout, newExercise);
     } else {
       // User canceled the dialog (tapped outside or pressed Cancel)
       print('Exercise selection canceled.');
@@ -161,7 +162,9 @@ class _WorkoutPageState extends State<WorkoutPage> {
       for (Set set in exercise.sets) {
         if (set.isCompleted) {
           setWasCompleted = true;
-          setState(() { set.isCompleted = !set.isCompleted; });
+          setState(() {
+            set.isCompleted = !set.isCompleted;
+          });
           Provider.of<WorkoutDataProvider>(context, listen: false)
               .updateSet(workout, exercise, set);
         }
@@ -194,8 +197,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 Text(
                   widget.workout.name,
                   style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                      fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 // EXERCISES LIST
                 const Text(
@@ -241,11 +243,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
         });
 
     // Save session in sessionList
-    Provider.of<SessionData>(context, listen: false).addSession(
-      widget.workout.name,
-      completedExercises,
-      date,
-    );
+    //TODO: Construct session with only completed sets from correct exercises.
+    // Figure out efficient way to do this.
+    Session newSession = Session();
+    Provider.of<SessionDataProvider>(context, listen: false)
+        .addSession(newSession);
   }
 
   // Special helper for closing "congrats" popup
@@ -308,25 +310,28 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ],
           ),
         ),
-        body: ListView.builder( // OUTER ListView for Exercises
+        body: ListView.builder(
+            // OUTER ListView for Exercises
             itemCount: widget.workout.exercises.length,
             itemBuilder: (context, exerciseIndex) {
-              Exercise currentExercise = widget.workout.exercises[exerciseIndex];
+              Exercise currentExercise =
+                  widget.workout.exercises[exerciseIndex];
               return ExerciseTile(
                   workout: widget.workout,
                   exercise: currentExercise,
                   isExerciseCompleted: currentExercise.isCompleted,
                   sets: currentExercise.sets,
                   onDeleteSet: (set) {
-                      setState(() {
-                        set.isCompleted = false;
-                      });
-                      value.updateSet(widget.workout, currentExercise, set);
+                    setState(() {
+                      set.isCompleted = false;
+                    });
+                    value.updateSet(widget.workout, currentExercise, set);
                     setState(() {
                       value.deleteSet(widget.workout, currentExercise, set);
                     });
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('Set deleted from ${currentExercise.name}')));
+                        content:
+                            Text('Set deleted from ${currentExercise.name}')));
                   },
                   onToggleSetCompletion: (set) {
                     setState(() {
@@ -345,8 +350,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                     setState(() {
                       value.deleteExercise(widget.workout, currentExercise);
                     });
-                  }
-              );
+                  });
             }),
       ),
     );

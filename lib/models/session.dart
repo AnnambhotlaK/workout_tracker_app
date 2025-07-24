@@ -3,7 +3,7 @@ import 'exercise.dart';
 
 class Session {
   String id; // Added by firestore
-  String userId;
+  String? userId;
   String workoutId; // "Foreign key" for Firestore
   String workoutName; // Denormalized
   Timestamp dateCompleted;

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
-import 'package:main/curr_workout_data/curr_workout_data.dart';
-import 'package:main/session_data/session_data.dart';
 import 'package:main/pages/workout_page.dart';
 import '../curr_workout_data/workout_data_provider.dart';
+import '../session_data/session_data_provider.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 
@@ -138,8 +137,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer2<WorkoutDataProvider, SessionData>(
-      builder: (context, workoutValue, sessionValue, child) {
+    return Consumer2<WorkoutDataProvider, SessionDataProvider>(
+      builder: (context, workoutProvider, sessionProvider, child) {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Home'),
@@ -148,7 +147,7 @@ class _HomePageState extends State<HomePage> {
             actions: <Widget>[
               //TODO: Get a good fire icon for streak
               Text(
-                '🔥 ${sessionValue.getCurrentStreak()}',
+                '🔥 ${sessionProvider.getCurrentStreak()}',
                 style: const TextStyle(color: Colors.orange, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.only(right: 15)),
@@ -164,13 +163,13 @@ class _HomePageState extends State<HomePage> {
             children: [
               // Activity heat map for sessions completed
               MyHeatMap(
-                  datasets: sessionValue.heatMapDataset,
-                  startDateYYYYMMDD: sessionValue.getStartDate()),
+                  datasets: sessionProvider.heatMapDataset,
+                  startDateYYYYMMDD: sessionProvider.getStartDate()),
               // List of workouts
               Material(
                 type: MaterialType.transparency,
                 // Child: show message if empty, show workouts if not
-                child: (workoutValue.workouts.isEmpty)
+                child: (workoutProvider.workouts.isEmpty)
                     ? const Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: Text("No workouts yet. Add some!",
@@ -179,17 +178,17 @@ class _HomePageState extends State<HomePage> {
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: workoutValue.workouts.length,
+                        itemCount: workoutProvider.workouts.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
                             key: UniqueKey(),
                             onDismissed: (direction) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
-                                      '${workoutValue.workouts[index].name} deleted')));
+                                      '${workoutProvider.workouts[index].name} deleted')));
                               setState(() {
-                                workoutValue.deleteWorkout(
-                                    workoutValue.workouts[index]);
+                                workoutProvider.deleteWorkout(
+                                    workoutProvider.workouts[index]);
                               });
                             },
                             // Red "delete" background with trash symbol
@@ -204,31 +203,31 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: ListTile(
                               title: Text(
-                                  workoutValue.workouts[index].name),
+                                  workoutProvider.workouts[index].name),
                               onTap: () {
                                 // If tapping on active workout: go to page
-                                if (workoutValue
+                                if (workoutProvider
                                     .workouts[index]
                                     .isActive) {
                                   goToWorkoutPage(
-                                    workoutValue.workouts[index]
+                                    workoutProvider.workouts[index]
                                   );
                                 }
                                 // If tapping on inactive workout + none others active: go to popup
-                                if (!workoutValue
+                                if (!workoutProvider
                                         .workouts[index]
                                         .isActive &&
-                                    (workoutValue.getActiveWorkout() == null)) {
+                                    (workoutProvider.getActiveWorkout() == null)) {
                                   confirmStartWorkoutPopup(
-                                    workoutValue.workouts[index]
+                                    workoutProvider.workouts[index]
                                   );
                                 }
                                 // If tapping on inactive workout + one other active: send notification
-                                if (!workoutValue
+                                if (!workoutProvider
                                         .workouts[index]
                                         .isActive &&
-                                    (workoutValue.getActiveWorkout() != null)) {
-                                  String name = workoutValue.getActiveWorkout()!.name;
+                                    (workoutProvider.getActiveWorkout() != null)) {
+                                  String name = workoutProvider.getActiveWorkout()!.name;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(

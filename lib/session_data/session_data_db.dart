@@ -1,4 +1,4 @@
-/* Database for saved workout sessions */
+/*
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:main/models/session.dart';
@@ -56,4 +56,5 @@ class HiveDatabase {
     int completionStatus = _myBox.get("COMPLETION_STATUS_$yyyymmdd") ?? 0;
     return completionStatus;
   }
-} // end class
+}
+*/

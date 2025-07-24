@@ -31,7 +31,7 @@ class MyHeatMap extends StatelessWidget {
         weekFontSize: 15,
         colorsets: const {1: Colors.green},
         onClick: (value) {
-          Provider.of<SessionData>(context, listen: false).showActivityOnDay(context, value);
+          Provider.of<SessionDataProvider>(context, listen: false).showActivityOnDay(context, value);
           //TODO: Show scrollable list of sessions on date value
         },
       ),
