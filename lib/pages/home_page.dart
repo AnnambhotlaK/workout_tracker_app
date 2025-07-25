@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
               // Activity heat map for sessions completed
               MyHeatMap(
                   datasets: sessionProvider.heatMapDataset,
-                  startDateYYYYMMDD: sessionProvider.getStartDate()),
+                  startDateYYYYMMDD: sessionProvider.getStartDateForHeatMap()),
               // List of workouts
               Material(
                 type: MaterialType.transparency,

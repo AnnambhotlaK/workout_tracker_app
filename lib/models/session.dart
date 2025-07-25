@@ -6,11 +6,11 @@ class Session {
   String? userId;
   String workoutId; // "Foreign key" for Firestore
   String workoutName; // Denormalized
-  Timestamp dateCompleted;
+  DateTime dateCompleted;
   Duration? length;
   String? notes;
   List<Exercise> exercises;
-  Timestamp createdAt;
+  Timestamp? createdAt;
 
   Session({
     required this.id,

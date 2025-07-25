@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
 import 'package:main/curr_workout_data/curr_workout_data.dart';
@@ -159,8 +160,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
     List<Exercise> completedExercises = [];
     bool setWasCompleted = false;
     for (Exercise exercise in workout.exercises) {
+      // add the exercise
+      completedExercises.add(exercise);
+
       for (Set set in exercise.sets) {
         if (set.isCompleted) {
+          completedExercises[-1].sets.add(set);
           setWasCompleted = true;
           setState(() {
             set.isCompleted = !set.isCompleted;
@@ -169,9 +174,14 @@ class _WorkoutPageState extends State<WorkoutPage> {
               .updateSet(workout, exercise, set);
         }
       }
+
+      // If no sets were completed in exercise, remove from list
+      if (completedExercises[-1].sets.isEmpty) {
+        completedExercises.removeLast();
+      }
+
       if (setWasCompleted) {
         completedExercises.add(exercise);
-
         setWasCompleted = false;
         setState(() {
           exercise.isCompleted = true;
@@ -181,7 +191,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
       }
     }
 
-    //TODO: Show details of workout with completed message
+    //TODO: Improve detail message
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -243,9 +253,19 @@ class _WorkoutPageState extends State<WorkoutPage> {
         });
 
     // Save session in sessionList
-    //TODO: Construct session with only completed sets from correct exercises.
-    // Figure out efficient way to do this.
-    Session newSession = Session();
+    Session newSession = Session(
+      id: '',
+      userId: '',
+      workoutId: workout.id,
+      workoutName: workout.name,
+      dateCompleted: date,
+      //TODO: Fill in length with actual duration from stopwatch
+      length: null,
+      //TODO: Add opportunity to add notes to a session at the end
+      notes: null,
+      exercises: completedExercises,
+      createdAt: null,
+    );
     Provider.of<SessionDataProvider>(context, listen: false)
         .addSession(newSession);
   }
