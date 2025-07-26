@@ -13,7 +13,12 @@ class SessionDataProvider extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
   List<Session> _sessions = [];
   StreamSubscription? _sessionSubscription;
+
   final String? _userId;
+  String? get currentUserId => _userId;
+
+  bool _isLoading = false;
+  String? _error;
 
   // Gives value for display on date
   Map<DateTime, int> heatMapDataset = {};
@@ -27,37 +32,45 @@ class SessionDataProvider extends ChangeNotifier {
     if (_userId != null) {
       _listenToSessions();
     }
+    else {
+      _sessions = [];
+    }
   }
 
   List<Session> get sessions => _sessions;
-  bool get isLoadingSessions => _isLoadingSessions;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
 
 
   void _listenToSessions() {
-    if (_userId == null) return;
-    _isLoadingSessions = true;
+    if (_userId == null) {
+      _sessions = [];
+      _isLoading = false;
+      notifyListeners();
+      return;
+    }
+
+    _isLoading = true;
     notifyListeners();
 
+    // Cancel any existing subscription before starting a new one
     _sessionSubscription?.cancel();
-    _sessionSubscription = _firestoreService
-        .getWorkoutSessionsStream(_userId!)
-        .orderBy('dateCompleted',
-            descending: false) // Or handle sorting in loadHeatMap
-        .listen((sessionData) {
-      _sessions = sessionData;
-      _isLoadingSessions = false;
-      // CRITICAL: Re-calculate heatmap data whenever sessions change
-      _calculateHeatMapData();
-      notifyListeners();
-    }, onError: (e) {
-      print("Error listening to sessions: $e");
-      _isLoadingSessions = false;
-      // Handle error display if needed
-      notifyListeners();
-    });
+    _sessionSubscription = _firestoreService.getSessions(_userId!).listen(
+          (workoutsData) {
+        _sessions = workoutsData;
+        _isLoading = false;
+        _error = null;
+        notifyListeners();
+      },
+      onError: (Object e) {
+        print("SessionDataProvider: Error listening to workouts: $e");
+        _isLoading = false;
+        _error = "Failed to load sessions: $e";
+        _sessions = [];
+        notifyListeners();
+      },
+    );
   }
-
-
 
   // -- Session Methods --
   Future<void> addSession(Session session) async {
@@ -201,7 +214,7 @@ class SessionDataProvider extends ChangeNotifier {
     // Otherwise, go through sessions and populate all heatmap related datasets
     for (Session session in _sessions) {
       // Normalize DateTime
-      DateTime sessionDate = session.dateCompleted.toDate();
+      DateTime sessionDate = session.dateCompleted;
       DateTime normalizedDateKey =
       DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
 
@@ -240,13 +253,13 @@ class SessionDataProvider extends ChangeNotifier {
     print("HeatMapWeekDataset calculated ${heatMapWeekDataset.length} entries");
   }
 
-  String getStartDateForHeatMap() {
+  DateTime getStartDateForHeatMap() {
     if (heatMapDataset.isEmpty) {
-      return null;
+      return DateTime.now();
     }
     List<DateTime> daysWithActivity = heatMapDataset.keys.toList();
     daysWithActivity.sort((a, b) => a.compareTo(b));
-    return daysWithActivity.first.toString();
+    return daysWithActivity.first;
   }
 
   // Get current streak of workouts active
@@ -358,13 +371,7 @@ class SessionDataProvider extends ChangeNotifier {
     );
   }
 
-  // -- Other Data Handling Methods --
-
-  @override
-  void dispose() {
-    _sessionSubscription?.cancel();
-    super.dispose();
-  }
+  // -- Subscription and Data Handling --
 
   // Method to be called on logout via ChangeNotifierProxyProvider
   void clearDataOnLogout() {
@@ -376,5 +383,13 @@ class SessionDataProvider extends ChangeNotifier {
     _isLoadingSessions = false;
     // notifyListeners(); // ProxyProvider will rebuild, often not needed here
   }
+
+  @override
+  void dispose() {
+    _sessionSubscription?.cancel();
+    super.dispose();
+  }
+
+
 
 }

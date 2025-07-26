@@ -3,7 +3,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:main/datetime/date_time.dart';
 import 'package:main/models/workout.dart';
 
-/* Database for workouts, exercises, and sets in user's "library"*/
+/* Database for workouts, exercises, and sets in user's "library"
 
 class HiveDatabase {
   // Reference hive box
@@ -66,3 +66,6 @@ class HiveDatabase {
     return false;
   }
 }
+
+
+ */

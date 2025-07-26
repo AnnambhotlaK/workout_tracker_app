@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/pages/workout_page.dart';
 import '../curr_workout_data/workout_data_provider.dart';
+import '../models/session.dart';
 import '../session_data/session_data_provider.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
@@ -137,6 +138,37 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final workoutProvider = context.watch<WorkoutDataProvider>();
+    if (workoutProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (workoutProvider.error != null) {
+      return Scaffold(body: Center(child: Text("Error: ${workoutProvider.error}")));
+    }
+    if (workoutProvider.currentUserId == null) {
+      // Should not occur, but need to check still
+      // AuthWrapper will ideally handle this
+      return const Scaffold(body: Center(child: Text("Error: User not logged in")));
+    }
+    List<Workout> workouts = workoutProvider.workouts;
+
+    final sessionProvider = context.watch<SessionDataProvider>();
+    if (sessionProvider.isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (sessionProvider.error != null) {
+      return Scaffold(body: Center(child: Text("Error: ${sessionProvider.error}")));
+    }
+    if (sessionProvider.currentUserId == null) {
+      // Should not occur, but need to check still
+      // AuthWrapper will ideally handle this
+      return const Scaffold(body: Center(child: Text("Error: User not logged in")));
+    }
+    List<Session> sessions = sessionProvider.sessions;
+
+
+
     return Consumer2<WorkoutDataProvider, SessionDataProvider>(
       builder: (context, workoutProvider, sessionProvider, child) {
         return Scaffold(
@@ -164,31 +196,31 @@ class _HomePageState extends State<HomePage> {
               // Activity heat map for sessions completed
               MyHeatMap(
                   datasets: sessionProvider.heatMapDataset,
-                  startDateYYYYMMDD: sessionProvider.getStartDateForHeatMap()),
+                  startDate: sessionProvider.getStartDateForHeatMap()
+              ),
               // List of workouts
               Material(
                 type: MaterialType.transparency,
                 // Child: show message if empty, show workouts if not
-                child: (workoutProvider.workouts.isEmpty)
-                    ? const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: (workouts.isEmpty)
+                    ? const Center(
                         child: Text("No workouts yet. Add some!",
                             style: TextStyle(fontStyle: FontStyle.italic)),
                       )
                     : ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: workoutProvider.workouts.length,
+                        itemCount: workouts.length,
                         itemBuilder: (context, index) {
                           return Dismissible(
                             key: UniqueKey(),
                             onDismissed: (direction) {
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                   content: Text(
-                                      '${workoutProvider.workouts[index].name} deleted')));
+                                      '${workouts[index].name} deleted')));
                               setState(() {
                                 workoutProvider.deleteWorkout(
-                                    workoutProvider.workouts[index]);
+                                    workouts[index]);
                               });
                             },
                             // Red "delete" background with trash symbol
@@ -203,14 +235,14 @@ class _HomePageState extends State<HomePage> {
                             ),
                             child: ListTile(
                               title: Text(
-                                  workoutProvider.workouts[index].name),
+                                  workouts[index].name),
                               onTap: () {
                                 // If tapping on active workout: go to page
                                 if (workoutProvider
                                     .workouts[index]
                                     .isActive) {
                                   goToWorkoutPage(
-                                    workoutProvider.workouts[index]
+                                    workouts[index]
                                   );
                                 }
                                 // If tapping on inactive workout + none others active: go to popup
@@ -219,12 +251,11 @@ class _HomePageState extends State<HomePage> {
                                         .isActive &&
                                     (workoutProvider.getActiveWorkout() == null)) {
                                   confirmStartWorkoutPopup(
-                                    workoutProvider.workouts[index]
+                                    workouts[index]
                                   );
                                 }
                                 // If tapping on inactive workout + one other active: send notification
-                                if (!workoutProvider
-                                        .workouts[index]
+                                if (!workouts[index]
                                         .isActive &&
                                     (workoutProvider.getActiveWorkout() != null)) {
                                   String name = workoutProvider.getActiveWorkout()!.name;

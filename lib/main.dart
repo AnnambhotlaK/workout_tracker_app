@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:main/auth/auth.dart';
-import 'package:main/auth/login_or_register.dart';
-import 'package:main/pages/main_page.dart';
-import 'package:main/pages/settings_page.dart';
+import 'package:main/auth/auth_wrapper.dart';
+import 'package:main/pages/home_page.dart';
 import 'package:main/session_data/session_data_provider.dart';
 import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,16 +9,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'curr_workout_data/workout_data_provider.dart';
 import 'exercise_db/database_helper.dart';
 import 'firebase_options.dart';
-import 'models/exercise.dart';
-import 'models/session.dart';
-import 'models/set.dart';
-import 'models/workout.dart';
 import 'theme/theme.dart';
+import 'services/auth_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  //await Hive.initFlutter();
   await Settings.init();
 
   // TEST ON DATABASEHELPER
@@ -35,8 +28,6 @@ Future<void> main() async {
     // Handle critical initialization error if necessary
   }
 
-  //var workoutBox = await Hive.openBox("curr_workouts_database");
-  //var sessionBox = await Hive.openBox("session_database");
   runApp(ChangeNotifierProvider(
       create: (_) => ThemeProvider(), child: const MyApp()));
 }
@@ -49,13 +40,42 @@ class MyApp extends StatelessWidget {
     final themeProvider = Provider.of<ThemeProvider>(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<WorkoutDataProvider>(create: (context) => WorkoutDataProvider()),
-        ChangeNotifierProvider<SessionDataProvider>(create: (context) => SessionDataProvider()),
+        ChangeNotifierProvider(create: (_) => AuthService()),
+        ChangeNotifierProxyProvider<AuthService, WorkoutDataProvider>(
+            create: (context) => WorkoutDataProvider(null),
+            update: (context, authService, previousWorkoutProvider) {
+              final userId = authService.currentUserId;
+              if (userId == null) {
+                previousWorkoutProvider?.clearDataOnLogout();
+                return previousWorkoutProvider ?? WorkoutDataProvider(null);
+              }
+              if (previousWorkoutProvider == null ||
+                  previousWorkoutProvider.currentUserId != userId) {
+                return WorkoutDataProvider(userId);
+              } else {
+                return previousWorkoutProvider;
+              }
+            }),
+        ChangeNotifierProxyProvider<AuthService, SessionDataProvider>(
+            create: (context) => SessionDataProvider(null),
+            update: (context, authService, previousSessionProvider) {
+              final userId = authService.currentUserId;
+              if (userId == null) {
+                previousSessionProvider?.clearDataOnLogout();
+                return previousSessionProvider ?? SessionDataProvider(null);
+              }
+              if (previousSessionProvider == null ||
+                  previousSessionProvider.currentUserId != userId) {
+                return SessionDataProvider(userId);
+              } else {
+                return previousSessionProvider;
+              }
+            }),
       ],
       child: MaterialApp(
         title: 'Setly',
         debugShowCheckedModeBanner: false,
-        home: const AuthPage(),
+        home: AuthWrapper(),
         theme: lightMode,
         darkTheme: darkMode,
         themeMode: themeProvider.themeMode,

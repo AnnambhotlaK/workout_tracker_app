@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 
 class MyHeatMap extends StatelessWidget {
   final Map<DateTime, int>? datasets;
-  final String startDateYYYYMMDD;
+  final DateTime startDate;
 
   const MyHeatMap({
     super.key,
     required this.datasets,
-    required this.startDateYYYYMMDD,
+    required this.startDate,
   });
 
   @override
@@ -19,7 +19,7 @@ class MyHeatMap extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(25),
       child: HeatMapCalendar(
-        initDate: createDateTimeObject(startDateYYYYMMDD),
+        initDate: startDate,
         datasets: datasets,
         colorMode: ColorMode.color,
         defaultColor: Colors.black,
