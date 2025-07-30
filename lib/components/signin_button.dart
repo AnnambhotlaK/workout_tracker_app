@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SigninButton extends StatelessWidget {
   final String text;
-  final Function() onTap;
+  final Function()? onTap;
   const SigninButton({super.key, required this.text, required this.onTap});
 
   @override

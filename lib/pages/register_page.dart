@@ -16,21 +16,25 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController usernameController = TextEditingController();
-
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   TextEditingController confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
 
   // login via firebase
   Future<void> registerUser() async {
+    /*
     // show loading
     showDialog(
         context: context,
         builder: (context) => const Center(
               child: CircularProgressIndicator(),
             ));
+
+     */
+    setState(() {
+      _isLoading = true;
+    });
 
     // if password don't match, pop and show error
     if (passwordController.text != confirmPasswordController.text) {
@@ -46,10 +50,17 @@ class _RegisterPageState extends State<RegisterPage> {
             .createUserWithEmailAndPassword(
                 email: emailController.text, password: passwordController.text);
         if (context.mounted) Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
+      }
+      on FirebaseAuthException catch (e) {
         // pop loading
-        if (context.mounted) Navigator.pop(context);
+        //if (context.mounted) Navigator.pop(context);
         displayMessageToUser(e.message.toString(), context);
+      }
+      finally {
+        // hide loading
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -120,7 +131,7 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: 25),
 
           // sign in button
-          SigninButton(text: "Register", onTap: registerUser),
+          SigninButton(text: "Register", onTap: _isLoading ? null : registerUser),
           const SizedBox(height: 10),
 
           // don't have account? Register button

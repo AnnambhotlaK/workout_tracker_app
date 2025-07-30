@@ -113,7 +113,7 @@ class WorkoutDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in workout_data_provider.dart at updateExercise(): User not logged in');
     }
-    final index = workout.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final index = workout.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (index != -1) {
       workout.exercises[index] = exercise;
       await _firestoreService.updateWorkout(_userId!, workout);
@@ -143,7 +143,7 @@ class WorkoutDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in workout_data_provider.dart at addSet(): User not logged in');
     }
-    final index = workout.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final index = workout.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (index != -1) {
       workout.exercises[index].sets.add(set);
       await _firestoreService.updateWorkout(_userId!, workout);
@@ -158,7 +158,7 @@ class WorkoutDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in workout_data_provider.dart at updateSet(): User not logged in');
     }
-    final exerciseIndex = workout.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final exerciseIndex = workout.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (exerciseIndex != -1) {
       final setIndex = exercise.sets.indexWhere((s) => s.id == set.id);
       if (setIndex != -1) {
@@ -181,7 +181,7 @@ class WorkoutDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in workout_data_provider.dart at deleteExercise(): User not logged in');
     }
-    final exerciseIndex = workout.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final exerciseIndex = workout.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (exerciseIndex != -1) {
       try {
         workout.exercises[exerciseIndex].sets.remove(set);

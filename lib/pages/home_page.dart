@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
               Material(
                 type: MaterialType.transparency,
                 // Child: show message if empty, show workouts if not
-                child: (workouts.isEmpty)
+                child: (workoutProvider.workouts.isEmpty)
                     ? const Center(
                         child: Text("No workouts yet. Add some!",
                             style: TextStyle(fontStyle: FontStyle.italic)),

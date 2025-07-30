@@ -66,24 +66,26 @@ class FirestoreService {
   // READ: Get stream of sessions for a given user
   Stream<List<Session>> getSessions(String userId,
       {DateTime? startDate, DateTime? endDate}) {
-    Query query = _db
+    return _db
         .collection('users')
         .doc(userId)
         .collection('sessions')
-        .orderBy('dateCompleted', descending: true);
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Session.fromSnapshot(doc)).toList());
+
+    /*
     if (startDate != null) {
       query = query.where('dateCompleted',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          isGreaterThanOrEqualTo: startDate);
     }
     if (endDate != null) {
       DateTime eod =
           DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
       query = query.where('dateCompleted',
-          isLessThanOrEqualTo: Timestamp.fromDate(eod));
-    }
+          isLessThanOrEqualTo: eod);
 
-    return query.snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Session.fromSnapshot(doc)).toList());
+         */
   }
 
   // UPDATE: Modify an existing session

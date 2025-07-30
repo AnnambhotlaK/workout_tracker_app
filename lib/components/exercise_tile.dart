@@ -5,12 +5,15 @@ import 'package:provider/provider.dart';
 import '../curr_workout_data/workout_data_provider.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
+import 'package:uuid/uuid.dart';
+
+Uuid uuid = const Uuid();
 
 class ExerciseTile extends StatelessWidget {
   final Workout workout;
   final Exercise exercise;
   final List<Set> sets; // Your Set model
-  final bool isExerciseCompleted; // Assuming you might want to show this
+  //final bool isExerciseCompleted; // Assuming you might want to show this
   final Function(Set set) onDeleteSet;
   final Function(Set set) onToggleSetCompletion;
   final VoidCallback onDeleteExercise;
@@ -20,7 +23,7 @@ class ExerciseTile extends StatelessWidget {
     required this.workout,
     required this.exercise,
     required this.sets,
-    required this.isExerciseCompleted,
+    //required this.isExerciseCompleted,
     required this.onDeleteSet,
     required this.onToggleSetCompletion,
     required this.onDeleteExercise,
@@ -30,7 +33,7 @@ class ExerciseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       // Keep Dismissible for the whole Exercise
-      key: UniqueKey(), // Use exerciseKey for more stable keys if appropriate
+      key: ValueKey('dismissible_exercise_${exercise.instanceId}'),
       onDismissed: (direction) => onDeleteExercise(),
       background: Container(
         color: Colors.red,
@@ -113,7 +116,7 @@ class ExerciseTile extends StatelessWidget {
                     // Each set is now directly part of the Column
                     return Dismissible(
                       // Dismissible for individual sets
-                      key: ValueKey(set),
+                      key: ValueKey('dismissible_set_${exercise.instanceId}_${set.id}'),
                       // Use the set's unique key
                       direction: DismissDirection.endToStart,
                       onDismissed: (direction) => onDeleteSet(set),
@@ -126,6 +129,7 @@ class ExerciseTile extends StatelessWidget {
                       ),
                       child: SetTile(
                         // Your existing SetTile
+                        key: ValueKey('${exercise.instanceId}_${set.id}'),
                         initialWeight: set.weight,
                         initialReps: set.reps,
                         isCompleted: set.isCompleted,
@@ -165,11 +169,11 @@ class ExerciseTile extends StatelessWidget {
                             workout,
                             exercise,
                             Set(
-                                id: '',
+                                id: uuid.v4(),
                                 weight: '0',
                                 reps: '0',
                                 isCompleted:
-                                    false)); // Assuming you have such a method
+                                    false));
                   },
                 ),
               ),

@@ -55,15 +55,15 @@ class SessionDataProvider extends ChangeNotifier {
 
     // Cancel any existing subscription before starting a new one
     _sessionSubscription?.cancel();
-    _sessionSubscription = _firestoreService.getSessions(_userId!).listen(
-          (workoutsData) {
-        _sessions = workoutsData;
+    _sessionSubscription = _firestoreService.getSessions(_userId).listen(
+          (sessionsData) {
+        _sessions = sessionsData;
         _isLoading = false;
         _error = null;
         notifyListeners();
       },
       onError: (Object e) {
-        print("SessionDataProvider: Error listening to workouts: $e");
+        print("SessionDataProvider: Error listening to sessions: $e");
         _isLoading = false;
         _error = "Failed to load sessions: $e";
         _sessions = [];
@@ -114,7 +114,7 @@ class SessionDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in session_data_provider.dart at updateExercise(): User not logged in');
     }
-    final index = session.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final index = session.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (index != -1) {
       session.exercises[index] = exercise;
       await _firestoreService.updateSession(_userId!, session);
@@ -144,7 +144,7 @@ class SessionDataProvider extends ChangeNotifier {
       return Future.error(
           'Error in session_data_provider.dart at addSet(): User not logged in');
     }
-    final index = session.exercises.indexWhere((ex) => ex.id == exercise.id);
+    final index = session.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (index != -1) {
       session.exercises[index].sets.add(set);
       await _firestoreService.updateSession(_userId!, session);
@@ -160,7 +160,7 @@ class SessionDataProvider extends ChangeNotifier {
           'Error in session_data_provider.dart at updateSet(): User not logged in');
     }
     final exerciseIndex =
-        session.exercises.indexWhere((ex) => ex.id == exercise.id);
+        session.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (exerciseIndex != -1) {
       final setIndex = exercise.sets.indexWhere((s) => s.id == set.id);
       if (setIndex != -1) {
@@ -182,7 +182,7 @@ class SessionDataProvider extends ChangeNotifier {
           'Error in session_data_provider.dart at deleteExercise(): User not logged in');
     }
     final exerciseIndex =
-        session.exercises.indexWhere((ex) => ex.id == exercise.id);
+        session.exercises.indexWhere((ex) => ex.instanceId == exercise.instanceId);
     if (exerciseIndex != -1) {
       try {
         session.exercises[exerciseIndex].sets.remove(set);

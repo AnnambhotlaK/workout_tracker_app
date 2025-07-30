@@ -152,10 +152,11 @@ class DatabaseHelper {
     }
   }
 
+  /*
   Future<List<JsonExercise>> getAllJsonExercises({String? searchTerm}) async {
     final db = await instance.database;
     List<Map<String, dynamic>> result;
-
+    print("Search term null?: ${searchTerm == null}");
     if (searchTerm != null && searchTerm.isNotEmpty) {
       result = await db.query(JsonExercisesTable,
           where: "name LIKE ?",
@@ -167,6 +168,32 @@ class DatabaseHelper {
       result = await db.query(JsonExercisesTable, orderBy: 'name ASC');
     }
     return result.map((json) => JsonExercise.fromDbMap(json)).toList();
+  }
+
+   */
+
+  Future<List<JsonExercise>> getAllJsonExercises({String? searchTerm}) async {
+    try {
+      print("DB_HELPER: Attempting to load JSON asset...");
+      // Your existing JSON loading logic (e.g., from 'assets/data.json')
+      final String response = await rootBundle.loadString('assets/data.json'); // Make sure path is correct!
+      print("DB_HELPER: JSON String loaded (first 500 chars): ${response.substring(0, response.length > 500 ? 500 : response.length)}");
+
+      final List<dynamic> data = json.decode(response) as List<dynamic>;
+      print("DB_HELPER: JSON Decoded. Number of items: ${data.length}");
+
+      List<JsonExercise> exercises = data.map((item) => JsonExercise.fromJson(item as Map<String, dynamic>)).toList();
+      print("DB_HELPER: Parsed exercises. First exercise name (if any): ${exercises.isNotEmpty ? exercises.first.name : 'N/A'}");
+
+      if (searchTerm != null && searchTerm.isNotEmpty) {
+        exercises = exercises.where((ex) => ex.name.toLowerCase().contains(searchTerm.toLowerCase())).toList();
+        print("DB_HELPER: Filtered by '$searchTerm'. Found: ${exercises.length}");
+      }
+      return exercises;
+    } catch (e) {
+      print('DB_HELPER: Error in getAllJsonExercises: $e');
+      return []; // Return empty on error
+    }
   }
 
   Future<void> deleteJsonExercise(String id) async {

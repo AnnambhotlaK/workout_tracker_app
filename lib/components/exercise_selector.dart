@@ -27,7 +27,7 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
   void _loadExercises() {
     // Get all exercises, or all exercises matching the search term
     _exercisesFuture = DatabaseHelper.instance.getAllJsonExercises(
-        searchTerm: _searchTerm.isNotEmpty ? _searchTerm : null);
+        searchTerm: _searchTerm.isEmpty ? null : _searchTerm);
   }
 
   // Reload search results upon changing query
@@ -56,19 +56,18 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                 textAlign: TextAlign.left,
               ),
               const SizedBox(height: 10),
+
               // Search Bar
               TextField(
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                 ),
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.search),
-                  filled: true,
-                  fillColor: Colors.grey,
                   hintText: 'Search',
                   border: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(30)),
+                      borderRadius: BorderRadius.circular(10)),
                 ),
                 onChanged: _onSearchChanged,
               ),
@@ -130,7 +129,11 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                         height: 100,
                         child: ElevatedButton(
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => const ExerciseAdder()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ExerciseAdder()));
                             Navigator.of(context).pop();
                           },
                           child: const Text('Add Custom'),

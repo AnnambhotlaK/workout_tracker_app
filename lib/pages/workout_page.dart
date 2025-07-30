@@ -55,7 +55,10 @@ class _WorkoutPageState extends State<WorkoutPage> {
       print('Selected Exercise Name: ${selectedExercise.name}');
       // Now you can use this 'selectedExercise' object
       Exercise newExercise = Exercise(
-          id: selectedExercise.id, name: selectedExercise.name, sets: []);
+          instanceId: uuid.v4(),
+          jsonId: selectedExercise.id,
+          name: selectedExercise.name,
+          sets: []);
       Provider.of<WorkoutDataProvider>(context, listen: false)
           .addExercise(widget.workout, newExercise);
     } else {
@@ -145,7 +148,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
     DateTime date = DateTime(now.year, now.month, now.day);
 
     // Deactivate current workout
-    print("WORKOUT ID: ${workout.id}");
+    print("COMPLETED WORKOUT ID: ${workout.id}");
     workout.isActive = false;
     Provider.of<WorkoutDataProvider>(context, listen: false)
         .updateWorkout(workout);
@@ -154,40 +157,36 @@ class _WorkoutPageState extends State<WorkoutPage> {
     Navigator.pop(context);
     clear();
 
-    //TODO: Fix to only save completed sets
-    // Next, uncheck all checked exercises in the workout
-    // Also add completed exercises to list of exercises
-    List<Exercise> completedExercises = [];
-    bool setWasCompleted = false;
-    for (Exercise exercise in workout.exercises) {
-      // add the exercise
-      completedExercises.add(exercise);
+    //TODO: Figure out how to only save completed sets to session
 
+    // -- Part 1: Add completed exercises/sets to list/sublists for addition to session
+    List<Exercise> completedExercises = [];
+    for (Exercise exercise in workout.exercises) {
+      List<Set> completedSets = [];
       for (Set set in exercise.sets) {
         if (set.isCompleted) {
-          completedExercises[-1].sets.add(set);
-          setWasCompleted = true;
-          setState(() {
-            set.isCompleted = !set.isCompleted;
-          });
-          Provider.of<WorkoutDataProvider>(context, listen: false)
-              .updateSet(workout, exercise, set);
+          completedSets.add(set);
         }
       }
-
-      // If no sets were completed in exercise, remove from list
-      if (completedExercises[-1].sets.isEmpty) {
-        completedExercises.removeLast();
+      if (completedSets.isNotEmpty) {
+        Exercise exerciseToAdd = Exercise(
+          instanceId: exercise.instanceId,
+          jsonId: exercise.jsonId,
+          name: exercise.name,
+          sets: List<Set>.from(completedSets),
+          //isCompleted: true,
+        );
+        completedExercises.add(exerciseToAdd);
       }
+    }
 
-      if (setWasCompleted) {
-        completedExercises.add(exercise);
-        setWasCompleted = false;
-        setState(() {
-          exercise.isCompleted = true;
-        });
-        Provider.of<WorkoutDataProvider>(context, listen: false)
-            .updateExercise(workout, exercise);
+    // -- Part 2: Reset isCompleted values in ORIGINAL workout for next time
+    for (Exercise exercise in workout.exercises) {
+      for (Set set in exercise.sets) {
+        if (set.isCompleted) {
+          set.isCompleted = false;
+          Provider.of<WorkoutDataProvider>(context, listen: false).updateSet(workout, exercise, set);
+        }
       }
     }
 
@@ -280,7 +279,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<WorkoutDataProvider>(
-      builder: (context, value, child) => Scaffold(
+      builder: (context, workoutProvider, child) => Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.blueAccent,
           foregroundColor: Colors.white,
@@ -309,7 +308,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 onPressed: () {
                   // if no exercises done in workout
                   bool readyToFinish = false;
-                  //Workout relevantWorkout = value.getRelevantWorkout(widget.workout);
+                  //Workout relevantWorkout = workoutProvider.getRelevantWorkout(widget.workout);
                   for (Exercise exercise in widget.workout.exercises) {
                     for (Set set in exercise.sets) {
                       if (set.isCompleted) {
@@ -330,48 +329,53 @@ class _WorkoutPageState extends State<WorkoutPage> {
             ],
           ),
         ),
-        body: ListView.builder(
-            // OUTER ListView for Exercises
-            itemCount: widget.workout.exercises.length,
-            itemBuilder: (context, exerciseIndex) {
-              Exercise currentExercise =
-                  widget.workout.exercises[exerciseIndex];
-              return ExerciseTile(
-                  workout: widget.workout,
-                  exercise: currentExercise,
-                  isExerciseCompleted: currentExercise.isCompleted,
-                  sets: currentExercise.sets,
-                  onDeleteSet: (set) {
-                    setState(() {
-                      set.isCompleted = false;
-                    });
-                    value.updateSet(widget.workout, currentExercise, set);
-                    setState(() {
-                      value.deleteSet(widget.workout, currentExercise, set);
-                    });
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content:
-                            Text('Set deleted from ${currentExercise.name}')));
-                  },
-                  onToggleSetCompletion: (set) {
-                    setState(() {
-                      set.isCompleted = !set.isCompleted;
-                    });
-                    value.updateSet(widget.workout, currentExercise, set);
-                  },
-                  // Add similar callbacks for deleting the whole exercise if needed
-                  onDeleteExercise: () {
-                    setState(() {
-                      currentExercise.isCompleted = false;
-                    });
-                    value.updateExercise(widget.workout, currentExercise);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text('${currentExercise.name} deleted')));
-                    setState(() {
-                      value.deleteExercise(widget.workout, currentExercise);
-                    });
-                  });
-            }),
+        body: (widget.workout.exercises.isEmpty)
+            ? const Center(
+                child: Text("No exercises yet. Add some!",
+                    style: TextStyle(fontStyle: FontStyle.italic)),
+              )
+            : ListView.builder(
+                // OUTER ListView for Exercises
+                itemCount: widget.workout.exercises.length,
+                itemBuilder: (context, exerciseIndex) {
+                  Exercise currentExercise =
+                      widget.workout.exercises[exerciseIndex];
+                  return ExerciseTile(
+                      workout: widget.workout,
+                      exercise: currentExercise,
+                      //isExerciseCompleted: currentExercise.isCompleted,
+                      sets: currentExercise.sets,
+                      onDeleteSet: (set) {
+                        setState(() {
+                          set.isCompleted = false;
+                        });
+                        workoutProvider.updateSet(
+                            widget.workout, currentExercise, set);
+                        setState(() {
+                          workoutProvider.deleteSet(
+                              widget.workout, currentExercise, set);
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Set deleted from ${currentExercise.name}')));
+                      },
+                      onToggleSetCompletion: (set) {
+                        setState(() {
+                          set.isCompleted = !set.isCompleted;
+                        });
+                        workoutProvider.updateSet(
+                            widget.workout, currentExercise, set);
+                      },
+                      // Add similar callbacks for deleting the whole exercise if needed
+                      onDeleteExercise: () {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('${currentExercise.name} deleted')));
+                        setState(() {
+                          workoutProvider.deleteExercise(
+                              widget.workout, currentExercise);
+                        });
+                      });
+                }),
       ),
     );
   }

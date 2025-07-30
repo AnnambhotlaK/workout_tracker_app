@@ -1,54 +1,5 @@
 [
   {
-    "name": "3/4 Sit-Up",
-    "force": "pull",
-    "level": "beginner",
-    "mechanic": "compound",
-    "equipment": "body only",
-    "primaryMuscles": [
-      "abdominals"
-    ],
-    "secondaryMuscles": [],
-    "instructions": [
-      "Lie down on the floor and secure your feet. Your legs should be bent at the knees.",
-      "Place your hands behind or to the side of your head. You will begin with your back on the ground. This will be your starting position.",
-      "Flex your hips and spine to raise your torso toward your knees.",
-      "At the top of the contraction your torso should be perpendicular to the ground. Reverse the motion, going only ¾ of the way down.",
-      "Repeat for the recommended amount of repetitions."
-    ],
-    "category": "strength",
-    "images": [
-      "3_4_Sit-Up/0.jpg",
-      "3_4_Sit-Up/1.jpg"
-    ],
-    "id": "3_4_Sit-Up"
-  },
-  {
-    "name": "90/90 Hamstring",
-    "force": "push",
-    "level": "beginner",
-    "mechanic": null,
-    "equipment": "body only",
-    "primaryMuscles": [
-      "hamstrings"
-    ],
-    "secondaryMuscles": [
-      "calves"
-    ],
-    "instructions": [
-      "Lie on your back, with one leg extended straight out.",
-      "With the other leg, bend the hip and knee to 90 degrees. You may brace your leg with your hands if necessary. This will be your starting position.",
-      "Extend your leg straight into the air, pausing briefly at the top. Return the leg to the starting position.",
-      "Repeat for 10-20 repetitions, and then switch to the other leg."
-    ],
-    "category": "stretching",
-    "images": [
-      "90_90_Hamstring/0.jpg",
-      "90_90_Hamstring/1.jpg"
-    ],
-    "id": "90_90_Hamstring"
-  },
-  {
     "name": "Ab Crunch Machine",
     "force": "pull",
     "level": "intermediate",
@@ -97,78 +48,6 @@
     "id": "Ab_Roller"
   },
   {
-    "name": "Adductor",
-    "force": "static",
-    "level": "intermediate",
-    "mechanic": "isolation",
-    "equipment": "foam roll",
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [],
-    "instructions": [
-      "Lie face down with one leg on a foam roll.",
-      "Rotate the leg so that the foam roll contacts against your inner thigh. Shift as much weight onto the foam roll as can be tolerated.",
-      "While trying to relax the muscles if the inner thigh, roll over the foam between your hip and knee, holding points of tension for 10-30 seconds. Repeat with the other leg."
-    ],
-    "category": "stretching",
-    "images": [
-      "Adductor/0.jpg",
-      "Adductor/1.jpg"
-    ],
-    "id": "Adductor"
-  },
-  {
-    "name": "Adductor/Groin",
-    "force": "static",
-    "level": "intermediate",
-    "mechanic": null,
-    "equipment": null,
-    "primaryMuscles": [
-      "adductors"
-    ],
-    "secondaryMuscles": [],
-    "instructions": [
-      "Lie on your back with your feet raised towards the ceiling.",
-      "Have your partner hold your feet or ankles. Abduct your legs as far as you can. This will be your starting position.",
-      "Attempt to squeeze your legs together for 10 or more seconds, while your partner prevents you from doing so.",
-      "Now, relax the muscles in your legs as your partner pushes your feet apart, stretching as far as is comfortable for you. Be sure to let your partner know when the stretch is adequate to prevent overstretching or injury."
-    ],
-    "category": "stretching",
-    "images": [
-      "Adductor_Groin/0.jpg",
-      "Adductor_Groin/1.jpg"
-    ],
-    "id": "Adductor_Groin"
-  },
-  {
-    "name": "Advanced Kettlebell Windmill",
-    "force": "push",
-    "level": "intermediate",
-    "mechanic": "isolation",
-    "equipment": "kettlebells",
-    "primaryMuscles": [
-      "abdominals"
-    ],
-    "secondaryMuscles": [
-      "glutes",
-      "hamstrings",
-      "shoulders"
-    ],
-    "instructions": [
-      "Clean and press a kettlebell overhead with one arm.",
-      "Keeping the kettlebell locked out at all times, push your butt out in the direction of the locked out kettlebell. Keep the non-working arm behind your back and turn your feet out at a forty-five degree angle from the arm with the kettlebell.",
-      "Lower yourself as far as possible.",
-      "Pause for a second and reverse the motion back to the starting position."
-    ],
-    "category": "strength",
-    "images": [
-      "Advanced_Kettlebell_Windmill/0.jpg",
-      "Advanced_Kettlebell_Windmill/1.jpg"
-    ],
-    "id": "Advanced_Kettlebell_Windmill"
-  },
-  {
     "name": "Air Bike",
     "force": "pull",
     "level": "beginner",
@@ -192,30 +71,6 @@
       "Air_Bike/1.jpg"
     ],
     "id": "Air_Bike"
-  },
-  {
-    "name": "All Fours Quad Stretch",
-    "force": "static",
-    "level": "intermediate",
-    "mechanic": null,
-    "equipment": "body only",
-    "primaryMuscles": [
-      "quadriceps"
-    ],
-    "secondaryMuscles": [
-      "quadriceps"
-    ],
-    "instructions": [
-      "Start off on your hands and knees, then lift your leg off the floor and hold the foot with your hand.",
-      "Use your hand to hold the foot or ankle, keeping the knee fully flexed, stretching the quadriceps and hip flexors.",
-      "Focus on extending your hips, thrusting them towards the floor. Hold for 10-20 seconds and then switch sides."
-    ],
-    "category": "stretching",
-    "images": [
-      "All_Fours_Quad_Stretch/0.jpg",
-      "All_Fours_Quad_Stretch/1.jpg"
-    ],
-    "id": "All_Fours_Quad_Stretch"
   },
   {
     "name": "Alternate Hammer Curl",
@@ -1930,33 +1785,6 @@
       "Bench_Press_-_With_Bands/1.jpg"
     ],
     "id": "Bench_Press_-_With_Bands"
-  },
-  {
-    "name": "Bench Press with Chains",
-    "force": "push",
-    "level": "expert",
-    "mechanic": "compound",
-    "equipment": "barbell",
-    "primaryMuscles": [
-      "triceps"
-    ],
-    "secondaryMuscles": [
-      "chest",
-      "lats",
-      "shoulders"
-    ],
-    "instructions": [
-      "Adjust the leader chain, shortening it to the desired length.Place the chains on the sleeves of the bar.",
-      "Lying on the bench, get your head beyond the bar if possible. Tuck your feet underneath you and arch your back. Using the bar to help support your weight, lift your shoulder off the bench and retract them, squeezing the shoulder blades together. Use your feet to drive your traps into the bench. Maintain this tight body position throughout the movement. However wide your grip, it should cover the ring on the bar.",
-      "Pull the bar out of the rack without protracting your shoulders. Focus on squeezing the bar and trying to pull it apart. Lower the bar to your lower chest or upper stomach. The bar, wrist, and elbow should stay in line at all times.",
-      "Pause when the barbell touches your torso, and then drive the bar up with as much force as possible. The elbows should be tucked in until lockout."
-    ],
-    "category": "powerlifting",
-    "images": [
-      "Bench_Press_with_Chains/0.jpg",
-      "Bench_Press_with_Chains/1.jpg"
-    ],
-    "id": "Bench_Press_with_Chains"
   },
   {
     "name": "Bench Sprint",

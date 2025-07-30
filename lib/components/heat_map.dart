@@ -21,9 +21,9 @@ class MyHeatMap extends StatelessWidget {
       child: HeatMapCalendar(
         initDate: startDate,
         datasets: datasets,
-        colorMode: ColorMode.color,
-        defaultColor: Colors.black,
-        textColor: Colors.white,
+        //colorMode: ColorMode.color,
+        //defaultColor: Provider.of<ThemeData>(context).primaryColor,
+        //textColor: Colors.white,
         showColorTip: false,
         flexible: true,
         size: 30,

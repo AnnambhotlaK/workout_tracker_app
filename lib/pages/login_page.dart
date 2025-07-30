@@ -15,18 +15,23 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
+  bool _isLoading = false;
 
   // login via firebase
   Future<void> login() async {
     // show loading
+    /*
     showDialog(
       context: context,
       builder: (context) => const Center(
         child: CircularProgressIndicator(),
       ),
     );
+    */
+    setState(() {
+      _isLoading = true;
+    });
 
     // try sign in
     try {
@@ -35,14 +40,24 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text,
       );
       // pop loading if works
-      if (context.mounted) Navigator.pop(context);
+      //if (context.mounted) {
+      //  Navigator.pop(context);
+      //}
     }
     // Catch error
     on FirebaseAuthException catch (e) {
       // pop loading
-      Navigator.pop(context);
+      //if (context.mounted) {
+      //  Navigator.pop(context);
+      //}
       // show error
       displayMessageToUser("We couldn't find an account with those credentials!", context);
+    }
+    finally {
+      // hide loading
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -98,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 25),
 
           // sign in button
-          SigninButton(text: "Login", onTap: login),
+          SigninButton(text: "Login", onTap: _isLoading ? null : login),
           const SizedBox(height: 10),
 
           // don't have account? Register button
