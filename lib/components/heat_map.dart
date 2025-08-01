@@ -5,40 +5,51 @@ import 'package:main/session_data/session_data_provider.dart';
 import 'package:provider/provider.dart';
 
 class MyHeatMap extends StatelessWidget {
-  final Map<DateTime, int>? datasets;
-  final DateTime startDate;
 
   const MyHeatMap({
     super.key,
-    required this.datasets,
-    required this.startDate,
   });
 
   @override
   Widget build(BuildContext context) {
+    final sessionDataProvider = Provider.of<SessionDataProvider>(context, listen: false);
+
+    final Map<DateTime, int>? datasetsForHeatMap = sessionDataProvider.heatMapDataset;
+    final DateTime startDateForHeatMap = sessionDataProvider.getStartDateForHeatMap();
+
+    // DEBUG: Print what MyHeatMap is receiving
+    print("MyHeatMap build(): StartDate: $startDateForHeatMap");
+    print("MyHeatMap build(): Datasets received by widget: $datasetsForHeatMap");
+    if (datasetsForHeatMap != null && datasetsForHeatMap.isNotEmpty) {
+      datasetsForHeatMap.forEach((date, value) {
+        print("  Dataset entry for HeatMap: Date: $date, Value: $value");
+      });
+    } else {
+      print("MyHeatMap build(): Datasets are null or empty.");
+    }
+
+
     return Container(
       padding: const EdgeInsets.all(25),
       child: HeatMapCalendar(
-        initDate: startDate,
-        datasets: datasets,
-        //colorMode: ColorMode.color,
-        //defaultColor: Provider.of<ThemeData>(context).primaryColor,
-        //textColor: Colors.white,
+        initDate: startDateForHeatMap,
+        datasets: datasetsForHeatMap,
         showColorTip: false,
         flexible: true,
         size: 30,
         monthFontSize: 20,
         weekFontSize: 15,
+        colorMode: ColorMode.opacity,
         colorsets: {
           1: Colors.green.shade100,
           2: Colors.green.shade200,
           3: Colors.green.shade300,
           4: Colors.green.shade400,
-          //5: Colors.green.shade500,
-          //6: Colors.green.shade600,
-          //7: Colors.green.shade700,
-          //8: Colors.green.shade800,
-          //9: Colors.green.shade900
+          5: Colors.green.shade500,
+          6: Colors.green.shade600,
+          7: Colors.green.shade700,
+          8: Colors.green.shade800,
+          9: Colors.green.shade900
         },
         onClick: (date) {
           Provider.of<SessionDataProvider>(context, listen: false)

@@ -14,6 +14,9 @@ import '../models/exercise.dart';
 import '../models/workout.dart';
 import '../session_data/session_data.dart';
 import '../session_data/session_data_provider.dart';
+import 'package:uuid/uuid.dart';
+
+const uuid = Uuid();
 
 class WorkoutPage extends StatefulWidget {
   final Workout workout;
@@ -144,8 +147,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
   // Actions to save session to sessionData
   Future<void> saveSession(Workout workout) async {
     // Get current datetime (useful for later)
-    DateTime now = DateTime.now();
-    DateTime date = DateTime(now.year, now.month, now.day);
+    DateTime date = DateTime.now();
 
     // Deactivate current workout
     print("COMPLETED WORKOUT ID: ${workout.id}");
@@ -188,6 +190,11 @@ class _WorkoutPageState extends State<WorkoutPage> {
           Provider.of<WorkoutDataProvider>(context, listen: false).updateSet(workout, exercise, set);
         }
       }
+    }
+
+    // -- Part 3: For each completed exercise, must modify their ids for key issues.
+    for (Exercise exercise in completedExercises) {
+      exercise.instanceId = uuid.v4();
     }
 
     //TODO: Improve detail message

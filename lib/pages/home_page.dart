@@ -194,9 +194,9 @@ class _HomePageState extends State<HomePage> {
           body: ListView(
             children: [
               // Activity heat map for sessions completed
-              MyHeatMap(
-                  datasets: sessionProvider.heatMapDataset,
-                  startDate: sessionProvider.getStartDateForHeatMap()
+              const MyHeatMap(
+                  //datasets: sessionProvider.heatMapDataset,
+                  //startDate: sessionProvider.getStartDateForHeatMap()
               ),
               // List of workouts
               Material(

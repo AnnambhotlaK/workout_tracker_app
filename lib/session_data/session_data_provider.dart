@@ -60,6 +60,7 @@ class SessionDataProvider extends ChangeNotifier {
         _sessions = sessionsData;
         _isLoading = false;
         _error = null;
+        _calculateHeatMapData();
         notifyListeners();
       },
       onError: (Object e) {
@@ -215,21 +216,21 @@ class SessionDataProvider extends ChangeNotifier {
     for (Session session in _sessions) {
       // Normalize DateTime
       DateTime sessionDate = session.dateCompleted;
-      DateTime normalizedDateKey =
-      DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
+      //DateTime normalizedDateKey =
+      //DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
 
       // 1: Populate heatMapDataset, which counts sessions completed on datetime <DateTime, int>
       // If already exists, update with +1
       // If not, set to value 1
       heatMapDataset.update(
-        normalizedDateKey,
+        sessionDate,
             (value) => value + 1,
         ifAbsent: () => 1,
       );
 
-      // 2: Populate heatMapSessionDataset, which lists all sessions completed on datetime <DateTime, List<Session>>
+      // 2: Populate heatMapSessionDataset, which maps a specific DateTime to a list of Sessions <DateTime, List<Session>>
       heatMapSessionDataset.update(
-        normalizedDateKey,
+        sessionDate,
             (existingSessions) {
           existingSessions.add(session);
           return existingSessions;
@@ -238,7 +239,7 @@ class SessionDataProvider extends ChangeNotifier {
       );
 
       // 3: Populate heatMapWeekDataset, which lists all sessions completed in week <int, List<Session>>
-      final weekNumber = normalizedDateKey.weekNumber;
+      final weekNumber = sessionDate.weekNumber;
       heatMapWeekDataset.update(
         weekNumber,
             (existingSessions) {
@@ -255,19 +256,22 @@ class SessionDataProvider extends ChangeNotifier {
 
   DateTime getStartDateForHeatMap() {
     if (heatMapDataset.isEmpty) {
+      print("getStartDateForHeatMap: heatMapDataset is empty!");
       return DateTime.now();
     }
+    print("getStartDateForHeatMap: heatMapDataset is not empty!");
     List<DateTime> daysWithActivity = heatMapDataset.keys.toList();
     daysWithActivity.sort((a, b) => a.compareTo(b));
-    return daysWithActivity.first;
+    print("getStartDateForHeatMap: starting date is: ${daysWithActivity.first}");
+    return daysWithActivity.first.subtract(Duration(days: 1));
   }
 
   // Get current streak of workouts active
   int getCurrentStreak() {
     if (heatMapSessionDataset.isEmpty) return 0;
 
-    DateTime today = DateTime.now();
-    DateTime currentDate = DateTime(today.year, today.month, today.day); // Normalized current day
+    DateTime currentDate = DateTime.now();
+    //DateTime currentDate = DateTime(today.year, today.month, today.day); // Normalized current day
 
     int streak = 0;
     bool activeToday = heatMapSessionDataset[currentDate] != null && heatMapSessionDataset[currentDate]!.isNotEmpty;
@@ -301,8 +305,8 @@ class SessionDataProvider extends ChangeNotifier {
   }
 
   void showActivityOnDay(BuildContext context, DateTime date) {
-    DateTime normalizedDateKey = DateTime(date.year, date.month, date.day);
-    List<Session> activityList = heatMapSessionDataset[normalizedDateKey] ?? [];
+    //DateTime normalizedDateKey = DateTime(date.year, date.month, date.day);
+    List<Session> activityList = heatMapSessionDataset[date] ?? [];
 
     if (activityList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
