@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/pages/workout_page.dart';
-import '../curr_workout_data/workout_data_provider.dart';
+import '../data_providers/workout_data_provider.dart';
 import '../models/session.dart';
-import '../session_data/session_data_provider.dart';
+import '../data_providers/session_data_provider.dart';
 import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 

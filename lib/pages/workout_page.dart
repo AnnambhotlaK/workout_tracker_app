@@ -1,19 +1,14 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:main/components/exercise_tile.dart';
-import 'package:main/curr_workout_data/curr_workout_data.dart';
 import 'package:provider/provider.dart';
 import '../components/exercise_selector.dart';
-import '../curr_workout_data/workout_data_provider.dart';
+import '../data_providers/workout_data_provider.dart';
 import '../exercise_db/json_exercise.dart';
 import '../models/session.dart';
 import '../models/set.dart';
-import '../components/exercise_tile.dart';
-import '../components/set_tile.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
-import '../session_data/session_data.dart';
-import '../session_data/session_data_provider.dart';
+import '../data_providers/session_data_provider.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();

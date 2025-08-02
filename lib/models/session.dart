@@ -6,7 +6,7 @@ class Session {
   String? userId;
   String workoutId; // "Foreign key" for Firestore
   String workoutName; // Denormalized
-  DateTime dateCompleted;
+  DateTime dateCompleted; // Stored with specific DateTime, but referred in HeatMap with yyyy-mm-dd
   Duration? length;
   String? notes;
   List<Exercise> exercises;

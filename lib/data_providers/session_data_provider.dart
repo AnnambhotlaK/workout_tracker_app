@@ -5,7 +5,6 @@ import '../models/exercise.dart';
 import '../models/session.dart';
 import '../services/firestore_service.dart';
 import '../models/set.dart';
-import 'package:main/datetime/date_time.dart';
 import 'package:week_number/iso.dart';
 import 'package:intl/intl.dart';
 
@@ -216,21 +215,21 @@ class SessionDataProvider extends ChangeNotifier {
     for (Session session in _sessions) {
       // Normalize DateTime
       DateTime sessionDate = session.dateCompleted;
-      //DateTime normalizedDateKey =
-      //DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
+      DateTime normalizedDateKey =
+      DateTime(sessionDate.year, sessionDate.month, sessionDate.day);
 
       // 1: Populate heatMapDataset, which counts sessions completed on datetime <DateTime, int>
       // If already exists, update with +1
       // If not, set to value 1
       heatMapDataset.update(
-        sessionDate,
+        normalizedDateKey,
             (value) => value + 1,
         ifAbsent: () => 1,
       );
 
       // 2: Populate heatMapSessionDataset, which maps a specific DateTime to a list of Sessions <DateTime, List<Session>>
       heatMapSessionDataset.update(
-        sessionDate,
+        normalizedDateKey,
             (existingSessions) {
           existingSessions.add(session);
           return existingSessions;
@@ -239,7 +238,7 @@ class SessionDataProvider extends ChangeNotifier {
       );
 
       // 3: Populate heatMapWeekDataset, which lists all sessions completed in week <int, List<Session>>
-      final weekNumber = sessionDate.weekNumber;
+      final weekNumber = normalizedDateKey.weekNumber;
       heatMapWeekDataset.update(
         weekNumber,
             (existingSessions) {
@@ -270,8 +269,8 @@ class SessionDataProvider extends ChangeNotifier {
   int getCurrentStreak() {
     if (heatMapSessionDataset.isEmpty) return 0;
 
-    DateTime currentDate = DateTime.now();
-    //DateTime currentDate = DateTime(today.year, today.month, today.day); // Normalized current day
+    DateTime today = DateTime.now();
+    DateTime currentDate = DateTime(today.year, today.month, today.day); // Normalized current day
 
     int streak = 0;
     bool activeToday = heatMapSessionDataset[currentDate] != null && heatMapSessionDataset[currentDate]!.isNotEmpty;
@@ -305,8 +304,8 @@ class SessionDataProvider extends ChangeNotifier {
   }
 
   void showActivityOnDay(BuildContext context, DateTime date) {
-    //DateTime normalizedDateKey = DateTime(date.year, date.month, date.day);
-    List<Session> activityList = heatMapSessionDataset[date] ?? [];
+    DateTime normalizedDateKey = DateTime(date.year, date.month, date.day);
+    List<Session> activityList = heatMapSessionDataset[normalizedDateKey] ?? [];
 
     if (activityList.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

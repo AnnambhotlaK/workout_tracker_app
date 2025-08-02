@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/set_tile.dart';
 import 'package:main/models/set.dart';
 import 'package:provider/provider.dart';
-import '../curr_workout_data/workout_data_provider.dart';
+import '../data_providers/workout_data_provider.dart';
 import '../models/exercise.dart';
 import '../models/workout.dart';
 import 'package:uuid/uuid.dart';
