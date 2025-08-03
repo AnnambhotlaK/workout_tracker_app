@@ -88,7 +88,6 @@ class _SetTileState extends State<SetTile> {
       leading: Checkbox(
         value: widget.isCompleted,
         onChanged: widget.onCheckboxChanged,
-        //activeColor: Theme.of(context).primaryColor,
       ),
       title: Padding(
         padding: EdgeInsetsGeometry.only(bottom: 5),

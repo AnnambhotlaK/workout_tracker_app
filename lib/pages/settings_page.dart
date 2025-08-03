@@ -81,6 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
       onChange: (bool isDarkModeOn) {
         themeProvider.toggleTheme(isDarkModeOn);
       },
+      activeColor: Colors.grey.shade800,
     );
   }
 

@@ -143,11 +143,11 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                     // Close popup
                     Expanded(
                       child: Container(
-                        padding: EdgeInsets.only(left: 5),
+                        padding: const EdgeInsets.only(left: 5),
                         height: 100,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red[400],
+                            backgroundColor: Colors.red.shade400,
                           ),
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Cancel'),

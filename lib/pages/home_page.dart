@@ -174,13 +174,12 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Home'),
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
             actions: <Widget>[
               //TODO: Get a good fire icon for streak
+              const Icon(Icons.local_fire_department_sharp, color: Colors.white),
               Text(
-                '🔥 ${sessionProvider.getCurrentStreak()}',
-                style: const TextStyle(color: Colors.orange, fontSize: 20),
+                '${sessionProvider.getCurrentStreak()}',
+                style: const TextStyle(color: Colors.white, fontSize: 20),
               ),
               const Padding(padding: EdgeInsets.only(right: 15)),
             ],

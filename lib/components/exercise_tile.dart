@@ -158,6 +158,7 @@ class ExerciseTile extends StatelessWidget {
                 child: TextButton.icon(
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).primaryColor,
+                    textStyle: const TextStyle(color: Colors.white),
                   ),
                   icon: Icon(Icons.add, size: 16),
                   label: Text("Add Set"),

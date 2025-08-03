@@ -53,8 +53,6 @@ class _StatsPageState extends State<StatsPage> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Statistics'),
-            backgroundColor: Colors.blueAccent,
-            foregroundColor: Colors.white,
           ),
           body: ListView(children: [
 
