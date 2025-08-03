@@ -24,16 +24,13 @@ class _MainPageState extends State<MainPage> {
   @override
   void initState() {
     super.initState();
-
-    //Provider.of<WorkoutDataProvider>(context, listen: false).workouts();
-    //Provider.of<SessionDataProvider>(context, listen: false).initializeSessionList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 250),
         transitionBuilder: (Widget child, Animation<double> animation) {
           return FadeTransition(
             opacity: animation,

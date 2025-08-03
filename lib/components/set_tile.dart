@@ -46,7 +46,8 @@ class _SetTileState extends State<SetTile> {
         widget.onWeightChanged(_weightController.text);
       }
       if (_weightFocusNode.hasFocus) {
-        _weightController.selection = TextSelection(baseOffset: 0, extentOffset: _weightController.text.length);
+        _weightController.selection = TextSelection(
+            baseOffset: 0, extentOffset: _weightController.text.length);
       }
     });
     _repsFocusNode.addListener(() {
@@ -55,7 +56,8 @@ class _SetTileState extends State<SetTile> {
         widget.onRepsChanged(_repsController.text);
       }
       if (_repsFocusNode.hasFocus) {
-        _repsController.selection = TextSelection(baseOffset: 0, extentOffset: _repsController.text.length);
+        _repsController.selection = TextSelection(
+            baseOffset: 0, extentOffset: _repsController.text.length);
       }
     });
   }
@@ -86,14 +88,14 @@ class _SetTileState extends State<SetTile> {
     return ListTile(
       textColor: Colors.white,
       leading: Checkbox(
-        value: widget.isCompleted,
-        onChanged: widget.onCheckboxChanged,
-      ),
+          value: widget.isCompleted,
+          onChanged: widget.onCheckboxChanged,
+          checkColor: Colors.white,
+          activeColor: Colors.green),
       title: Padding(
         padding: EdgeInsetsGeometry.only(bottom: 5),
         child: Row(
           children: [
-
             // WEIGHT TEXT BOX
             Padding(
               padding: EdgeInsetsGeometry.fromLTRB(19, 0, 0, 0),
@@ -110,7 +112,7 @@ class _SetTileState extends State<SetTile> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
                 decoration: InputDecoration(
                   isDense: true,
@@ -118,11 +120,15 @@ class _SetTileState extends State<SetTile> {
                       vertical: 2.0, horizontal: 4.0),
                   hintText: "0",
                   hintStyle: TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(5)),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.blueAccent), borderRadius: BorderRadius.circular(5)),
-                  fillColor: Colors.blue[100],
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none),
                   filled: true,
+                  fillColor: widget.isCompleted
+                      ? (Theme.of(context).brightness == Brightness.dark
+                          ? Colors.green.shade700
+                          : Colors.green.shade300)
+                      : null,
                 ),
                 onFieldSubmitted: (value) {
                   // Save when user presses "done" on keyboard
@@ -144,20 +150,23 @@ class _SetTileState extends State<SetTile> {
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 16,
-                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
                 ),
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding:
-                  const EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 2.0, horizontal: 2.0),
                   hintText: "0",
                   hintStyle: TextStyle(color: Colors.grey),
-                  border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-                  fillColor: Colors.red[100],
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      borderSide: BorderSide.none),
                   filled: true,
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.grey), borderRadius: BorderRadius.circular(5)),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: Colors.redAccent), borderRadius: BorderRadius.circular(5)),
+                  fillColor: widget.isCompleted
+                      ? (Theme.of(context).brightness == Brightness.dark
+                      ? Colors.green.shade700
+                      : Colors.green.shade300)
+                      : null,
                 ),
                 onFieldSubmitted: (value) {
                   widget.onRepsChanged(value);

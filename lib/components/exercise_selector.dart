@@ -51,7 +51,7 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
             children: <Widget>[
               // Title
               const Text(
-                'Select Exercise',
+                'Add Exercise',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.left,
               ),
@@ -59,16 +59,6 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
 
               // Search Bar
               TextField(
-                style: const TextStyle(
-                  fontSize: 15,
-                ),
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
-                  hintText: 'Search',
-                  border: OutlineInputBorder(
-                      borderSide: const BorderSide(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(10)),
-                ),
                 onChanged: _onSearchChanged,
               ),
 
@@ -101,7 +91,6 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                         itemBuilder: (context, index) {
                           final exercise = exercises[index];
                           return Container(
-                            decoration: const BoxDecoration(),
                             child: ListTile(
                               title: Text(exercise.name),
                               subtitle:
@@ -146,9 +135,6 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                         padding: const EdgeInsets.only(left: 5),
                         height: 100,
                         child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red.shade400,
-                          ),
                           onPressed: () => Navigator.of(context).pop(),
                           child: const Text('Cancel'),
                         ),

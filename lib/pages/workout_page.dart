@@ -294,8 +294,8 @@ class _WorkoutPageState extends State<WorkoutPage> {
               // Add Exercise button
               FloatingActionButton(
                 heroTag: "addBtn",
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+                //backgroundColor: Colors.red,
+                //foregroundColor: Colors.white,
                 onPressed: () => _showExerciseSelector(context),
                 child: const Icon(Icons.add),
               ),
@@ -303,13 +303,12 @@ class _WorkoutPageState extends State<WorkoutPage> {
               // End Session button
               FloatingActionButton(
                 heroTag: "endSessionBtn",
-                backgroundColor: Colors.green,
-                foregroundColor: Colors.white,
+                //backgroundColor: Colors.green,
+                //foregroundColor: Colors.white,
                 //TODO: Make it so button is greyed if workout is invalid
                 onPressed: () {
                   // if no exercises done in workout
                   bool readyToFinish = false;
-                  //Workout relevantWorkout = workoutProvider.getRelevantWorkout(widget.workout);
                   for (Exercise exercise in widget.workout.exercises) {
                     for (Set set in exercise.sets) {
                       if (set.isCompleted) {

@@ -175,7 +175,7 @@ class _HomePageState extends State<HomePage> {
           appBar: AppBar(
             title: const Text('Home'),
             actions: <Widget>[
-              //TODO: Get a good fire icon for streak
+              // TODO: Fix streak indicator
               const Icon(Icons.local_fire_department_sharp, color: Colors.white),
               Text(
                 '${sessionProvider.getCurrentStreak()}',
@@ -186,17 +186,12 @@ class _HomePageState extends State<HomePage> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: createNewWorkout,
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
             child: const Icon(Icons.add),
           ),
           body: ListView(
             children: [
               // Activity heat map for sessions completed
-              const MyHeatMap(
-                  //datasets: sessionProvider.heatMapDataset,
-                  //startDate: sessionProvider.getStartDateForHeatMap()
-              ),
+              const MyHeatMap(),
               // List of workouts
               Material(
                 type: MaterialType.transparency,

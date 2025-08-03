@@ -79,7 +79,7 @@ class _SettingsPageState extends State<SettingsPage> {
       title: 'Dark Mode',
       leading: Icon(Icons.dark_mode, color: Colors.purple),
       onChange: (bool isDarkModeOn) {
-        themeProvider.toggleTheme(isDarkModeOn);
+        themeProvider.toggleTheme();
       },
       activeColor: Colors.grey.shade800,
     );

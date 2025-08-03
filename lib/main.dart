@@ -70,9 +70,7 @@ class MyApp extends StatelessWidget {
         title: 'Setly',
         debugShowCheckedModeBanner: false,
         home: AuthWrapper(),
-        theme: lightMode,
-        darkTheme: darkMode,
-        themeMode: themeProvider.themeMode,
+        theme: Provider.of<ThemeProvider>(context).themeData,
       ),
     );
   }

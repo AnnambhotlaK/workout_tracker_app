@@ -1,51 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../pages/settings_page.dart';
+import 'package:flutter_settings_screens/flutter_settings_screens.dart';
+import 'theme.dart'; // Your theme.dart
 
 class ThemeProvider with ChangeNotifier {
-  static const String _themeModeKey = 'themeMode';
-  ThemeMode _themeMode = ThemeMode.system;
+  ThemeData _themeData = Settings.getValue<bool>(keyDarkMode, defaultValue: false) ?? false
+      ? darkMode
+      : lightMode;
 
-  ThemeMode get themeMode => _themeMode;
+  ThemeData get themeData => _themeData;
 
-  ThemeProvider() {
-    _loadThemeMode(); // Load saved theme on initialization
-  }
+  // Optional: Add a getter for isDarkMode if UI needs to know
+  bool get isDarkMode => _themeData == darkMode;
 
-  // load _themeMode from shared preferences
-  Future<void> _loadThemeMode() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? savedThemeMode = prefs.getString(_themeModeKey);
-
-    if (savedThemeMode == 'light') {
-      _themeMode = ThemeMode.light;
-    } else if (savedThemeMode == 'dark') {
-      _themeMode = ThemeMode.dark;
-    } else {
-      _themeMode = ThemeMode.system; // Default or if no preference saved
-    }
+  set themeData(ThemeData themeData) {
+    _themeData = themeData;
     notifyListeners();
   }
 
-  // Update _themeMode universally
-  Future<void> setThemeMode(ThemeMode mode) async {
-    if (_themeMode == mode) return; // No change
-
-    _themeMode = mode;
-    notifyListeners();
-
-    // Persist the choice
-    final prefs = await SharedPreferences.getInstance();
-    if (mode == ThemeMode.light) {
-      await prefs.setString(_themeModeKey, 'light');
-    } else if (mode == ThemeMode.dark) {
-      await prefs.setString(_themeModeKey, 'dark');
+  void toggleTheme() {
+    final newIsDarkMode = !isDarkMode;
+    if (newIsDarkMode) {
+      _themeData = darkMode;
     } else {
-      await prefs.remove(_themeModeKey); // Or set to 'system'
+      _themeData = lightMode;
     }
+    // Persist value for settings_page.dart
+    Settings.setValue<bool>(keyDarkMode, newIsDarkMode);
+    notifyListeners();
   }
 
-  // Helper to toggle between light and dark (ignoring system for direct toggle)
-  Future<void> toggleTheme(bool isDarkMode) async {
-    await setThemeMode(isDarkMode ? ThemeMode.dark : ThemeMode.light);
+  // Necessary to update themeProvider based on settings
+  void loadThemeFromSettings() {
+    final bool isDarkModeEnabled = Settings.getValue<bool>(keyDarkMode, defaultValue: false) ?? false;
+    if (isDarkModeEnabled && _themeData != darkMode) {
+      _themeData = darkMode;
+      notifyListeners();
+    } else if (!isDarkModeEnabled && _themeData != lightMode) {
+      _themeData = lightMode;
+      notifyListeners();
+    }
   }
 }

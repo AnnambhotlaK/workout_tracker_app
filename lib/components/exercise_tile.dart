@@ -36,7 +36,7 @@ class ExerciseTile extends StatelessWidget {
       key: ValueKey('dismissible_exercise_${exercise.instanceId}'),
       onDismissed: (direction) => onDeleteExercise(),
       background: Container(
-        color: Colors.red,
+        color: Colors.redAccent,
         padding: const EdgeInsets.only(right: 20),
         alignment: Alignment.centerRight,
         child: const Icon(Icons.delete, color: Colors.white, size: 36),
@@ -79,7 +79,7 @@ class ExerciseTile extends StatelessWidget {
                           textAlign: TextAlign.center,
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: Colors.grey[500]),
+                          ),
                         ),
                       ),
                       const Padding(
@@ -95,8 +95,7 @@ class ExerciseTile extends StatelessWidget {
                           "Reps",
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[500]),
+                              fontWeight: FontWeight.bold,),
                         ),
                       ),
                     ],
@@ -155,13 +154,8 @@ class ExerciseTile extends StatelessWidget {
               // Maybe an "Add Set" button for this exercise
               Align(
                 alignment: Alignment.centerRight,
-                child: TextButton.icon(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    textStyle: const TextStyle(color: Colors.white),
-                  ),
-                  icon: Icon(Icons.add, size: 16),
-                  label: Text("Add Set"),
+                child: ElevatedButton(
+                  child: Text("+ Add Set"),
                   onPressed: () {
                     // Call your function to add a new set to this specific exercise
                     // Provider.of<WorkoutDataProvider>(context, listen: false).addSetToExercise(workoutKey, exerciseKey, "0", "0");

@@ -47,13 +47,13 @@ class MyHeatMap extends StatelessWidget {
         colorsets: {
           1: Colors.green,
         },
-        defaultColor: themeDataProvider.themeMode == ThemeMode.dark
+        defaultColor: themeDataProvider.isDarkMode
             ? Colors.grey.shade800
             : Colors.grey.shade200,
-        textColor: themeDataProvider.themeMode == ThemeMode.dark
+        textColor: themeDataProvider.isDarkMode
             ? Colors.white
             : Colors.black,
-        weekTextColor: themeDataProvider.themeMode == ThemeMode.dark
+        weekTextColor: themeDataProvider.isDarkMode
             ? Colors.white
             : Colors.black,
         onClick: (date) {
