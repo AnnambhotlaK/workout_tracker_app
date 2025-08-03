@@ -11,25 +11,65 @@ class WorkoutDataProvider extends ChangeNotifier {
   List<Workout> _workouts = [];
   StreamSubscription? _workoutSubscription;
 
-  final String? _userId; // Passed from ChangeNotifierProxyProvider in main.dart
+  String? _userId; // Passed from ChangeNotifierProxyProvider in main.dart
   String? get currentUserId => _userId; // Getter for external access
 
   bool _isLoading = false;
   String? _error;
 
-  WorkoutDataProvider(this._userId) {
-    print("WorkoutDataProvider initialized with userId: $_userId");
-    if (_userId != null) {
-      _listenToWorkouts();
-    }
-    else {
-      _workouts = [];
-    }
+  WorkoutDataProvider(String? initialUserId) {
+    updateUser(initialUserId);
   }
 
   List<Workout> get workouts => _workouts;
   bool get isLoading => _isLoading;
   String? get error => _error;
+
+  void updateUser(String? newUserId) {
+    print(
+        "WorkoutDataProvider: Updating user to $newUserId (previous: $_userId)");
+    if (_userId == newUserId && _workouts.isNotEmpty && !_isLoading) {
+      // Avoid unnecessary re-fetch if user is same and already loaded
+      if (newUserId != null && _workoutSubscription == null) {
+        // this means user is same, but subscription was lost (e.g. after logout then login of same user)
+      } else {
+        print(
+            "WorkoutDataProvider: User is the same ($newUserId), no need to re-fetch if not empty and not loading.");
+        // If already loaded for this user, no need to do much unless you want to force refresh.
+        // If _sessionSubscription is null here despite having a newUserId, it means it was cancelled (e.g. logout)
+        // and needs to be re-established.
+        if (newUserId != null && _workoutSubscription == null) {
+          // proceed to _listenToSessions
+          _listenToWorkouts();
+        }
+        else if (newUserId == null) {
+          // User logged out, clear data
+          _clearData();
+          notifyListeners(); // Notify UI that data is cleared
+          return;
+        }
+        else {
+          return; // Already good for this user
+        }
+      }
+    }
+
+    _userId = newUserId;
+    _clearData(); // Clear old user's data before fetching for new user
+
+    if (_userId != null) {
+      _isLoading = true; // Set loading state for the new user
+      // No need to notifyListeners() here for isLoading, _listenToSessions will handle it
+      _listenToWorkouts();
+    } else {
+      // User is null (logged out)
+      _isLoading = false; // Not loading if no user
+      notifyListeners(); // Notify that data is cleared and not loading
+    }
+
+  }
+
+
 
   void _listenToWorkouts() {
     if (_userId == null) {
@@ -59,6 +99,15 @@ class WorkoutDataProvider extends ChangeNotifier {
         notifyListeners();
       },
     );
+  }
+
+  void _clearData() {
+    print("WorkoutDataProvider: Calling _clearData");
+    _workoutSubscription?.cancel();
+    _workoutSubscription = null; // Important to nullify after cancel
+    _workouts = [];
+    _isLoading = true; // Set to true initially when clearing, will be set to false if no user or after load
+    _error = null;
   }
 
   Workout? getActiveWorkout() {

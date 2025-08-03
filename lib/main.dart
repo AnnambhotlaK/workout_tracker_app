@@ -3,6 +3,7 @@ import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:main/auth/auth_wrapper.dart';
 import 'package:main/pages/home_page.dart';
 import 'package:main/data_providers/session_data_provider.dart';
+import 'package:main/services/firestore_service.dart';
 import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -41,36 +42,29 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),
+
         ChangeNotifierProxyProvider<AuthService, WorkoutDataProvider>(
-            create: (context) => WorkoutDataProvider(null),
+            create: (context) => WorkoutDataProvider(
+              Provider.of<AuthService>(context, listen: false).currentUserId,
+            ),
             update: (context, authService, previousWorkoutProvider) {
-              final userId = authService.currentUserId;
-              if (userId == null) {
-                previousWorkoutProvider?.clearDataOnLogout();
-                return previousWorkoutProvider ?? WorkoutDataProvider(null);
-              }
-              if (previousWorkoutProvider == null ||
-                  previousWorkoutProvider.currentUserId != userId) {
-                return WorkoutDataProvider(userId);
-              } else {
-                return previousWorkoutProvider;
-              }
+              final newUserId = authService.currentUserId;
+              print("ProxyProvider fo SessionDataProvider: Updating user to $newUserId");
+              previousWorkoutProvider!.updateUser(newUserId);
+              return previousWorkoutProvider;
             }),
+
         ChangeNotifierProxyProvider<AuthService, SessionDataProvider>(
-            create: (context) => SessionDataProvider(null),
+            create: (context) => SessionDataProvider(
+              Provider.of<AuthService>(context, listen: false).currentUserId,
+            ),
             update: (context, authService, previousSessionProvider) {
-              final userId = authService.currentUserId;
-              if (userId == null) {
-                previousSessionProvider?.clearDataOnLogout();
-                return previousSessionProvider ?? SessionDataProvider(null);
-              }
-              if (previousSessionProvider == null ||
-                  previousSessionProvider.currentUserId != userId) {
-                return SessionDataProvider(userId);
-              } else {
-                return previousSessionProvider;
-              }
+              final newUserId = authService.currentUserId;
+              print("ProxyProvider for SessionDataProvider: Updating user to $newUserId");
+              previousSessionProvider!.updateUser(newUserId);
+              return previousSessionProvider;
             }),
+
       ],
       child: MaterialApp(
         title: 'Setly',
