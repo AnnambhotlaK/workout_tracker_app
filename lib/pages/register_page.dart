@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/login_text_field.dart';
 import 'package:main/components/signin_button.dart';
 import 'package:firebase_core/firebase_core.dart';
-import '../helper/helper_functions.dart';
+import '../helper_functions.dart';
 
 class RegisterPage extends StatefulWidget {
   final void Function()? onTap;
@@ -83,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
           const SizedBox(height: 25),
 
           // app name
-          const Text('Setly',
+          const Text('Join Onfinity',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 36,

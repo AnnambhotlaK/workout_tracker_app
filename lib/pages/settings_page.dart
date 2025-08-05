@@ -3,7 +3,7 @@
  */
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
-import 'package:main/helper/helper_functions.dart';
+import 'package:main/helper_functions.dart';
 import 'package:provider/provider.dart';
 
 import '../auth/auth_wrapper.dart';

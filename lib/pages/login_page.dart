@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/login_text_field.dart';
 import 'package:main/components/signin_button.dart';
 
-import '../helper/helper_functions.dart';
+import '../helper_functions.dart';
 
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           const SizedBox(height: 25),
 
           // app name
-          const Text('Setly',
+          const Text('Onfinity',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 36,

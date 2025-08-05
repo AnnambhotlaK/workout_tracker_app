@@ -11,7 +11,7 @@ class WorkoutDataProvider extends ChangeNotifier {
   List<Workout> _workouts = [];
   StreamSubscription? _workoutSubscription;
 
-  String? _userId; // Passed from ChangeNotifierProxyProvider in main.dart
+  String? _userId; // Passed from ChangeNotifierProxyProvider in main-dev or main-prod
   String? get currentUserId => _userId; // Getter for external access
 
   bool _isLoading = false;

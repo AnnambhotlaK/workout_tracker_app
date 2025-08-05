@@ -10,12 +10,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'data_providers/workout_data_provider.dart';
 import 'exercise_db/database_helper.dart';
 import 'firebase_options.dart';
+import 'helper_functions.dart';
 import 'theme/theme.dart';
 import 'services/auth_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await initializeFirebase(isProd: false);
   await Settings.init();
 
   // TEST ON DATABASEHELPER
@@ -67,7 +68,7 @@ class MyApp extends StatelessWidget {
 
       ],
       child: MaterialApp(
-        title: 'Setly',
+        title: 'Onfinity',
         debugShowCheckedModeBanner: false,
         home: AuthWrapper(),
         theme: Provider.of<ThemeProvider>(context).themeData,
