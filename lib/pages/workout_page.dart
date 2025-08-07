@@ -208,7 +208,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
                 // WORKOUT NAME
                 Text(
                   widget.workout.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold, color: Colors.white),
                 ),
                 // EXERCISES LIST

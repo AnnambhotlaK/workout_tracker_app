@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:main/components/login_text_field.dart';
 import 'package:main/components/signin_button.dart';
-import 'package:firebase_core/firebase_core.dart';
 import '../helper_functions.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -46,7 +45,7 @@ class _RegisterPageState extends State<RegisterPage> {
     // Otherwise, try creating user
     else {
       try {
-        UserCredential? userCredential = await FirebaseAuth.instance
+        await FirebaseAuth.instance
             .createUserWithEmailAndPassword(
                 email: emailController.text, password: passwordController.text);
         if (context.mounted) Navigator.pop(context);

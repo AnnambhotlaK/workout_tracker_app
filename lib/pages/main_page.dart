@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:main/pages/settings_page.dart';
 import 'package:main/pages/stats_page.dart';
-import 'package:provider/provider.dart';
-
-import '../data_providers/workout_data_provider.dart';
 import 'home_page.dart';
 
 class MainPage extends StatefulWidget {

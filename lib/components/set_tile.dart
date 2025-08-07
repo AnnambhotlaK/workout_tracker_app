@@ -93,18 +93,18 @@ class _SetTileState extends State<SetTile> {
           checkColor: Colors.white,
           activeColor: Colors.green),
       title: Padding(
-        padding: EdgeInsetsGeometry.only(bottom: 5),
+        padding: const EdgeInsetsGeometry.only(bottom: 5),
         child: Row(
           children: [
             // WEIGHT TEXT BOX
-            Padding(
+            const Padding(
               padding: EdgeInsetsGeometry.fromLTRB(19, 0, 0, 0),
             ),
             Expanded(
               child: TextFormField(
                 controller: _weightController,
                 focusNode: _weightFocusNode,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
                   // Allow numbers and one decimal
@@ -119,7 +119,7 @@ class _SetTileState extends State<SetTile> {
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 2.0, horizontal: 4.0),
                   hintText: "0",
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide.none),
@@ -137,7 +137,7 @@ class _SetTileState extends State<SetTile> {
                 },
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsetsGeometry.fromLTRB(35, 0, 0, 0),
             ),
             Expanded(
@@ -157,7 +157,7 @@ class _SetTileState extends State<SetTile> {
                   contentPadding: const EdgeInsets.symmetric(
                       vertical: 2.0, horizontal: 2.0),
                   hintText: "0",
-                  hintStyle: TextStyle(color: Colors.grey),
+                  hintStyle: const TextStyle(color: Colors.grey),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide.none),

@@ -5,6 +5,18 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+def keystorePropertiesFile = rootProject.file("key.properties")
+def keystoreProperties = new Properties()
+
+// Try to load the properties file if it exists
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+} else {
+    // Optionally print a warning or set default (null) values if you want to allow builds without it
+    // For release, it's usually an error if it's missing.
+    println "Warning: key.properties file not found. Release builds may fail to sign."
+}
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file("local.properties")
 if (localPropertiesFile.exists()) {
@@ -40,33 +52,52 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.onfinity.onfinity"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutterVersionCode.toInteger()
-        versionName = flutterVersionName
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(keystoreProperties['storeFile']) // Replace with your keystore path
+            storePassword keystoreProperties['storePassword'] // Replace with your keystore password
+            keyAlias keystoreProperties['keyAlias'] // Replace with your key alias
+            keyPassword keystoreProperties['keyPassword'] // Replace with your key password
+        }
     }
 
     buildTypes {
+        // note: using debug mode in dev, but don't need an explicit type for it
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
         }
     }
 
     flavorDimensions "environment"
     productFlavors {
         dev {
-            flavorDimensions "environment"
+            dimension "environment"
             applicationIdSuffix = ".dev"
+            versionNameSuffix = "_dev"
+            manifestPlaceholders = [
+                    appName: "Onfinity Dev",
+                    appIcon: "@mipmap/ic_launcher" // If you have a dev-specific icon
+            ]
         }
         prod {
-            flavorDimensions "environment"
+            dimension "environment"
             applicationIdSuffix = ".prod"
+            versionNameSuffix = "_prod"
+            manifestPlaceholders = [
+                    appName: "Onfinity",
+                    appIcon: "@mipmap/ic_launcher"
+            ]
         }
     }
 

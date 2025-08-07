@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:main/components/heat_map.dart';
 import 'package:main/pages/workout_page.dart';
 import '../data_providers/workout_data_provider.dart';
-import '../models/session.dart';
 import '../data_providers/session_data_provider.dart';
-import '../models/exercise.dart';
 import 'package:provider/provider.dart';
 
 import '../models/workout.dart';
@@ -165,7 +163,6 @@ class _HomePageState extends State<HomePage> {
       // AuthWrapper will ideally handle this
       return const Scaffold(body: Center(child: Text("Error: User not logged in")));
     }
-    List<Session> sessions = sessionProvider.sessions;
 
 
 
@@ -174,8 +171,8 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           appBar: AppBar(
             title: const Text('Home'),
+            /*
             actions: <Widget>[
-              // TODO: Fix streak indicator
               const Icon(Icons.local_fire_department_sharp, color: Colors.white),
               Text(
                 '${sessionProvider.getCurrentStreak()}',
@@ -183,6 +180,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const Padding(padding: EdgeInsets.only(right: 15)),
             ],
+             */
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: createNewWorkout,

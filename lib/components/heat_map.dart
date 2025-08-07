@@ -44,7 +44,7 @@ class MyHeatMap extends StatelessWidget {
         monthFontSize: 20,
         weekFontSize: 15,
         colorMode: ColorMode.color,
-        colorsets: {
+        colorsets: const {
           1: Colors.green,
         },
         defaultColor: themeDataProvider.isDarkMode

@@ -72,12 +72,11 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _buildDarkModeSwitch(ThemeProvider themeProvider) {
-    bool isCurrentlyDark;
 
     return SwitchSettingsTile(
       settingKey: keyDarkMode,
       title: 'Dark Mode',
-      leading: Icon(Icons.dark_mode, color: Colors.purple),
+      leading: const Icon(Icons.dark_mode, color: Colors.purple),
       onChange: (bool isDarkModeOn) {
         themeProvider.toggleTheme();
       },

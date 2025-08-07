@@ -317,7 +317,7 @@ class SessionDataProvider extends ChangeNotifier {
     daysWithActivity.sort((a, b) => a.compareTo(b));
     print(
         "getStartDateForHeatMap: starting date is: ${daysWithActivity.first}");
-    return daysWithActivity.first.subtract(Duration(days: 1));
+    return daysWithActivity.first.subtract(const Duration(days: 1));
   }
 
   // Get current streak of workouts active

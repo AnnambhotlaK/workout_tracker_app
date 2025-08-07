@@ -1,6 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'firebase_options.dart';
 
 import 'firebase_options_dev.dart' as dev;
 import 'firebase_options_prod.dart' as prod;
@@ -11,11 +10,11 @@ final prodOptions = prod.DefaultFirebaseOptions.currentPlatform;
 Future<void> initializeFirebase({required bool isProd}) async {
   if (isProd) {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.prod,
+      options: prodOptions,
     );
   } else {
     await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.dev,
+      options: devOptions,
     );
   }
 }
@@ -28,7 +27,7 @@ void displayMessageToUser(String message, BuildContext context) {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: Text('OK'),
+          child: const Text('OK'),
         ),
       ],
     ),

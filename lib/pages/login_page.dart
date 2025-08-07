@@ -45,11 +45,7 @@ class _LoginPageState extends State<LoginPage> {
       //}
     }
     // Catch error
-    on FirebaseAuthException catch (e) {
-      // pop loading
-      //if (context.mounted) {
-      //  Navigator.pop(context);
-      //}
+    on FirebaseAuthException {
       // show error
       displayMessageToUser("We couldn't find an account with those credentials!", context);
     }

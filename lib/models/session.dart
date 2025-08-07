@@ -42,7 +42,7 @@ class Session {
       userId: data['userId'] ?? '',
       workoutId: data['workoutId'] ?? '',
       workoutName: data['workoutName'] ?? '',
-      dateCompleted: (data['dateCompleted'] as Timestamp).toDate() ?? Timestamp.now().toDate(),
+      dateCompleted: (data['dateCompleted'] as Timestamp).toDate(),
       length: data['length'] != null ? Duration(seconds: data['length']) : null,
       notes: data['notes'] ?? '',
       exercises: (data['exercises'] as List<dynamic>? ?? [])

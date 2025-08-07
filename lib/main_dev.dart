@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:main/auth/auth_wrapper.dart';
-import 'package:main/pages/home_page.dart';
 import 'package:main/data_providers/session_data_provider.dart';
-import 'package:main/services/firestore_service.dart';
 import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'data_providers/workout_data_provider.dart';
 import 'exercise_db/database_helper.dart';
-import 'firebase_options.dart';
 import 'helper_functions.dart';
-import 'theme/theme.dart';
 import 'services/auth_service.dart';
 
 Future<void> main() async {
@@ -39,7 +34,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthService()),

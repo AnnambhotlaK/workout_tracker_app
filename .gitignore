@@ -148,6 +148,5 @@ yarn-error.log*
 
 # Environment files (local configs)
 /.env.*
-/lib/firebase_options.dart
 /lib/firebase_options_dev.dart
 /lib/firebase_options_prod.dart

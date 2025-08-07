@@ -67,7 +67,7 @@ class ExerciseTile extends StatelessWidget {
 
               // Weight and Reps headers
               if (sets.isNotEmpty) // Only show headers if there are sets
-                Padding(
+                const Padding(
                   padding: const EdgeInsets.only(
                       left: 80.0, right: 8.0, bottom: 4.0),
                   child: Row(
@@ -155,7 +155,7 @@ class ExerciseTile extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: ElevatedButton(
-                  child: Text("+ Add Set"),
+                  child: const Text("+ Add Set"),
                   onPressed: () {
                     // Call your function to add a new set to this specific exercise
                     // Provider.of<WorkoutDataProvider>(context, listen: false).addSetToExercise(workoutKey, exerciseKey, "0", "0");

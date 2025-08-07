@@ -35,7 +35,7 @@ class AuthService extends ChangeNotifier {
         print('Error wrong-password: Wrong password provided for that user.');
       }
       // rethrow for UI
-      throw e;
+      rethrow;
     }
   }
 
@@ -55,7 +55,7 @@ class AuthService extends ChangeNotifier {
         print('Error email-already-in-use: Account already exists for that email.');
       }
       // rethrow for UI
-      throw e;
+      rethrow;
     }
   }
 
