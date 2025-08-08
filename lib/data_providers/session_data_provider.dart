@@ -20,7 +20,7 @@ class SessionDataProvider extends ChangeNotifier {
   String? _error;
 
   // Gives value for display on date
-  Map<DateTime, int> heatMapDataset = {};
+  Map<DateTime, int>? heatMapDataset = {};
   // Used to key datetimes to the list of sessions completed on date
   Map<DateTime, List<Session>> heatMapSessionDataset = {};
   // Used to key a week to a list of sessions completed in that week
@@ -116,7 +116,7 @@ class SessionDataProvider extends ChangeNotifier {
     _sessionSubscription?.cancel();
     _sessionSubscription = null; // Important to nullify after cancel
     _sessions = [];
-    heatMapDataset.clear();
+    heatMapDataset!.clear();
     heatMapSessionDataset.clear();
     heatMapWeekDataset.clear();
     _isLoading = true; // Set to true initially when clearing, will be set to false if no user or after load
@@ -254,7 +254,7 @@ class SessionDataProvider extends ChangeNotifier {
   // Calculate and populate all heatmap related datasets from _sessions list
   void _calculateHeatMapData() {
     // Clear existing data
-    heatMapDataset.clear();
+    heatMapDataset!.clear();
     heatMapSessionDataset.clear();
     heatMapWeekDataset.clear();
 
@@ -274,7 +274,7 @@ class SessionDataProvider extends ChangeNotifier {
       // 1: Populate heatMapDataset, which counts sessions completed on datetime <DateTime, int>
       // If already exists, update with +1
       // If not, set to value 1
-      heatMapDataset.update(
+      heatMapDataset!.update(
         normalizedDateKey,
         (value) => value + 1,
         ifAbsent: () => 1,
@@ -301,66 +301,27 @@ class SessionDataProvider extends ChangeNotifier {
         ifAbsent: () => [session],
       );
     }
-    print("HeatMapDataset calculated ${heatMapDataset.length} entries");
+    print("HeatMapDataset calculated ${heatMapDataset?.length} entries");
     print(
         "HeatMapSessionDataset calculated ${heatMapSessionDataset.length} entries");
     print("HeatMapWeekDataset calculated ${heatMapWeekDataset.length} entries");
   }
 
   DateTime getStartDateForHeatMap() {
-    if (heatMapDataset.isEmpty) {
+    if (heatMapDataset == null) {
+      print("getStartDateForHeatMap: heatMapDataset is null!");
+      return DateTime.now();
+    }
+    else if (heatMapDataset!.isEmpty) {
       print("getStartDateForHeatMap: heatMapDataset is empty!");
       return DateTime.now();
     }
     print("getStartDateForHeatMap: heatMapDataset is not empty!");
-    List<DateTime> daysWithActivity = heatMapDataset.keys.toList();
+    List<DateTime> daysWithActivity = heatMapDataset!.keys.toList();
     daysWithActivity.sort((a, b) => a.compareTo(b));
     print(
         "getStartDateForHeatMap: starting date is: ${daysWithActivity.first}");
     return daysWithActivity.first.subtract(const Duration(days: 1));
-  }
-
-  // Get current streak of workouts active
-  int getCurrentStreak() {
-    if (heatMapSessionDataset.isEmpty) return 0;
-
-    DateTime today = DateTime.now();
-    DateTime currentDate =
-        DateTime(today.year, today.month, today.day); // Normalized current day
-
-    int streak = 0;
-    bool activeToday = heatMapSessionDataset[currentDate] != null &&
-        heatMapSessionDataset[currentDate]!.isNotEmpty;
-
-    if (activeToday) {
-      streak = 1;
-      // Check previous days
-      DateTime dayToCheck = currentDate.subtract(const Duration(days: 1));
-      while (heatMapSessionDataset[dayToCheck] != null &&
-          heatMapSessionDataset[dayToCheck]!.isNotEmpty) {
-        streak++;
-        dayToCheck = dayToCheck.subtract(const Duration(days: 1));
-      }
-    } else {
-      // If not active today, check if yesterday was active to determine if streak ended yesterday
-      DateTime yesterday = currentDate.subtract(const Duration(days: 1));
-      if (heatMapSessionDataset[yesterday] != null &&
-          heatMapSessionDataset[yesterday]!.isNotEmpty) {
-        // Streak ended yesterday, count from yesterday backwards
-        streak = 0; // Reset streak as today broke it
-        DateTime dayToCheck = yesterday;
-        while (heatMapSessionDataset[dayToCheck] != null &&
-            heatMapSessionDataset[dayToCheck]!.isNotEmpty) {
-          streak++;
-          dayToCheck = dayToCheck.subtract(const Duration(days: 1));
-        }
-        return streak; // Return the streak that *ended* yesterday.
-      } else {
-        // Not active today, not active yesterday. Streak is 0.
-        return 0;
-      }
-    }
-    return streak;
   }
 
   void showActivityOnDay(BuildContext context, DateTime date) {
@@ -444,7 +405,7 @@ class SessionDataProvider extends ChangeNotifier {
   void clearDataOnLogout() {
     _sessionSubscription?.cancel();
     _sessions = [];
-    heatMapDataset.clear();
+    heatMapDataset!.clear();
     heatMapSessionDataset.clear();
     heatMapWeekDataset.clear();
     _isLoadingSessions = false;
