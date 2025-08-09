@@ -21,14 +21,6 @@ class _LoginPageState extends State<LoginPage> {
   // login via firebase
   Future<void> login() async {
     // show loading
-    /*
-    showDialog(
-      context: context,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-    */
     setState(() {
       _isLoading = true;
     });
@@ -39,10 +31,6 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-      // pop loading if works
-      //if (context.mounted) {
-      //  Navigator.pop(context);
-      //}
     }
     // Catch error
     on FirebaseAuthException {

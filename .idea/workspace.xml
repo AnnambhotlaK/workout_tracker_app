@@ -5,12 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="56abd3b7-9772-46a9-98d4-da830d980be9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/test/components/heat_map_test.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/test/data_providers/workout_data_provider_test.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data_providers/session_data_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data_providers/session_data_provider.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/exercise_selector.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/exercise_selector.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/components/heat_map.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/components/heat_map.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/login_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/login_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/pages/register_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/pages/register_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

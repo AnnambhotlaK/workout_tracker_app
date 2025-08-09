@@ -114,7 +114,7 @@ class _ExerciseSelectorState extends State<ExerciseSelector> {
                   children: [
                     //TODO: Button for custom exercise addition
                     Expanded(
-                      child: Container(
+                      child: SizedBox(
                         height: 100,
                         child: ElevatedButton(
                           onPressed: () {

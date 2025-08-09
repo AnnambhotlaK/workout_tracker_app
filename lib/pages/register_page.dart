@@ -22,15 +22,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // login via firebase
   Future<void> registerUser() async {
-    /*
-    // show loading
-    showDialog(
-        context: context,
-        builder: (context) => const Center(
-              child: CircularProgressIndicator(),
-            ));
-
-     */
     setState(() {
       _isLoading = true;
     });

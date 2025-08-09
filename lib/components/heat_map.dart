@@ -5,9 +5,7 @@ import 'package:main/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class MyHeatMap extends StatelessWidget {
-  const MyHeatMap({
-    super.key,
-  });
+  const MyHeatMap({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +33,34 @@ class MyHeatMap extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.all(25),
-      child: HeatMapCalendar(
+      child: Consumer<SessionDataProvider>(
+          builder: (context, sessionDataProvider, child) {
+        return HeatMapCalendar(
+          initDate: startDateForHeatMap,
+          datasets: datasetsForHeatMap,
+          showColorTip: false,
+          flexible: true,
+          size: 30,
+          monthFontSize: 20,
+          weekFontSize: 15,
+          colorMode: ColorMode.color,
+          colorsets: const {
+            1: Colors.green,
+          },
+          defaultColor: themeDataProvider.isDarkMode
+              ? Colors.grey.shade800
+              : Colors.grey.shade200,
+          textColor: themeDataProvider.isDarkMode ? Colors.white : Colors.black,
+          weekTextColor:
+              themeDataProvider.isDarkMode ? Colors.white : Colors.black,
+          onClick: (date) {
+            Provider.of<SessionDataProvider>(context, listen: false)
+                .showActivityOnDay(context, date);
+          },
+        );
+      }),
+      /*
+        HeatMapCalendar(
         initDate: startDateForHeatMap,
         datasets: datasetsForHeatMap,
         showColorTip: false,
@@ -61,6 +86,7 @@ class MyHeatMap extends StatelessWidget {
               .showActivityOnDay(context, date);
         },
       ),
+      */
     );
   }
 }
